@@ -10,8 +10,7 @@
 		<div class="w-embed">
 			<div class="comparison-container">
 				<div class="header-buttons">
-					<button id="add-comparator">Compare <span>+</span></button>
-					<button id="duplicate-comparator">Duplicate and Compare <span>+</span></button>
+					<button id="compare">Compare <span>+</span></button>
 				</div>
 
 				<div class="comparison-wrapper">
@@ -152,163 +151,155 @@ input, select {
 			</style>
 		</div>
 		<div class="code-embed w-embed w-script"><script>
-				document.getElementById('add-comparator').addEventListener('click', function() {
-					addCalculator();
-				});
 
-				document.getElementById('duplicate-comparator').addEventListener('click', function() {
-					duplicateCalculator();
-				});
+document.getElementById('compare').addEventListener('click', function() {
+    duplicateCalculator();
+});
 
-				function addCalculator(defaults = {}) {
-					const calculatorContainer = document.getElementById('calculator-container');
+function addCalculator(defaults = {}) {
+    const calculatorContainer = document.getElementById('calculator-container');
 
-					const calculatorBlock = document.createElement('div');
-					calculatorBlock.className = 'calculator-block';
+    const calculatorBlock = document.createElement('div');
+    calculatorBlock.className = 'calculator-block';
 
-					// Build the calculator block
-					calculatorBlock.innerHTML = `
-	<div class="form-group">
-	    <input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="storage" value="${defaults.storage || 40}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="import-handling" value="${defaults.importHandling || 40}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="excise-tax" value="${defaults.exciseTax || 0}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="custom-duties" value="${defaults.customDuties || 9}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}">
-	</div>
-	<div class="form-group">
-	    <select class="freight-type">
-		<option value="per_shipment" ${defaults.freightType === 'per_shipment' ? 'selected' : ''}>Per Shipment</option>
-		<option value="per_unit" ${defaults.freightType === 'per_unit' ? 'selected' : ''}>Per Unit</option>
-	    </select>
-	</div>
-	<div class="form-group">
-	    <input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="importer-margin" value="${defaults.importerMargin || 30}">
-	</div>
-				<div class="form-group">
-				<input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}">
-				</div>
-				<div class="form-group">
-				<input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}">
-				</div>
-				<div class="form-group">
-				<input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}">
-				</div>
-				<div class="form-group">
-				<input type="number" class="production-costs" value="${defaults.productionCosts || 500}">
-				</div>
-				<div id="result-container">
-				<h2>Results</h2>
-				<p class="price-per-unit">Price per Unit: <span></span></p>
-				<p class="price-per-shipment">Price per Shipment: <span></span></p>
-				</div>
-			`;
+    // Build the calculator block with grid rows
+    calculatorBlock.innerHTML = `
+        <input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}">
+        <div class="spacer"></div>
+        <input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}">
+        <input type="number" class="storage" value="${defaults.storage || 40}">
+        <input type="number" class="import-handling" value="${defaults.importHandling || 40}">
+        <input type="number" class="excise-tax" value="${defaults.exciseTax || 0}">
+        <input type="number" class="custom-duties" value="${defaults.customDuties || 9}">
+        <div class="spacer"></div>
+        <input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}">
+        <select class="freight-type">
+            <option value="per_shipment" ${defaults.freightType === 'per_shipment' ? 'selected' : ''}>Per Shipment</option>
+            <option value="per_unit" ${defaults.freightType === 'per_unit' ? 'selected' : ''}>Per Unit</option>
+        </select>
+        <div class="spacer"></div>
+        <input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}">
+        <input type="number" class="importer-margin" value="${defaults.importerMargin || 30}">
+        <input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}">
+        <input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}">
+        <div class="spacer"></div>
+        <input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}">
+        <input type="number" class="production-costs" value="${defaults.productionCosts || 500}">
+        <div class="spacer"></div>
+        <p class="price-per-unit">Price per Unit: <span></span></p>
+        <p class="price-per-shipment">Price per Shipment: <span></span></p>
+    `;
 
-					calculatorContainer.appendChild(calculatorBlock);
+    calculatorContainer.appendChild(calculatorBlock);
+    
+    // Attach event listeners for real-time calculations
+    attachListeners(calculatorBlock);
+    
+    // Perform initial calculation
+    validateAndCalculate(calculatorBlock);
+}
 
-					// Attach event listeners for real-time calculations
-					attachListeners(calculatorBlock);
+function duplicateCalculator() {
+    const calculators = document.querySelectorAll('.calculator-block');
+    const lastCalculator = calculators[calculators.length - 1];
+    const lastValues = {
+        unitsPerShipment: lastCalculator.querySelector('.units-per-shipment').value,
+        domesticLogistics: lastCalculator.querySelector('.domestic-logistics').value,
+        storage: lastCalculator.querySelector('.storage').value,
+        importHandling: lastCalculator.querySelector('.import-handling').value,
+        exciseTax: lastCalculator.querySelector('.excise-tax').value,
+        customDuties: lastCalculator.querySelector('.custom-duties').value,
+        freightInsurance: lastCalculator.querySelector('.freight-insurance').value,
+        freightType: lastCalculator.querySelector('.freight-type').value,
+        manufacturerMargin: lastCalculator.querySelector('.manufacturer-margin').value,
+        importerMargin: lastCalculator.querySelector('.importer-margin').value,
+        wholesalerMargin: lastCalculator.querySelector('.wholesaler-margin').value,
+        retailerMargin: lastCalculator.querySelector('.retailer-margin').value,
+        marketingBudget: lastCalculator.querySelector('.marketing-budget').value,
+        productionCosts: lastCalculator.querySelector('.production-costs').value,
+    };
+    addCalculator(lastValues);
+}
 
-					// Perform initial calculation
-					calculate(calculatorBlock);
-				}
+function attachListeners(calculatorBlock) {
+    const inputs = calculatorBlock.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => validateAndCalculate(calculatorBlock));
+    });
+}
 
-				function duplicateCalculator() {
-					const calculators = document.querySelectorAll('.calculator-block');
-					const lastCalculator = calculators[calculators.length - 1];
-					const lastValues = {
-						unitsPerShipment: lastCalculator.querySelector('.units-per-shipment').value,
-						domesticLogistics: lastCalculator.querySelector('.domestic-logistics').value,
-						storage: lastCalculator.querySelector('.storage').value,
-						importHandling: lastCalculator.querySelector('.import-handling').value,
-						exciseTax: lastCalculator.querySelector('.excise-tax').value,
-						customDuties: lastCalculator.querySelector('.custom-duties').value,
-						freightInsurance: lastCalculator.querySelector('.freight-insurance').value,
-						freightType: lastCalculator.querySelector('.freight-type').value,
-						manufacturerMargin: lastCalculator.querySelector('.manufacturer-margin').value,
-						importerMargin: lastCalculator.querySelector('.importer-margin').value,
-						wholesalerMargin: lastCalculator.querySelector('.wholesaler-margin').value,
-						retailerMargin: lastCalculator.querySelector('.retailer-margin').value,
-						marketingBudget: lastCalculator.querySelector('.marketing-budget').value,
-						productionCosts: lastCalculator.querySelector('.production-costs').value,
-					};
-					addCalculator(lastValues);
-				}
+function validateAndCalculate(calculatorBlock) {
+    const margins = calculatorBlock.querySelectorAll('.manufacturer-margin, .importer-margin, .wholesaler-margin, .retailer-margin');
+    margins.forEach(margin => {
+        if (margin.value > 100) {
+            margin.value = 100;
+        } else if (margin.value < 0) {
+            margin.value = 0;
+        }
+    });
 
-				function attachListeners(calculatorBlock) {
-					const inputs = calculatorBlock.querySelectorAll('input, select');
-					inputs.forEach(input => {
-						input.addEventListener('input', () => calculate(calculatorBlock));
-					});
-				}
+    const staticValues = calculatorBlock.querySelectorAll('.domestic-logistics, .storage, .import-handling, .excise-tax, .custom-duties, .freight-insurance');
+    staticValues.forEach(value => {
+        if (value.value < 0) {
+            value.value = 0;
+        }
+    });
 
-				function calculate(calculatorBlock) {
-					const unitsPerShipment = parseFloat(calculatorBlock.querySelector('.units-per-shipment').value);
-					const domesticLogistics = parseFloat(calculatorBlock.querySelector('.domestic-logistics').value);
-					const storage = parseFloat(calculatorBlock.querySelector('.storage').value);
-					const importHandling = parseFloat(calculatorBlock.querySelector('.import-handling').value);
-					const exciseTax = parseFloat(calculatorBlock.querySelector('.excise-tax').value);
-					const customDuties = parseFloat(calculatorBlock.querySelector('.custom-duties').value);
-					const freightInsurance = parseFloat(calculatorBlock.querySelector('.freight-insurance').value);
-					const freightType = calculatorBlock.querySelector('.freight-type').value;
-					const manufacturerMargin = parseFloat(calculatorBlock.querySelector('.manufacturer-margin').value);
-					const retailerMargin = parseFloat(calculatorBlock.querySelector('.retailer-margin').value);
-					const wholesalerMargin = parseFloat(calculatorBlock.querySelector('.wholesaler-margin').value);
-					const importerMargin = parseFloat(calculatorBlock.querySelector('.importer-margin').value);
-					const marketingBudget = parseFloat(calculatorBlock.querySelector('.marketing-budget').value);
-					const productionCosts = parseFloat(calculatorBlock.querySelector('.production-costs').value);
+    calculate(calculatorBlock);
+}
 
-					// Calculate freight/insurance based on selection
-					let freightCost = freightInsurance;
-					if (freightType === 'per_unit') {
-						freightCost *= unitsPerShipment;
-					}
+function calculate(calculatorBlock) {
+    const unitsPerShipment = parseFloat(calculatorBlock.querySelector('.units-per-shipment').value);
+    const domesticLogistics = parseFloat(calculatorBlock.querySelector('.domestic-logistics').value);
+    const storage = parseFloat(calculatorBlock.querySelector('.storage').value);
+    const importHandling = parseFloat(calculatorBlock.querySelector('.import-handling').value);
+    const exciseTax = parseFloat(calculatorBlock.querySelector('.excise-tax').value);
+    const customDuties = parseFloat(calculatorBlock.querySelector('.custom-duties').value);
+    const freightInsurance = parseFloat(calculatorBlock.querySelector('.freight-insurance').value);
+    const freightType = calculatorBlock.querySelector('.freight-type').value;
+    const manufacturerMargin = parseFloat(calculatorBlock.querySelector('.manufacturer-margin').value);
+    const retailerMargin = parseFloat(calculatorBlock.querySelector('.retailer-margin').value);
+    const wholesalerMargin = parseFloat(calculatorBlock.querySelector('.wholesaler-margin').value);
+    const importerMargin = parseFloat(calculatorBlock.querySelector('.importer-margin').value);
+    const marketingBudget = parseFloat(calculatorBlock.querySelector('.marketing-budget').value);
+    const productionCosts = parseFloat(calculatorBlock.querySelector('.production-costs').value);
 
-					// Start calculations from the bottom to the top
+    // Calculate freight/insurance based on selection
+    let freightCost = freightInsurance;
+    if (freightType === 'per_unit') {
+        freightCost *= unitsPerShipment;
+    }
 
-					// Calculate Manufacturer Price
-					const baseCost = productionCosts + marketingBudget;
-					const exworksPrice = baseCost / (1 - manufacturerMargin / 100);
+    // Start calculations from the bottom to the top
 
-					// Calculate CIF Total including all logistics and duties
-					const cifTotal = exworksPrice + freightCost + customDuties + exciseTax + importHandling + storage + domesticLogistics;
+    // Calculate Manufacturer Price
+    const baseCost = productionCosts + marketingBudget;
+    const exworksPrice = baseCost / (1 - manufacturerMargin / 100);
 
-					// Calculate Importer Price
-					const importerPrice = cifTotal / (1 - importerMargin / 100);
+    // Calculate CIF Total including all logistics and duties
+    const cifTotal = exworksPrice + freightCost + customDuties + exciseTax + importHandling + storage + domesticLogistics;
 
-					// Calculate Wholesaler Price
-					const wholesalerPrice = importerPrice / (1 - wholesalerMargin / 100);
+    // Calculate Importer Price
+    const importerPrice = cifTotal / (1 - importerMargin / 100);
 
-					// Calculate Retailer Price
-					const retailerPrice = wholesalerPrice / (1 - retailerMargin / 100);
+    // Calculate Wholesaler Price
+    const wholesalerPrice = importerPrice / (1 - wholesalerMargin / 100);
 
-					// Calculate per unit and per shipment price
-					const pricePerUnit = retailerPrice.toFixed(2);
-					const pricePerShipment = (retailerPrice * unitsPerShipment).toFixed(2);
+    // Calculate Retailer Price
+    const retailerPrice = wholesalerPrice / (1 - retailerMargin / 100);
 
-					// Display results
-					calculatorBlock.querySelector('.price-per-unit span').textContent = pricePerUnit + ' JPY';
-					calculatorBlock.querySelector('.price-per-shipment span').textContent = pricePerShipment + ' JPY';
-				}
+    // Calculate per unit and per shipment price
+    const pricePerUnit = retailerPrice.toFixed(2);
+    const pricePerShipment = (retailerPrice * unitsPerShipment).toFixed(2);
 
-				// Add initial calculator on page load
-				addCalculator();
+    // Display results
+    calculatorBlock.querySelector('.price-per-unit span').textContent = pricePerUnit + ' JPY';
+    calculatorBlock.querySelector('.price-per-shipment span').textContent = pricePerShipment + ' JPY';
+}
+
+// Add initial calculator on page load
+addCalculator();
+
 
 			</script>
 		</div>
