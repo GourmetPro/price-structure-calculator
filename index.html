@@ -164,27 +164,27 @@ function addCalculator(defaults = {}) {
 
     // Build the calculator block with grid rows
     calculatorBlock.innerHTML = `
-        <input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}">
+        <input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}" min="0">
         <div class="spacer"></div>
-        <input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}">
-        <input type="number" class="storage" value="${defaults.storage || 40}">
-        <input type="number" class="import-handling" value="${defaults.importHandling || 40}">
-        <input type="number" class="excise-tax" value="${defaults.exciseTax || 0}">
-        <input type="number" class="custom-duties" value="${defaults.customDuties || 9}">
+        <input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}" min="0">
+        <input type="number" class="storage" value="${defaults.storage || 40}" min="0">
+        <input type="number" class="import-handling" value="${defaults.importHandling || 40}" min="0">
+        <input type="number" class="excise-tax" value="${defaults.exciseTax || 0}" min="0">
+        <input type="number" class="custom-duties" value="${defaults.customDuties || 9}" min="0">
         <div class="spacer"></div>
-        <input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}">
+        <input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}" min="0">
         <select class="freight-type">
             <option value="per_shipment" ${defaults.freightType === 'per_shipment' ? 'selected' : ''}>Per Shipment</option>
             <option value="per_unit" ${defaults.freightType === 'per_unit' ? 'selected' : ''}>Per Unit</option>
         </select>
         <div class="spacer"></div>
-        <input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}">
-        <input type="number" class="importer-margin" value="${defaults.importerMargin || 30}">
-        <input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}">
-        <input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}">
+        <input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}" min="0" max="100">
+        <input type="number" class="importer-margin" value="${defaults.importerMargin || 30}" min="0" max="100">
+        <input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}" min="0" max="100">
+        <input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}" min="0" max="100">
         <div class="spacer"></div>
-        <input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}">
-        <input type="number" class="production-costs" value="${defaults.productionCosts || 500}">
+        <input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}" min="0">
+        <input type="number" class="production-costs" value="${defaults.productionCosts || 500}" min="0">
         <div class="spacer"></div>
         <p class="price-per-unit">Price per Unit: <span></span></p>
         <p class="price-per-shipment">Price per Shipment: <span></span></p>
@@ -231,7 +231,9 @@ function attachListeners(calculatorBlock) {
 function validateAndCalculate(calculatorBlock) {
     const margins = calculatorBlock.querySelectorAll('.manufacturer-margin, .importer-margin, .wholesaler-margin, .retailer-margin');
     margins.forEach(margin => {
-        if (margin.value > 100) {
+        if (margin.value === "") {
+            margin.value = 0;
+        } else if (margin.value > 100) {
             margin.value = 100;
         } else if (margin.value < 0) {
             margin.value = 0;
@@ -240,7 +242,9 @@ function validateAndCalculate(calculatorBlock) {
 
     const staticValues = calculatorBlock.querySelectorAll('.domestic-logistics, .storage, .import-handling, .excise-tax, .custom-duties, .freight-insurance');
     staticValues.forEach(value => {
-        if (value.value < 0) {
+        if (value.value === "") {
+            value.value = 0;
+        } else if (value.value < 0) {
             value.value = 0;
         }
     });
@@ -299,6 +303,7 @@ function calculate(calculatorBlock) {
 
 // Add initial calculator on page load
 addCalculator();
+
 
 
 			</script>
