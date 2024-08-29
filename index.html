@@ -12,31 +12,95 @@
 				<div class="header-buttons">
 					<button id="compare">Compare <span>+</span></button>
 				</div>
-
+			
 				<div class="comparison-wrapper">
-					<!-- Static headings -->
-					<div class="static-headings">
-						<h2>Units Per Shipment</h2>
-						<h2>CIF+Custom Duty+Logistics</h2>
-						<h3>Domestic Logistics</h3>
-						<h3>Storage</h3>
-						<h3>Import Handling</h3>
-						<h3>Excise Tax</h3>
-						<h3>Custom Duties</h3>
-						<h2>Freight/Insurance</h2>
-						<h2>Margins</h2>
-						<h3>Manufacturer Margin (%)</h3>
-						<h3>Importer Margin (%)</h3>
-						<h3>Wholesaler Margin (%)</h3>
-						<h3>Retailer Margin (%)</h3>
-						<h2>Additional Costs</h2>
-						<h3>Marketing Budget</h3>
-						<h3>Production Costs</h3>
-						<h2>Results</h2>
-					</div>
-
-					<!-- Calculator containers will be added here dynamically -->
-					<div id="calculator-container"></div>
+					<!-- Static headings and initial table structure -->
+					<table>
+						<tr class="units-per-shipment-row">
+							<td><h2>Units Per Shipment</h2></td>
+							<td><input type="number" class="units-per-shipment" value="1000" min="0"></td>
+						</tr>
+						<tr class="cif-logistics-heading">
+							<td><h2>CIF+Custom Duty+Logistics</h2></td>
+						</tr>
+						<tr class="domestic-logistics-row">
+							<td><h3>Domestic Logistics</h3></td>
+							<td><input type="number" class="domestic-logistics" value="30" min="0"></td>
+						</tr>
+						<tr class="storage-row">
+							<td><h3>Storage</h3></td>
+							<td><input type="number" class="storage" value="40" min="0"></td>
+						</tr>
+						<tr class="import-handling-row">
+							<td><h3>Import Handling</h3></td>
+							<td><input type="number" class="import-handling" value="40" min="0"></td>
+						</tr>
+						<tr class="excise-tax-row">
+							<td><h3>Excise Tax</h3></td>
+							<td><input type="number" class="excise-tax" value="0" min="0"></td>
+						</tr>
+						<tr class="custom-duties-row">
+							<td><h3>Custom Duties</h3></td>
+							<td><input type="number" class="custom-duties" value="9" min="0"></td>
+						</tr>
+						<tr class="freight-insurance-heading">
+							<td><h2>Freight/Insurance</h2></td>
+						</tr>
+						<tr class="freight-insurance-row">
+							<td><h3>Freight/Insurance</h3></td>
+							<td><input type="number" class="freight-insurance" value="800" min="0"></td>
+						</tr>
+						<tr class="freight-type-row">
+							<td><h3>Freight Type</h3></td>
+							<td>
+								<select class="freight-type">
+									<option value="per_shipment" selected>Per Shipment</option>
+									<option value="per_unit">Per Unit</option>
+								</select>
+							</td>
+						</tr>
+						<tr class="margins-heading">
+							<td><h2>Margins</h2></td>
+						</tr>
+						<tr class="manufacturer-margin-row">
+							<td><h3>Manufacturer Margin (%)</h3></td>
+							<td><input type="number" class="manufacturer-margin" value="38" min="0" max="100"></td>
+						</tr>
+						<tr class="importer-margin-row">
+							<td><h3>Importer Margin (%)</h3></td>
+							<td><input type="number" class="importer-margin" value="30" min="0" max="100"></td>
+						</tr>
+						<tr class="wholesaler-margin-row">
+							<td><h3>Wholesaler Margin (%)</h3></td>
+							<td><input type="number" class="wholesaler-margin" value="15" min="0" max="100"></td>
+						</tr>
+						<tr class="retailer-margin-row">
+							<td><h3>Retailer Margin (%)</h3></td>
+							<td><input type="number" class="retailer-margin" value="25" min="0" max="100"></td>
+						</tr>
+						<tr class="additional-costs-heading">
+							<td><h2>Additional Costs</h2></td>
+						</tr>
+						<tr class="marketing-budget-row">
+							<td><h3>Marketing Budget</h3></td>
+							<td><input type="number" class="marketing-budget" value="0" min="0"></td>
+						</tr>
+						<tr class="production-costs-row">
+							<td><h3>Production Costs</h3></td>
+							<td><input type="number" class="production-costs" value="500" min="0"></td>
+						</tr>
+						<tr class="results-heading">
+							<td><h2>Results</h2></td>
+						</tr>
+						<tr class="price-per-unit-row">
+							<td><h3>Price per Unit</h3></td>
+							<td><p>Price per Unit: <span></span></p></td>
+						</tr>
+						<tr class="price-per-shipment-row">
+							<td><h3>Price per Shipment</h3></td>
+							<td><p>Price per Shipment: <span></span></p></td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -51,6 +115,10 @@ body {
 
 #calculator-container {
 	display:flex;
+}
+
+td {
+	padding-right: 32px;
 }
 
 .comparison-container {
@@ -157,74 +225,73 @@ document.getElementById('compare').addEventListener('click', function() {
 });
 
 function addCalculator(defaults = {}) {
-    const calculatorContainer = document.getElementById('calculator-container');
-
-    const calculatorBlock = document.createElement('div');
-    calculatorBlock.className = 'calculator-block';
-
-    // Build the calculator block with grid rows
-    calculatorBlock.innerHTML = `
-        <input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}" min="0">
-        <div class="spacer"></div>
-        <input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}" min="0">
-        <input type="number" class="storage" value="${defaults.storage || 40}" min="0">
-        <input type="number" class="import-handling" value="${defaults.importHandling || 40}" min="0">
-        <input type="number" class="excise-tax" value="${defaults.exciseTax || 0}" min="0">
-        <input type="number" class="custom-duties" value="${defaults.customDuties || 9}" min="0">
-        <div class="spacer"></div>
-        <input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}" min="0">
+    addTableColumn('.units-per-shipment-row', `<input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}" min="0">`);
+    addTableColumn('.domestic-logistics-row', `<input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}" min="0">`);
+    addTableColumn('.storage-row', `<input type="number" class="storage" value="${defaults.storage || 40}" min="0">`);
+    addTableColumn('.import-handling-row', `<input type="number" class="import-handling" value="${defaults.importHandling || 40}" min="0">`);
+    addTableColumn('.excise-tax-row', `<input type="number" class="excise-tax" value="${defaults.exciseTax || 0}" min="0">`);
+    addTableColumn('.custom-duties-row', `<input type="number" class="custom-duties" value="${defaults.customDuties || 9}" min="0">`);
+    addTableColumn('.freight-insurance-row', `<input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}" min="0">`);
+    addTableColumn('.freight-type-row', `
         <select class="freight-type">
             <option value="per_shipment" ${defaults.freightType === 'per_shipment' ? 'selected' : ''}>Per Shipment</option>
             <option value="per_unit" ${defaults.freightType === 'per_unit' ? 'selected' : ''}>Per Unit</option>
         </select>
-        <div class="spacer"></div>
-        <input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}" min="0" max="100">
-        <input type="number" class="importer-margin" value="${defaults.importerMargin || 30}" min="0" max="100">
-        <input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}" min="0" max="100">
-        <input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}" min="0" max="100">
-        <div class="spacer"></div>
-        <input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}" min="0">
-        <input type="number" class="production-costs" value="${defaults.productionCosts || 500}" min="0">
-        <div class="spacer"></div>
-        <p class="price-per-unit">Price per Unit: <span></span></p>
-        <p class="price-per-shipment">Price per Shipment: <span></span></p>
-    `;
-
-    calculatorContainer.appendChild(calculatorBlock);
+    `);
+    addTableColumn('.manufacturer-margin-row', `<input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}" min="0" max="100">`);
+    addTableColumn('.importer-margin-row', `<input type="number" class="importer-margin" value="${defaults.importerMargin || 30}" min="0" max="100">`);
+    addTableColumn('.wholesaler-margin-row', `<input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}" min="0" max="100">`);
+    addTableColumn('.retailer-margin-row', `<input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}" min="0" max="100">`);
+    addTableColumn('.marketing-budget-row', `<input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}" min="0">`);
+    addTableColumn('.production-costs-row', `<input type="number" class="production-costs" value="${defaults.productionCosts || 500}" min="0">`);
+    addTableColumn('.price-per-unit-row', `<p>Price per Unit: <span></span></p>`);
+    addTableColumn('.price-per-shipment-row', `<p>Price per Shipment: <span></span></p>`);
     
     // Attach event listeners for real-time calculations
-    attachListeners(calculatorBlock);
-    
-    // Perform initial calculation
-    validateAndCalculate(calculatorBlock);
+    attachListeners();
+}
+
+function addTableColumn(rowSelector, content) {
+    const row = document.querySelector(rowSelector);
+    const cell = document.createElement('td');
+    cell.innerHTML = content;
+    row.appendChild(cell);
 }
 
 function duplicateCalculator() {
-    const calculators = document.querySelectorAll('.calculator-block');
-    const lastCalculator = calculators[calculators.length - 1];
+    const lastCalculatorCells = document.querySelectorAll('table tr td:last-child');
+
+    if (lastCalculatorCells.length === 0) {
+        console.error("No previous calculator found to duplicate.");
+        return;
+    }
+
     const lastValues = {
-        unitsPerShipment: lastCalculator.querySelector('.units-per-shipment').value,
-        domesticLogistics: lastCalculator.querySelector('.domestic-logistics').value,
-        storage: lastCalculator.querySelector('.storage').value,
-        importHandling: lastCalculator.querySelector('.import-handling').value,
-        exciseTax: lastCalculator.querySelector('.excise-tax').value,
-        customDuties: lastCalculator.querySelector('.custom-duties').value,
-        freightInsurance: lastCalculator.querySelector('.freight-insurance').value,
-        freightType: lastCalculator.querySelector('.freight-type').value,
-        manufacturerMargin: lastCalculator.querySelector('.manufacturer-margin').value,
-        importerMargin: lastCalculator.querySelector('.importer-margin').value,
-        wholesalerMargin: lastCalculator.querySelector('.wholesaler-margin').value,
-        retailerMargin: lastCalculator.querySelector('.retailer-margin').value,
-        marketingBudget: lastCalculator.querySelector('.marketing-budget').value,
-        productionCosts: lastCalculator.querySelector('.production-costs').value,
+        unitsPerShipment: lastCalculatorCells[1].querySelector('.units-per-shipment')?.value || 1000,
+        domesticLogistics: lastCalculatorCells[2].querySelector('.domestic-logistics')?.value || 30,
+        storage: lastCalculatorCells[3].querySelector('.storage')?.value || 40,
+        importHandling: lastCalculatorCells[4].querySelector('.import-handling')?.value || 40,
+        exciseTax: lastCalculatorCells[5].querySelector('.excise-tax')?.value || 0,
+        customDuties: lastCalculatorCells[6].querySelector('.custom-duties')?.value || 9,
+        freightInsurance: lastCalculatorCells[7].querySelector('.freight-insurance')?.value || 800,
+        freightType: lastCalculatorCells[8].querySelector('.freight-type')?.value || 'per_shipment',
+        manufacturerMargin: lastCalculatorCells[9].querySelector('.manufacturer-margin')?.value || 38,
+        importerMargin: lastCalculatorCells[10].querySelector('.importer-margin')?.value || 30,
+        wholesalerMargin: lastCalculatorCells[11].querySelector('.wholesaler-margin')?.value || 15,
+        retailerMargin: lastCalculatorCells[12].querySelector('.retailer-margin')?.value || 25,
+        marketingBudget: lastCalculatorCells[13].querySelector('.marketing-budget')?.value || 0,
+        productionCosts: lastCalculatorCells[14].querySelector('.production-costs')?.value || 500,
     };
     addCalculator(lastValues);
 }
 
-function attachListeners(calculatorBlock) {
-    const inputs = calculatorBlock.querySelectorAll('input, select');
+function attachListeners() {
+    const inputs = document.querySelectorAll('input, select');
     inputs.forEach(input => {
-        input.addEventListener('input', () => validateAndCalculate(calculatorBlock));
+        input.addEventListener('input', () => {
+            const calculatorBlock = input.closest('table');
+            validateAndCalculate(calculatorBlock);
+        });
     });
 }
 
@@ -297,14 +364,11 @@ function calculate(calculatorBlock) {
     const pricePerShipment = (retailerPrice * unitsPerShipment).toFixed(2);
 
     // Display results
-    calculatorBlock.querySelector('.price-per-unit span').textContent = pricePerUnit + ' JPY';
-    calculatorBlock.querySelector('.price-per-shipment span').textContent = pricePerShipment + ' JPY';
+    calculatorBlock.querySelector('.price-per-unit-row span').textContent = pricePerUnit + ' JPY';
+    calculatorBlock.querySelector('.price-per-shipment-row span').textContent = pricePerShipment + ' JPY';
 }
 
 // Add initial calculator on page load
-addCalculator();
-
-
 
 			</script>
 		</div>
