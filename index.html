@@ -5,6 +5,7 @@
 		<meta charset="utf-8"/>
 		<title>calculator</title>
 		<meta content="calculator" property="og:title"/><meta content="calculator" property="twitter:title"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+		<script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"></script>
 	</head>
 	<body>
 		<div class="w-embed">
@@ -19,6 +20,42 @@
 						<tr class="units-per-shipment-row">
 							<td><h2>Units Per Shipment</h2></td>
 							<td><input type="number" class="units-per-shipment" value="1000" min="0"></td>
+						</tr>
+						<tr class="currency-row">
+							<td><h3>Currency</h3></td>
+							<td>
+								<select class="currency-select">
+									<option value="JPY">JPY - Japanese Yen</option>
+									<option value="USD">USD - US Dollar</option>
+									<option value="EUR">EUR - Euro</option>
+									<option value="GBP">GBP - British Pound</option>
+									<option value="INR">INR - Indian Rupee</option>
+									<option value="CNY">CNY - Chinese Yuan</option>
+									<option value="CAD">CAD - Canadian Dollar</option>
+									<option value="AUD">AUD - Australian Dollar</option>
+									<option value="CHF">CHF - Swiss Franc</option>
+									<option value="HKD">HKD - Hong Kong Dollar</option>
+									<option value="SGD">SGD - Singapore Dollar</option>
+									<option value="MXN">MXN - Mexican Peso</option>
+									<option value="BRL">BRL - Brazilian Real</option>
+									<option value="RUB">RUB - Russian Ruble</option>
+									<option value="ZAR">ZAR - South African Rand</option>
+									<option value="TRY">TRY - Turkish Lira</option>
+									<option value="SEK">SEK - Swedish Krona</option>
+									<option value="NOK">NOK - Norwegian Krone</option>
+									<option value="DKK">DKK - Danish Krone</option>
+									<option value="NZD">NZD - New Zealand Dollar</option>
+									<option value="PLN">PLN - Polish Złoty</option>
+									<option value="THB">THB - Thai Baht</option>
+									<option value="KRW">KRW - South Korean Won</option>
+									<option value="IDR">IDR - Indonesian Rupiah</option>
+									<option value="AED">AED - United Arab Emirates Dirham</option>
+									<option value="SAR">SAR - Saudi Riyal</option>
+									<option value="MYR">MYR - Malaysian Ringgit</option>
+									<option value="PHP">PHP - Philippine Peso</option>
+									<option value="VND">VND - Vietnamese Dong</option>
+								</select>
+							</td>
 						</tr>
 						<tr class="cif-logistics-heading">
 							<td><h2>CIF+Custom Duty+Logistics</h2></td>
@@ -258,15 +295,60 @@ function addCalculator(defaults = {}) {
     const inputRows = table.querySelectorAll('tr:not(.heading):not(.delete-row)');
     const columnIndex = table.querySelector('tr').childElementCount;
 
+	const currencies = [
+    { code: 'JPY', name: 'Japanese Yen' },
+    { code: 'USD', name: 'US Dollar' },
+    { code: 'EUR', name: 'Euro' },
+    { code: 'GBP', name: 'British Pound' },
+    { code: 'INR', name: 'Indian Rupee' },
+    { code: 'CNY', name: 'Chinese Yuan' },
+    { code: 'CAD', name: 'Canadian Dollar' },
+    { code: 'AUD', name: 'Australian Dollar' },
+    { code: 'CHF', name: 'Swiss Franc' },
+    { code: 'HKD', name: 'Hong Kong Dollar' },
+    { code: 'SGD', name: 'Singapore Dollar' },
+    { code: 'MXN', name: 'Mexican Peso' },
+    { code: 'BRL', name: 'Brazilian Real' },
+    { code: 'RUB', name: 'Russian Ruble' },
+    { code: 'ZAR', name: 'South African Rand' },
+    { code: 'TRY', name: 'Turkish Lira' },
+    { code: 'SEK', name: 'Swedish Krona' },
+    { code: 'NOK', name: 'Norwegian Krone' },
+    { code: 'DKK', name: 'Danish Krone' },
+    { code: 'NZD', name: 'New Zealand Dollar' },
+    { code: 'PLN', name: 'Polish Złoty' },
+    { code: 'THB', name: 'Thai Baht' },
+    { code: 'KRW', name: 'South Korean Won' },
+    { code: 'IDR', name: 'Indonesian Rupiah' },
+    { code: 'AED', name: 'United Arab Emirates Dirham' },
+    { code: 'SAR', name: 'Saudi Riyal' },
+    { code: 'MYR', name: 'Malaysian Ringgit' },
+    { code: 'PHP', name: 'Philippine Peso' },
+    { code: 'VND', name: 'Vietnamese Dong' }
+];
+
     inputRows.forEach(row => {
         const cell = document.createElement('td');
-        const input = row.querySelector('input, select');
-        if (input) {
-            const newInput = input.cloneNode(true);
-            newInput.value = defaults[input.className] || input.value;
-            cell.appendChild(newInput);
-        } else if (row.classList.contains('price-per-unit-row') || row.classList.contains('price-per-shipment-row')) {
-            cell.innerHTML = '<p><span></span></p>';
+		if (row.classList.contains('currency-row')) {
+    const currencySelect = document.createElement('select');
+    currencySelect.className = 'currency-select';
+    currencies.forEach(curr => {
+        const option = document.createElement('option');
+        option.value = curr.code;
+        option.textContent = `${curr.code} - ${curr.name}`;
+        if (curr.code === (defaults.currency || 'JPY')) option.selected = true;
+        currencySelect.appendChild(option);
+    });
+    cell.appendChild(currencySelect);
+        } else {
+            const input = row.querySelector('input, select');
+            if (input) {
+                const newInput = input.cloneNode(true);
+                newInput.value = defaults[input.className] || input.value;
+                cell.appendChild(newInput);
+            } else if (row.classList.contains('price-per-unit-row') || row.classList.contains('price-per-shipment-row')) {
+                cell.innerHTML = '<p><span></span></p>';
+            }
         }
         row.appendChild(cell);
     });
@@ -298,7 +380,7 @@ function duplicateCalculator() {
 
 function deleteCalculator(columnIndex) {
     const table = document.querySelector('table');
-    const calculatorCount = table.querySelector('tr').childElementCount - 1; // Subtract 2 for the label column and initial calculator
+    const calculatorCount = table.querySelector('tr').childElementCount - 1; // Subtract 1 for the label column and initial calculator
 
     if (calculatorCount > 0 && columnIndex > 1) { // Ensure we're not deleting the initial calculator
         table.querySelectorAll('tr').forEach(row => {
@@ -310,6 +392,64 @@ function deleteCalculator(columnIndex) {
     } else {
         alert("Cannot delete this calculator.");
     }
+}
+
+function formatCurrency(amount, currencyCode) {
+    const options = {
+        symbol: getCurrencySymbol(currencyCode),
+        separator: ',',
+        decimal: '.',
+        precision: ['JPY', 'KRW', 'VND'].includes(currencyCode) ? 0 : 2,
+    };
+
+    if (currencyCode === 'INR') {
+        return formatIndianRupee(amount);
+    }
+
+    return currency(amount, options).format();
+}
+
+function getCurrencySymbol(currencyCode) {
+    const symbols = {
+        'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 
+        'INR': '₹', 'CNY': '¥', 'CAD': 'C$', 'AUD': 'A$',
+        'CHF': 'CHF', 'HKD': 'HK$', 'SGD': 'S$', 'MXN': 'MX$', 'BRL': 'R$',
+        'RUB': '₽', 'ZAR': 'R', 'TRY': '₺', 'SEK': 'kr', 'NOK': 'kr',
+        'DKK': 'kr', 'NZD': 'NZ$', 'PLN': 'zł', 'THB': '฿', 'KRW': '₩',
+        'IDR': 'Rp', 'AED': 'د.إ', 'SAR': '﷼', 'MYR': 'RM', 'PHP': '₱',
+        'VND': '₫'
+    };
+    return symbols[currencyCode] || currencyCode;
+}
+
+function formatIndianRupee(amount) {
+    const parts = amount.toFixed(2).split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+    
+    let formattedInteger = '';
+    for (let i = 0; i < integerPart.length; i++) {
+        if (i === 0) {
+            formattedInteger = integerPart[integerPart.length - 1 - i];
+        } else if (i === 1 || i === 2) {
+            formattedInteger = integerPart[integerPart.length - 1 - i] + formattedInteger;
+        } else if ((i - 2) % 2 === 1) {
+            formattedInteger = integerPart[integerPart.length - 1 - i] + ',' + formattedInteger;
+        } else {
+            formattedInteger = integerPart[integerPart.length - 1 - i] + formattedInteger;
+        }
+    }
+    
+    return `₹ ${formattedInteger}.${decimalPart}`;
+}
+
+function getCurrencySymbol(currencyCode) {
+    const symbols = {
+        'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 
+        'INR': '₹', 'CNY': '¥', 'CAD': 'C$', 'AUD': 'A$',
+        'CHF': 'CHF', 'HKD': 'HK$', 'SGD': 'S$', 'MXN': 'MX$', 'BRL': 'R$'
+    };
+    return symbols[currencyCode] || currencyCode;
 }
 
 function attachListeners() {
@@ -372,17 +512,21 @@ function calculate(table, columnIndex) {
     // Calculate Retailer Price
     const retailerPrice = wholesalerPrice / (1 - retailerMargin / 100);
 
+    const currencySelect = table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) .currency-select`);
+    const currency = currencySelect ? currencySelect.value : 'JPY';
+
     // Calculate per unit and per shipment price
-    const pricePerUnit = retailerPrice.toFixed(2);
-    const pricePerShipment = (retailerPrice * unitsPerShipment).toFixed(2);
+    const pricePerUnit = formatCurrency(retailerPrice, currency);
+    const pricePerShipment = formatCurrency(retailerPrice * unitsPerShipment, currency);
 
     // Display results
     const pricePerUnitSpan = table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`);
     const pricePerShipmentSpan = table.querySelector(`tr.price-per-shipment-row td:nth-child(${columnIndex + 1}) span`);
     
-    if (pricePerUnitSpan) pricePerUnitSpan.textContent = pricePerUnit + ' JPY';
-    if (pricePerShipmentSpan) pricePerShipmentSpan.textContent = pricePerShipment + ' JPY';
+    if (pricePerUnitSpan) pricePerUnitSpan.textContent = pricePerUnit;
+    if (pricePerShipmentSpan) pricePerShipmentSpan.textContent = pricePerShipment;
 }
+
 
 // Initialize the calculator when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
