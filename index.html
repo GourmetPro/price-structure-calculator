@@ -327,19 +327,19 @@ function addCalculator(defaults = {}) {
     { code: 'VND', name: 'Vietnamese Dong' }
 ];
 
-    inputRows.forEach(row => {
+		inputRows.forEach(row => {
         const cell = document.createElement('td');
-		if (row.classList.contains('currency-row')) {
-    const currencySelect = document.createElement('select');
-    currencySelect.className = 'currency-select';
-    currencies.forEach(curr => {
-        const option = document.createElement('option');
-        option.value = curr.code;
-        option.textContent = `${curr.code} - ${curr.name}`;
-        if (curr.code === (defaults.currency || 'JPY')) option.selected = true;
-        currencySelect.appendChild(option);
-    });
-    cell.appendChild(currencySelect);
+        if (row.classList.contains('currency-row')) {
+            const currencySelect = document.createElement('select');
+            currencySelect.className = 'currency-select';
+            currencies.forEach(curr => {
+                const option = document.createElement('option');
+                option.value = curr.code;
+                option.textContent = `${curr.code} - ${curr.name}`;
+                if (curr.code === (defaults.currency || 'JPY')) option.selected = true;
+                currencySelect.appendChild(option);
+            });
+            cell.appendChild(currencySelect);
         } else {
             const input = row.querySelector('input, select');
             if (input) {
@@ -370,11 +370,21 @@ function addCalculator(defaults = {}) {
 }
 
 function duplicateCalculator() {
-    const lastInputs = document.querySelectorAll('table tr:not(.heading) td:last-child input, table tr:not(.heading) td:last-child select');
+    const table = document.querySelector('table');
+    const lastColumn = table.querySelectorAll('tr:not(.heading) td:last-child');
     const defaults = {};
-    lastInputs.forEach(input => {
-        defaults[input.className] = input.value;
+
+    lastColumn.forEach(cell => {
+        const input = cell.querySelector('input, select');
+        if (input) {
+            if (input.classList.contains('currency-select')) {
+                defaults.currency = input.value;
+            } else {
+                defaults[input.className] = input.value;
+            }
+        }
     });
+
     addCalculator(defaults);
 }
 
