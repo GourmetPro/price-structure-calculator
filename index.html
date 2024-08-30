@@ -101,19 +101,39 @@
 						</tr>
 						<tr class="manufacturer-margin-row">
 							<td><h3>Manufacturer Margin (%)</h3></td>
-							<td><input type="number" class="manufacturer-margin" value="38" min="0" max="100"></td>
+							<td>
+								<div class="margin-input-container">
+									<input type="number" class="manufacturer-margin" value="38" min="0" max="100">
+									<div class="margin-value manufacturer-margin-value"></div>
+								</div>
+							</td>
 						</tr>
 						<tr class="importer-margin-row">
 							<td><h3>Importer Margin (%)</h3></td>
-							<td><input type="number" class="importer-margin" value="30" min="0" max="100"></td>
+							<td>
+								<div class="margin-input-container">
+									<input type="number" class="importer-margin" value="30" min="0" max="100">
+									<div class="margin-value importer-margin-value"></div>
+								</div>
+							</td>
 						</tr>
 						<tr class="wholesaler-margin-row">
 							<td><h3>Wholesaler Margin (%)</h3></td>
-							<td><input type="number" class="wholesaler-margin" value="15" min="0" max="100"></td>
+							<td>
+								<div class="margin-input-container">
+									<input type="number" class="wholesaler-margin" value="15" min="0" max="100">
+									<div class="margin-value wholesaler-margin-value"></div>
+								</div>
+							</td>
 						</tr>
 						<tr class="retailer-margin-row">
 							<td><h3>Retailer Margin (%)</h3></td>
-							<td><input type="number" class="retailer-margin" value="25" min="0" max="100"></td>
+							<td>
+								<div class="margin-input-container">
+									<input type="number" class="retailer-margin" value="25" min="0" max="100">
+									<div class="margin-value retailer-margin-value"></div>
+								</div>
+							</td>
 						</tr>
 						<tr class="additional-costs-heading">
 							<td><h2>Additional Costs</h2></td>
@@ -226,6 +246,29 @@ td {
 	margin-bottom: 10px;
 	color: #555;
 }
+
+.margin-input-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .margin-input-container input {
+        width: 100%;
+        padding-right: 50px; /* Adjust this value based on the width of your margin value */
+        box-sizing: border-box;
+    }
+
+    .margin-value {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.9em;
+        color: #666;
+        background-color: #f0f0f0;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
 
 .calculator-block {
 	border-left: 2px solid #ddd;
@@ -343,9 +386,27 @@ function addCalculator(defaults = {}) {
         } else {
             const input = row.querySelector('input, select');
             if (input) {
-                const newInput = input.cloneNode(true);
-                newInput.value = defaults[input.className] || input.value;
-                cell.appendChild(newInput);
+                if (row.classList.contains('manufacturer-margin-row') || 
+                    row.classList.contains('importer-margin-row') || 
+                    row.classList.contains('wholesaler-margin-row') || 
+                    row.classList.contains('retailer-margin-row')) {
+                    const container = document.createElement('div');
+                    container.className = 'margin-input-container';
+                    
+                    const newInput = input.cloneNode(true);
+                    newInput.value = defaults[input.className] || input.value;
+                    container.appendChild(newInput);
+                    
+                    const marginValueDiv = document.createElement('div');
+                    marginValueDiv.className = 'margin-value ' + input.className + '-value';
+                    container.appendChild(marginValueDiv);
+                    
+                    cell.appendChild(container);
+                } else {
+                    const newInput = input.cloneNode(true);
+                    newInput.value = defaults[input.className] || input.value;
+                    cell.appendChild(newInput);
+                }
             } else if (row.classList.contains('price-per-unit-row') || row.classList.contains('price-per-shipment-row')) {
                 cell.innerHTML = '<p><span></span></p>';
             }
@@ -462,6 +523,15 @@ function getCurrencySymbol(currencyCode) {
     return symbols[currencyCode] || currencyCode;
 }
 
+function displayMarginValue(table, columnIndex, marginType, value) {
+    const marginValueElement = table.querySelector(`tr.${marginType}-margin-row td:nth-child(${columnIndex + 1}) .margin-value`);
+    if (marginValueElement) {
+        const currencySelect = table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) .currency-select`);
+        const currency = currencySelect ? currencySelect.value : 'JPY';
+        marginValueElement.textContent = formatCurrency(value, currency);
+    }
+}
+
 function attachListeners() {
     const inputs = document.querySelectorAll('input, select');
     inputs.forEach(input => {
@@ -528,6 +598,18 @@ function calculate(table, columnIndex) {
     // Calculate per unit and per shipment price
     const pricePerUnit = formatCurrency(retailerPrice, currency);
     const pricePerShipment = formatCurrency(retailerPrice * unitsPerShipment, currency);
+
+	// Calculate margin values
+	const manufacturerMarginValue = exworksPrice - baseCost;
+    const importerMarginValue = importerPrice - cifTotal;
+    const wholesalerMarginValue = wholesalerPrice - importerPrice;
+    const retailerMarginValue = retailerPrice - wholesalerPrice;
+
+	// Display margin values
+	displayMarginValue(table, columnIndex, 'manufacturer', manufacturerMarginValue);
+    displayMarginValue(table, columnIndex, 'importer', importerMarginValue);
+	displayMarginValue(table, columnIndex, 'wholesaler', wholesalerMarginValue);
+	displayMarginValue(table, columnIndex, 'retailer', retailerMarginValue);
 
     // Display results
     const pricePerUnitSpan = table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`);
