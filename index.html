@@ -57,6 +57,26 @@
 								</select>
 							</td>
 						</tr>
+						<tr class="production-costs-row">
+							<td><h3>Production Costs</h3></td>
+							<td><input type="number" class="production-costs" value="500" min="0"></td>
+						</tr>
+						<tr class="freight-insurance-heading">
+							<td><h2>Freight/Insurance</h2></td>
+						</tr>
+						<tr class="freight-insurance-row">
+							<td><h3>Freight/Insurance</h3></td>
+							<td><input type="number" class="freight-insurance" value="800" min="0"></td>
+						</tr>
+						<tr class="freight-type-row">
+							<td><h3>Freight Type</h3></td>
+							<td>
+								<select class="freight-type">
+									<option value="per_shipment" selected>Per Shipment</option>
+									<option value="per_unit">Per Unit</option>
+								</select>
+							</td>
+						</tr>
 						<tr class="cif-logistics-heading">
 							<td><h2>CIF+Custom Duty+Logistics</h2></td>
 						</tr>
@@ -79,22 +99,6 @@
 						<tr class="custom-duties-row">
 							<td><h3>Custom Duties</h3></td>
 							<td><input type="number" class="custom-duties" value="9" min="0"></td>
-						</tr>
-						<tr class="freight-insurance-heading">
-							<td><h2>Freight/Insurance</h2></td>
-						</tr>
-						<tr class="freight-insurance-row">
-							<td><h3>Freight/Insurance</h3></td>
-							<td><input type="number" class="freight-insurance" value="800" min="0"></td>
-						</tr>
-						<tr class="freight-type-row">
-							<td><h3>Freight Type</h3></td>
-							<td>
-								<select class="freight-type">
-									<option value="per_shipment" selected>Per Shipment</option>
-									<option value="per_unit">Per Unit</option>
-								</select>
-							</td>
 						</tr>
 						<tr class="margins-heading">
 							<td><h2>Margins</h2></td>
@@ -141,10 +145,6 @@
 						<tr class="marketing-budget-row">
 							<td><h3>Marketing Budget</h3></td>
 							<td><input type="number" class="marketing-budget" value="0" min="0"></td>
-						</tr>
-						<tr class="production-costs-row">
-							<td><h3>Production Costs</h3></td>
-							<td><input type="number" class="production-costs" value="500" min="0"></td>
 						</tr>
 						<tr class="results-heading">
 							<td><h2>Results</h2></td>
@@ -466,61 +466,45 @@ function deleteCalculator(columnIndex) {
 }
 
 function formatCurrency(amount, currencyCode) {
+    const locales = {
+        'USD': 'en-US',
+        'EUR': 'de-DE',
+        'GBP': 'en-GB',
+        'INR': 'en-IN',
+        'JPY': 'ja-JP',
+        'CNY': 'zh-CN',
+        'CAD': 'en-CA',
+        'AUD': 'en-AU',
+        'CHF': 'de-CH',
+        'HKD': 'zh-HK',
+        'SGD': 'en-SG',
+        'MXN': 'es-MX',
+        'BRL': 'pt-BR',
+        'RUB': 'ru-RU',
+        'ZAR': 'en-ZA',
+        'TRY': 'tr-TR',
+        'SEK': 'sv-SE',
+        'NOK': 'nb-NO',
+        'DKK': 'da-DK',
+        'NZD': 'en-NZ',
+        'PLN': 'pl-PL',
+        'THB': 'th-TH',
+        'KRW': 'ko-KR',
+        'IDR': 'id-ID',
+        'AED': 'ar-AE',
+        'SAR': 'ar-SA',
+        'MYR': 'ms-MY',
+        'PHP': 'en-PH',
+        'VND': 'vi-VN'
+    };
+
+    const locale = locales[currencyCode] || 'en-US';
     const options = {
-        symbol: getCurrencySymbol(currencyCode),
-        separator: ',',
-        decimal: '.',
-        precision: ['JPY', 'KRW', 'VND'].includes(currencyCode) ? 0 : 2,
+        style: 'currency',
+        currency: currencyCode
     };
 
-    if (currencyCode === 'INR') {
-        return formatIndianRupee(amount);
-    }
-
-    return currency(amount, options).format();
-}
-
-function getCurrencySymbol(currencyCode) {
-    const symbols = {
-        'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 
-        'INR': '₹', 'CNY': '¥', 'CAD': 'C$', 'AUD': 'A$',
-        'CHF': 'CHF', 'HKD': 'HK$', 'SGD': 'S$', 'MXN': 'MX$', 'BRL': 'R$',
-        'RUB': '₽', 'ZAR': 'R', 'TRY': '₺', 'SEK': 'kr', 'NOK': 'kr',
-        'DKK': 'kr', 'NZD': 'NZ$', 'PLN': 'zł', 'THB': '฿', 'KRW': '₩',
-        'IDR': 'Rp', 'AED': 'د.إ', 'SAR': '﷼', 'MYR': 'RM', 'PHP': '₱',
-        'VND': '₫'
-    };
-    return symbols[currencyCode] || currencyCode;
-}
-
-function formatIndianRupee(amount) {
-    const parts = amount.toFixed(2).split('.');
-    const integerPart = parts[0];
-    const decimalPart = parts[1];
-    
-    let formattedInteger = '';
-    for (let i = 0; i < integerPart.length; i++) {
-        if (i === 0) {
-            formattedInteger = integerPart[integerPart.length - 1 - i];
-        } else if (i === 1 || i === 2) {
-            formattedInteger = integerPart[integerPart.length - 1 - i] + formattedInteger;
-        } else if ((i - 2) % 2 === 1) {
-            formattedInteger = integerPart[integerPart.length - 1 - i] + ',' + formattedInteger;
-        } else {
-            formattedInteger = integerPart[integerPart.length - 1 - i] + formattedInteger;
-        }
-    }
-    
-    return `₹ ${formattedInteger}.${decimalPart}`;
-}
-
-function getCurrencySymbol(currencyCode) {
-    const symbols = {
-        'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 
-        'INR': '₹', 'CNY': '¥', 'CAD': 'C$', 'AUD': 'A$',
-        'CHF': 'CHF', 'HKD': 'HK$', 'SGD': 'S$', 'MXN': 'MX$', 'BRL': 'R$'
-    };
-    return symbols[currencyCode] || currencyCode;
+    return new Intl.NumberFormat(locale, options).format(amount);
 }
 
 function displayMarginValue(table, columnIndex, marginType, value) {
