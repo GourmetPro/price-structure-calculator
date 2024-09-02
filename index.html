@@ -77,8 +77,29 @@
 								</select>
 							</td>
 						</tr>
-						<tr class="cif-logistics-heading">
-							<td><h2>CIF+Custom Duty+Logistics</h2></td>
+						<tr class="duties-heading">
+							<td><h2>Duties</h2></td>
+						</tr>
+						<tr class="custom-duties-row">
+							<td><h3>Custom Duties (%)</h3></td>
+							<td>
+								<div class="margin-input-container">
+									<input type="number" class="custom-duties" value="9" min="0" max="100">
+									<div class="margin-value custom-duties-value"></div>
+								</div>
+							</td>
+						</tr>
+						<tr class="excise-tax-row">
+							<td><h3>Excise Tax</h3></td>
+							<td>
+								<div class="margin-input-container">
+									<input type="number" class="excise-tax" value="0" min="0">
+									<div class="margin-value excise-tax-value"></div>
+								</div>
+							</td>
+						</tr>
+                        <tr class="cif-logistics-heading">
+							<td><h2>CIF+Logistics</h2></td>
 						</tr>
 						<tr class="domestic-logistics-row">
 							<td><h3>Domestic Logistics</h3></td>
@@ -91,14 +112,6 @@
 						<tr class="import-handling-row">
 							<td><h3>Import Handling</h3></td>
 							<td><input type="number" class="import-handling" value="40" min="0"></td>
-						</tr>
-						<tr class="excise-tax-row">
-							<td><h3>Excise Tax</h3></td>
-							<td><input type="number" class="excise-tax" value="0" min="0"></td>
-						</tr>
-						<tr class="custom-duties-row">
-							<td><h3>Custom Duties</h3></td>
-							<td><input type="number" class="custom-duties" value="9" min="0"></td>
 						</tr>
 						<tr class="margins-heading">
 							<td><h2>Margins</h2></td>
@@ -538,19 +551,19 @@ function calculate(table, columnIndex) {
     };
 
     const unitsPerShipment = getValueFromColumn('.units-per-shipment');
+    const productionCosts = getValueFromColumn('.production-costs');
+    const freightInsurance = getValueFromColumn('.freight-insurance');
+    const freightType = table.querySelector(`tr:not(.heading) td:nth-child(${columnIndex + 1}) .freight-type`)?.value || 'per_shipment';
+    const customDuties = getValueFromColumn('.custom-duties');
+    const exciseTax = getValueFromColumn('.excise-tax');
     const domesticLogistics = getValueFromColumn('.domestic-logistics');
     const storage = getValueFromColumn('.storage');
     const importHandling = getValueFromColumn('.import-handling');
-    const exciseTax = getValueFromColumn('.excise-tax');
-    const customDuties = getValueFromColumn('.custom-duties');
-    const freightInsurance = getValueFromColumn('.freight-insurance');
-    const freightType = table.querySelector(`tr:not(.heading) td:nth-child(${columnIndex + 1}) .freight-type`)?.value || 'per_shipment';
     const manufacturerMargin = getValueFromColumn('.manufacturer-margin');
-    const retailerMargin = getValueFromColumn('.retailer-margin');
-    const wholesalerMargin = getValueFromColumn('.wholesaler-margin');
     const importerMargin = getValueFromColumn('.importer-margin');
+    const wholesalerMargin = getValueFromColumn('.wholesaler-margin');
+    const retailerMargin = getValueFromColumn('.retailer-margin');
     const marketingBudget = getValueFromColumn('.marketing-budget');
-    const productionCosts = getValueFromColumn('.production-costs');
 
     // Calculate freight/insurance based on selection
     let freightCost = freightInsurance;
@@ -558,14 +571,21 @@ function calculate(table, columnIndex) {
         freightCost *= unitsPerShipment;
     }
 
-    // Start calculations from the bottom to the top
-
     // Calculate Manufacturer Price
     const baseCost = productionCosts + marketingBudget;
     const exworksPrice = baseCost / (1 - manufacturerMargin / 100);
 
+    // Calculate CIF (Cost, Insurance, and Freight)
+    const cifPrice = exworksPrice + freightCost;
+
+    // Calculate Custom Duties as a percentage of CIF price
+    const customDutiesValue = (customDuties / 100) * cifPrice;
+
+    // Calculate Excise Tax as a normal value
+    const exciseTaxValue = exciseTax;
+
     // Calculate CIF Total including all logistics and duties
-    const cifTotal = exworksPrice + freightCost + customDuties + exciseTax + importHandling + storage + domesticLogistics;
+    const cifTotal = cifPrice + customDutiesValue + exciseTaxValue + importHandling + storage + domesticLogistics;
 
     // Calculate Importer Price
     const importerPrice = cifTotal / (1 - importerMargin / 100);
@@ -583,24 +603,34 @@ function calculate(table, columnIndex) {
     const pricePerUnit = formatCurrency(retailerPrice, currency);
     const pricePerShipment = formatCurrency(retailerPrice * unitsPerShipment, currency);
 
-	// Calculate margin values
-	const manufacturerMarginValue = exworksPrice - baseCost;
+    // Calculate margin values
+    const manufacturerMarginValue = exworksPrice - baseCost;
     const importerMarginValue = importerPrice - cifTotal;
     const wholesalerMarginValue = wholesalerPrice - importerPrice;
     const retailerMarginValue = retailerPrice - wholesalerPrice;
 
-	// Display margin values
-	displayMarginValue(table, columnIndex, 'manufacturer', manufacturerMarginValue);
+    // Display margin values
+    displayMarginValue(table, columnIndex, 'manufacturer', manufacturerMarginValue);
     displayMarginValue(table, columnIndex, 'importer', importerMarginValue);
-	displayMarginValue(table, columnIndex, 'wholesaler', wholesalerMarginValue);
-	displayMarginValue(table, columnIndex, 'retailer', retailerMarginValue);
+    displayMarginValue(table, columnIndex, 'wholesaler', wholesalerMarginValue);
+    displayMarginValue(table, columnIndex, 'retailer', retailerMarginValue);
+
+    // Display custom duties value
+    displayMarginValue(table, columnIndex, 'custom-duties', customDutiesValue);
+
+    // Display excise tax value
+    displayMarginValue(table, columnIndex, 'excise-tax', exciseTaxValue);
 
     // Display results
     const pricePerUnitSpan = table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`);
+    if (pricePerUnitSpan) {
+        pricePerUnitSpan.textContent = pricePerUnit;
+    }
+
     const pricePerShipmentSpan = table.querySelector(`tr.price-per-shipment-row td:nth-child(${columnIndex + 1}) span`);
-    
-    if (pricePerUnitSpan) pricePerUnitSpan.textContent = pricePerUnit;
-    if (pricePerShipmentSpan) pricePerShipmentSpan.textContent = pricePerShipment;
+    if (pricePerShipmentSpan) {
+        pricePerShipmentSpan.textContent = pricePerShipment;
+    }
 }
 
 
