@@ -61,12 +61,26 @@
 							<td><h3>Production Costs</h3></td>
 							<td><input type="number" class="production-costs" value="500" min="0"></td>
 						</tr>
+                        <tr class="manufacturer-margin-row">
+                            <td><h3>Manufacturer Margin (%)</h3></td>
+                            <td>
+                                <div class="margin-input-container">
+                                    <input type="number" class="manufacturer-margin" value="38" min="0" max="100">
+                                    <div class="margin-value manufacturer-margin-value"></div>
+                                </div>
+                                <div class="price-after-margin manufacturer-price"></div>
+                            </td>
+                        </tr>
 						<tr class="freight-insurance-heading">
 							<td><h2>Freight/Insurance</h2></td>
+							<td><p class="total-price-per-unit freight-insurance-total"></p></td>
 						</tr>
 						<tr class="freight-insurance-row">
 							<td><h3>Freight/Insurance</h3></td>
-							<td><input type="number" class="freight-insurance" value="800" min="0"></td>
+                            <td>
+                                <input type="number" class="freight-insurance" value="800" min="0">
+                                <div class="price-after-calculation freight-insurance-price"></div>
+                            </td>
 						</tr>
 						<tr class="freight-type-row">
 							<td><h3>Freight Type</h3></td>
@@ -79,85 +93,96 @@
 						</tr>
 						<tr class="duties-heading">
 							<td><h2>Duties</h2></td>
+							<td><p class="total-price-per-unit duties-total"></p></td>
 						</tr>
 						<tr class="custom-duties-row">
 							<td><h3>Custom Duties (%)</h3></td>
-							<td>
-								<div class="margin-input-container">
-									<input type="number" class="custom-duties" value="9" min="0" max="100">
-									<div class="margin-value custom-duties-value"></div>
-								</div>
-							</td>
+                            <td>
+                                <div class="margin-input-container">
+                                    <input type="number" class="custom-duties" value="9" min="0" max="100">
+                                    <div class="margin-value custom-duties-value"></div>
+                                </div>
+                                <div class="price-after-calculation custom-duties-price"></div>
+                            </td>
 						</tr>
 						<tr class="excise-tax-row">
 							<td><h3>Excise Tax</h3></td>
 							<td>
-								<div class="margin-input-container">
-									<input type="number" class="excise-tax" value="0" min="0">
-									<div class="margin-value excise-tax-value"></div>
-								</div>
-							</td>
+                                <div class="margin-input-container">
+                                    <input type="number" class="excise-tax" value="0" min="0">
+                                    <div class="margin-value excise-tax-value"></div>
+                                </div>
+                                <div class="price-after-calculation excise-tax-price"></div>
+                            </td>
 						</tr>
-                        <tr class="cif-logistics-heading">
+						<tr class="cif-logistics-heading">
 							<td><h2>CIF+Logistics</h2></td>
+							<td><p class="total-price-per-unit cif-logistics-total"></p></td>
 						</tr>
 						<tr class="domestic-logistics-row">
 							<td><h3>Domestic Logistics</h3></td>
-							<td><input type="number" class="domestic-logistics" value="30" min="0"></td>
+                            <td>
+                                <input type="number" class="domestic-logistics" value="30" min="0">
+                                <div class="price-after-calculation domestic-logistics-price"></div>
+                            </td>
 						</tr>
 						<tr class="storage-row">
 							<td><h3>Storage</h3></td>
-							<td><input type="number" class="storage" value="40" min="0"></td>
+                            <td>
+                                <input type="number" class="storage" value="40" min="0">
+                                <div class="price-after-calculation storage-price"></div>
+                            </td>
 						</tr>
 						<tr class="import-handling-row">
 							<td><h3>Import Handling</h3></td>
-							<td><input type="number" class="import-handling" value="40" min="0"></td>
+                            <td>
+                                <input type="number" class="import-handling" value="40" min="0">
+                                <div class="price-after-calculation import-handling-price"></div>
+                            </td>
 						</tr>
 						<tr class="margins-heading">
 							<td><h2>Margins</h2></td>
-						</tr>
-						<tr class="manufacturer-margin-row">
-							<td><h3>Manufacturer Margin (%)</h3></td>
-							<td>
-								<div class="margin-input-container">
-									<input type="number" class="manufacturer-margin" value="38" min="0" max="100">
-									<div class="margin-value manufacturer-margin-value"></div>
-								</div>
-							</td>
+							<td><p class="total-price-per-unit margins-total"></p></td>
 						</tr>
 						<tr class="importer-margin-row">
 							<td><h3>Importer Margin (%)</h3></td>
-							<td>
-								<div class="margin-input-container">
-									<input type="number" class="importer-margin" value="30" min="0" max="100">
-									<div class="margin-value importer-margin-value"></div>
-								</div>
-							</td>
+                            <td>
+                                <div class="margin-input-container">
+                                    <input type="number" class="importer-margin" value="30" min="0" max="100">
+                                    <div class="margin-value importer-margin-value"></div>
+                                </div>
+                                <div class="price-after-calculation importer-margin-price"></div>
+                            </td>
 						</tr>
 						<tr class="wholesaler-margin-row">
 							<td><h3>Wholesaler Margin (%)</h3></td>
-							<td>
-								<div class="margin-input-container">
-									<input type="number" class="wholesaler-margin" value="15" min="0" max="100">
-									<div class="margin-value wholesaler-margin-value"></div>
-								</div>
-							</td>
+                            <td>
+                                <div class="margin-input-container">
+                                    <input type="number" class="wholesaler-margin" value="15" min="0" max="100">
+                                    <div class="margin-value wholesaler-margin-value"></div>
+                                </div>
+                                <div class="price-after-calculation wholesaler-margin-price"></div>
+                            </td>
 						</tr>
 						<tr class="retailer-margin-row">
 							<td><h3>Retailer Margin (%)</h3></td>
-							<td>
-								<div class="margin-input-container">
-									<input type="number" class="retailer-margin" value="25" min="0" max="100">
-									<div class="margin-value retailer-margin-value"></div>
-								</div>
-							</td>
+                            <td>
+                                <div class="margin-input-container">
+                                    <input type="number" class="retailer-margin" value="25" min="0" max="100">
+                                    <div class="margin-value retailer-margin-value"></div>
+                                </div>
+                                <div class="price-after-calculation retailer-margin-price"></div>
+                            </td>
 						</tr>
 						<tr class="additional-costs-heading">
 							<td><h2>Additional Costs</h2></td>
 						</tr>
 						<tr class="marketing-budget-row">
 							<td><h3>Marketing Budget</h3></td>
-							<td><input type="number" class="marketing-budget" value="0" min="0"></td>
+                            <td>
+                                <input type="number" class="marketing-budget" value="0" min="0">
+                                <div class="price-after-calculation marketing-budget-price"></div>
+                            </td>
 						</tr>
 						<tr class="results-heading">
 							<td><h2>Results</h2></td>
@@ -338,6 +363,18 @@ input, select {
     background-color: #ff1a1a;
 }
 
+.price-after-margin {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .price-after-calculation {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 5px;
+    }
+
 			</style>
 		</div>
 		<div class="code-embed w-embed w-script"><script>
@@ -396,7 +433,16 @@ function addCalculator(defaults = {}) {
                 currencySelect.appendChild(option);
             });
             cell.appendChild(currencySelect);
-        } else {
+        } else if (row.classList.contains('freight-insurance-heading') ||
+                   row.classList.contains('duties-heading') ||
+                   row.classList.contains('cif-logistics-heading') ||
+                   row.classList.contains('margins-heading')) {
+            const totalElement = document.createElement('p');
+            totalElement.className = 'total-price-per-unit ' + row.classList[0].replace('-heading', '-total');
+            cell.appendChild(totalElement);
+        }
+        
+        else {
             const input = row.querySelector('input, select');
             if (input) {
                 if (row.classList.contains('manufacturer-margin-row') || 
@@ -584,11 +630,15 @@ function calculate(table, columnIndex) {
     // Calculate Excise Tax as a normal value
     const exciseTaxValue = exciseTax;
 
+    const priceAfterDuties = cifPrice + customDutiesValue + exciseTaxValue;
+
     // Calculate CIF Total including all logistics and duties
     const cifTotal = cifPrice + customDutiesValue + exciseTaxValue + importHandling + storage + domesticLogistics;
 
+    const cifLogisticsTotal = priceAfterDuties + domesticLogistics + storage + importHandling;
+
     // Calculate Importer Price
-    const importerPrice = cifTotal / (1 - importerMargin / 100);
+    const importerPrice = cifLogisticsTotal / (1 - importerMargin / 100);
 
     // Calculate Wholesaler Price
     const wholesalerPrice = importerPrice / (1 - wholesalerMargin / 100);
@@ -599,6 +649,27 @@ function calculate(table, columnIndex) {
     const currencySelect = table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) .currency-select`);
     const currency = currencySelect ? currencySelect.value : 'JPY';
 
+    const freightInsuranceTotalElement = table.querySelector(`tr.freight-insurance-heading td:nth-child(${columnIndex + 1}) .freight-insurance-total`);
+    if (freightInsuranceTotalElement) {
+        freightInsuranceTotalElement.textContent = formatCurrency(cifPrice, currency);
+    }
+
+    const dutiesTotalElement = table.querySelector(`tr.duties-heading td:nth-child(${columnIndex + 1}) .duties-total`);
+    if (dutiesTotalElement) {
+        dutiesTotalElement.textContent = formatCurrency(priceAfterDuties, currency);
+    }
+
+    const cifLogisticsTotalElement = table.querySelector(`tr.cif-logistics-heading td:nth-child(${columnIndex + 1}) .cif-logistics-total`);
+    if (cifLogisticsTotalElement) {
+        cifLogisticsTotalElement.textContent = formatCurrency(cifLogisticsTotal, currency);
+    }
+
+        // Update the manufacturer price display
+        const manufacturerPriceElement = table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-price`);
+    if (manufacturerPriceElement) {
+        manufacturerPriceElement.textContent = `${formatCurrency(exworksPrice, currency)}`;
+    }
+
     // Calculate per unit and per shipment price
     const pricePerUnit = formatCurrency(retailerPrice, currency);
     const pricePerShipment = formatCurrency(retailerPrice * unitsPerShipment, currency);
@@ -608,7 +679,14 @@ function calculate(table, columnIndex) {
     const importerMarginValue = importerPrice - cifTotal;
     const wholesalerMarginValue = wholesalerPrice - importerPrice;
     const retailerMarginValue = retailerPrice - wholesalerPrice;
+    const totalMargins = importerMarginValue + wholesalerMarginValue + retailerMarginValue + cifLogisticsTotal;
 
+        // Update the margins-total element
+        const marginsTotalElement = table.querySelector(`tr.margins-heading td:nth-child(${columnIndex + 1}) .margins-total`);
+    if (marginsTotalElement) {
+        marginsTotalElement.textContent = formatCurrency(totalMargins, currency);
+    }
+    
     // Display margin values
     displayMarginValue(table, columnIndex, 'manufacturer', manufacturerMarginValue);
     displayMarginValue(table, columnIndex, 'importer', importerMarginValue);
@@ -620,6 +698,37 @@ function calculate(table, columnIndex) {
 
     // Display excise tax value
     displayMarginValue(table, columnIndex, 'excise-tax', exciseTaxValue);
+
+    updateTotal('freight-insurance-heading', cifPrice);
+    updateTotal('duties-heading', priceAfterDuties);
+    updateTotal('cif-logistics-heading', cifLogisticsTotal);
+    updateTotal('margins-heading', totalMargins);
+
+    updatePriceDisplay('freight-insurance', cifPrice);
+    updatePriceDisplay('custom-duties', priceAfterDuties);
+    updatePriceDisplay('excise-tax', priceAfterDuties);
+    updatePriceDisplay('domestic-logistics', cifLogisticsTotal);
+    updatePriceDisplay('storage', cifLogisticsTotal);
+    updatePriceDisplay('import-handling', cifLogisticsTotal);
+    updatePriceDisplay('importer-margin', importerPrice);
+    updatePriceDisplay('wholesaler-margin', wholesalerPrice);
+    updatePriceDisplay('retailer-margin', retailerPrice);
+    updatePriceDisplay('marketing-budget', baseCost);
+
+
+    function updateTotal(rowClass, value) {
+        const totalElement = table.querySelector(`tr.${rowClass} td:nth-child(${columnIndex + 1}) .total-price-per-unit`);
+        if (totalElement) {
+            totalElement.textContent = formatCurrency(value, currency);
+        }
+    }
+
+    function updatePriceDisplay(className, value) {
+        const priceElement = table.querySelector(`tr.${className}-row td:nth-child(${columnIndex + 1}) .price-after-calculation`);
+        if (priceElement) {
+            priceElement.textContent = `${formatCurrency(value, currency)}`;
+        }
+    }
 
     // Display results
     const pricePerUnitSpan = table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`);
