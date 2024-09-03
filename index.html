@@ -82,15 +82,6 @@
                                 <div class="price-after-calculation freight-insurance-price"></div>
                             </td>
 						</tr>
-						<tr class="freight-type-row">
-							<td><h3>Freight Type</h3></td>
-							<td>
-								<select class="freight-type">
-									<option value="per_shipment" selected>Per Shipment</option>
-									<option value="per_unit">Per Unit</option>
-								</select>
-							</td>
-						</tr>
 						<tr class="duties-heading">
 							<td><h2>Duties</h2></td>
 							<td><p class="total-price-per-unit duties-total"></p></td>
@@ -599,7 +590,6 @@ function calculate(table, columnIndex) {
     const unitsPerShipment = getValueFromColumn('.units-per-shipment');
     const productionCosts = getValueFromColumn('.production-costs');
     const freightInsurance = getValueFromColumn('.freight-insurance');
-    const freightType = table.querySelector(`tr:not(.heading) td:nth-child(${columnIndex + 1}) .freight-type`)?.value || 'per_shipment';
     const customDuties = getValueFromColumn('.custom-duties');
     const exciseTax = getValueFromColumn('.excise-tax');
     const domesticLogistics = getValueFromColumn('.domestic-logistics');
@@ -611,18 +601,12 @@ function calculate(table, columnIndex) {
     const retailerMargin = getValueFromColumn('.retailer-margin');
     const marketingBudget = getValueFromColumn('.marketing-budget');
 
-    // Calculate freight/insurance based on selection
-    let freightCost = freightInsurance;
-    if (freightType === 'per_unit') {
-        freightCost *= unitsPerShipment;
-    }
-
     // Calculate Manufacturer Price
     const baseCost = productionCosts + marketingBudget;
     const exworksPrice = baseCost / (1 - manufacturerMargin / 100);
 
     // Calculate CIF (Cost, Insurance, and Freight)
-    const cifPrice = exworksPrice + freightCost;
+    const cifPrice = exworksPrice + (freightInsurance/unitsPerShipment);
 
     // Calculate Custom Duties as a percentage of CIF price
     const customDutiesValue = (customDuties / 100) * cifPrice;
