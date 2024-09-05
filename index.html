@@ -68,7 +68,7 @@
                                     <input type="number" class="manufacturer-margin" value="38" min="0" max="100">
                                     <div class="margin-value manufacturer-margin-value"></div>
                                 </div>
-                                <div class="price-after-margin manufacturer-price"></div>
+                                <div class="price-after-calculation manufacturer-margin-price"></div>
                             </td>
                         </tr>
 						<tr class="freight-insurance-heading">
@@ -131,9 +131,8 @@
                                 <div class="price-after-calculation import-handling-price"></div>
                             </td>
 						</tr>
-						<tr class="margins-heading">
+						<tr>
 							<td><h2>Margins</h2></td>
-							<td><p class="total-price-per-unit margins-total"></p></td>
 						</tr>
 						<tr class="importer-margin-row">
 							<td><h3>Importer Margin (%)</h3></td>
@@ -165,6 +164,10 @@
                                 <div class="price-after-calculation retailer-margin-price"></div>
                             </td>
 						</tr>
+                        <tr class="margins-heading product-total">
+                            <td></td>
+                            <td><p class="total-price-per-unit margins-total"></p></td>
+                        </tr>
 						<tr class="additional-costs-heading">
 							<td><h2>Additional Costs</h2></td>
 						</tr>
@@ -196,6 +199,20 @@
 		</div>
 		<div class="w-embed">
 			<style>
+
+:root {
+    --background: #ffffff;
+    --foreground: #020817;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --primary: #0f172a;
+    --primary-foreground: #f8fafc;
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
+    --radius: 0.5rem;
+}
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f4f4f4;
@@ -208,18 +225,23 @@ body {
 }
 
 h2 {
-	font-size: 20px;
-	font-weight: 700;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 8px;
 }
 
 h3 {
-
-	font-size: 18px;
-	font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    margin-bottom: 4px;
 }
 
 td {
+    padding: 12px;
 	padding-right: 32px;
+    border-bottom: 1px solid var(--border);
 }
 
 .comparison-container {
@@ -234,22 +256,25 @@ td {
 }
 
 .header-buttons button {
-	padding: 10px 15px;
-	background-color: #007BFF;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 14px;
-	margin-left: 10px;
-	display: flex;
-	align-items: center;
+    padding: 10px 15px;
+    background-color: #ffd212;
+    color: black;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
 }
 
-.header-buttons button span {
-	margin-left: 5px;
-	font-size: 18px;
+.header-buttons button:hover {
+    background-color: #f4c700;
+    color: var(--primary);
 }
+
 
 .comparison-wrapper {
 	display: flex;
@@ -276,28 +301,46 @@ td {
 	color: #555;
 }
 
+.product-total {
+
+    text-align: right;
+}
+
 .margin-input-container {
-        position: relative;
-        width: 100%;
-    }
+    position: relative;
+    width: 100%;
+}
 
-    .margin-input-container input {
-        width: 100%;
-        padding-right: 50px; /* Adjust this value based on the width of your margin value */
-        box-sizing: border-box;
-    }
+.margin-input-container input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 12px;
+    padding-right: 50px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    font-size: 14px;
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: border-color 0.2s;
+}
 
-    .margin-value {
-        position: absolute;
-        right: 5px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.9em;
-        color: #666;
-        background-color: #f0f0f0;
-        padding: 2px 5px;
-        border-radius: 3px;
-    }
+.margin-input-container input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+}
+
+.margin-value {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--muted-foreground);
+    background-color: var(--secondary);
+    padding: 2px 6px;
+    border-radius: var(--radius);
+}
 
 .calculator-block {
 	border-left: 2px solid #ddd;
@@ -315,12 +358,32 @@ td {
 	margin-bottom: 15px;
 }
 
-input, select {
+.total-price-per-unit {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+input{
 	width: 100%;
 	padding: 8px;
 	border: 1px solid #ddd;
 	border-radius: 5px;
 	font-size: 14px;
+}
+
+select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    font-size: 14px;
+    background-color: var(--background);
+    color: var(--foreground);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
 }
 
 #result-container {
@@ -341,77 +404,222 @@ input, select {
 }
 
 .delete-calculator {
-    background-color: #ff4d4d;
+    background-color: #ef4444;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
+    padding: 6px 12px;
+    border-radius: var(--radius);
     cursor: pointer;
-    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
 }
 
 .delete-calculator:hover {
-    background-color: #ff1a1a;
+    background-color: #dc2626;
 }
 
-.price-after-margin {
-        font-size: 0.9em;
-        color: #666;
-        margin-top: 5px;
-    }
-
-    .price-after-calculation {
-        font-size: 0.9em;
-        color: #666;
-        margin-top: 5px;
-    }
+.price-after-calculation, .price-after-margin {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    margin-top: 4px;
+}
 
 			</style>
 		</div>
 		<div class="code-embed w-embed w-script"><script>
 
-document.getElementById('compare').addEventListener('click', function() {
-    duplicateCalculator();
-});
+// DOM Element Capture
+const DOMElements = {
+    captureElements(table, columnIndex) {
+        return {
+            unitsPerShipment: table.querySelector(`tr.units-per-shipment-row td:nth-child(${columnIndex + 1}) input`),
+            currency: table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) select`),
+            productionCosts: table.querySelector(`tr.production-costs-row td:nth-child(${columnIndex + 1}) input`),
+            manufacturerMargin: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) input`),
+            manufacturerMarginValue: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-margin-value`),
+            manufacturerMarginPrice: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-margin-price`),
+            freightInsurance: table.querySelector(`tr.freight-insurance-row td:nth-child(${columnIndex + 1}) input`),
+            freightInsurancePrice: table.querySelector(`tr.freight-insurance-row td:nth-child(${columnIndex + 1}) .freight-insurance-price`),
+            customDuties: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) input`),
+            customDutiesValue: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) .custom-duties-value`),
+            customDutiesPrice: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) .custom-duties-price`),
+            exciseTax: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) input`),
+            exciseTaxValue: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) .excise-tax-value`),
+            exciseTaxPrice: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) .excise-tax-price`),
+            domesticLogistics: table.querySelector(`tr.domestic-logistics-row td:nth-child(${columnIndex + 1}) input`),
+            domesticLogisticsPrice: table.querySelector(`tr.domestic-logistics-row td:nth-child(${columnIndex + 1}) .domestic-logistics-price`),
+            storage: table.querySelector(`tr.storage-row td:nth-child(${columnIndex + 1}) input`),
+            storagePrice: table.querySelector(`tr.storage-row td:nth-child(${columnIndex + 1}) .storage-price`),
+            importHandling: table.querySelector(`tr.import-handling-row td:nth-child(${columnIndex + 1}) input`),
+            importHandlingPrice: table.querySelector(`tr.import-handling-row td:nth-child(${columnIndex + 1}) .import-handling-price`),
+            importerMargin: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) input`),
+            importerMarginValue: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) .importer-margin-value`),
+            importerMarginPrice: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) .importer-margin-price`),
+            wholesalerMargin: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) input`),
+            wholesalerMarginValue: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) .wholesaler-margin-value`),
+            wholesalerMarginPrice: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) .wholesaler-margin-price`),
+            retailerMargin: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) input`),
+            retailerMarginValue: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) .retailer-margin-value`),
+            retailerMarginPrice: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) .retailer-margin-price`),
+            marketingBudget: table.querySelector(`tr.marketing-budget-row td:nth-child(${columnIndex + 1}) input`),
+            marketingBudgetPrice: table.querySelector(`tr.marketing-budget-row td:nth-child(${columnIndex + 1}) .marketing-budget-price`),
+            freightInsuranceTotal: table.querySelector(`tr.freight-insurance-heading td:nth-child(${columnIndex + 1}) .freight-insurance-total`),
+            dutiesTotal: table.querySelector(`tr.duties-heading td:nth-child(${columnIndex + 1}) .duties-total`),
+            cifLogisticsTotal: table.querySelector(`tr.cif-logistics-heading td:nth-child(${columnIndex + 1}) .cif-logistics-total`),
+            marginsTotal: table.querySelector(`tr.margins-heading td:nth-child(${columnIndex + 1}) .margins-total`),
+            pricePerUnit: table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`),
+            pricePerShipment: table.querySelector(`tr.price-per-shipment-row td:nth-child(${columnIndex + 1}) span`)
+        };
+    }
+};
 
+// Calculator Logic
+const Calculator = {
+    calculate(inputs) {
+        const baseCost = inputs.productionCosts + inputs.marketingBudget;
+        const exworksPrice = baseCost / (1 - inputs.manufacturerMargin / 100);
+        const cifPrice = exworksPrice + (inputs.freightInsurance / inputs.unitsPerShipment);
+        const customDutiesValue = (inputs.customDuties / 100) * cifPrice;
+        const exciseTaxValue = inputs.exciseTax;
+        const priceAfterDuties = cifPrice + customDutiesValue + exciseTaxValue;
+        const cifLogisticsTotal = priceAfterDuties + inputs.domesticLogistics + inputs.storage + inputs.importHandling;
+        const importerPrice = cifLogisticsTotal / (1 - inputs.importerMargin / 100);
+        const wholesalerPrice = importerPrice / (1 - inputs.wholesalerMargin / 100);
+        const retailerPrice = wholesalerPrice / (1 - inputs.retailerMargin / 100);
+
+        const importerMarginValue = importerPrice - cifLogisticsTotal;
+        const wholesalerMarginValue = wholesalerPrice - importerPrice;
+        const retailerMarginValue = retailerPrice - wholesalerPrice;
+        const totalMargins = importerMarginValue + wholesalerMarginValue + retailerMarginValue + cifLogisticsTotal;
+
+        return {
+            baseCost,
+            exworksPrice,
+            cifPrice,
+            customDutiesValue,
+            exciseTaxValue,
+            priceAfterDuties,
+            cifLogisticsTotal,
+            importerPrice,
+            wholesalerPrice,
+            retailerPrice,
+            importerMarginValue,
+            wholesalerMarginValue,
+            retailerMarginValue,
+            totalMargins,
+            pricePerUnit: retailerPrice,
+            pricePerShipment: retailerPrice * inputs.unitsPerShipment
+        };
+    }
+};
+
+// Render Object
+const Renderer = {
+    render(elements, data, currency) {
+        const formatCurrency = (value) => new Intl.NumberFormat(undefined, { style: 'currency', currency: currency }).format(value);
+
+        const updateElement = (element, value) => {
+            if (element) {
+                element.textContent = formatCurrency(value);
+            }
+        };
+
+        // Update all the price displays
+        updateElement(elements.manufacturerMarginPrice, data.exworksPrice);
+        updateElement(elements.freightInsurancePrice, data.cifPrice);
+        updateElement(elements.customDutiesPrice, data.priceAfterDuties);
+        updateElement(elements.exciseTaxPrice, data.priceAfterDuties);
+        updateElement(elements.domesticLogisticsPrice, data.cifLogisticsTotal);
+        updateElement(elements.storagePrice, data.cifLogisticsTotal);
+        updateElement(elements.importHandlingPrice, data.cifLogisticsTotal);
+        updateElement(elements.importerMarginPrice, data.importerPrice);
+        updateElement(elements.wholesalerMarginPrice, data.wholesalerPrice);
+        updateElement(elements.retailerMarginPrice, data.retailerPrice);
+        updateElement(elements.marketingBudgetPrice, data.baseCost);
+
+        // Update totals
+        updateElement(elements.freightInsuranceTotal, data.cifPrice);
+        updateElement(elements.dutiesTotal, data.priceAfterDuties);
+        updateElement(elements.cifLogisticsTotal, data.cifLogisticsTotal);
+        updateElement(elements.marginsTotal, data.totalMargins);
+
+        // Update results
+        updateElement(elements.pricePerUnit, data.pricePerUnit);
+        updateElement(elements.pricePerShipment, data.pricePerShipment);
+
+        // Update margin values
+        updateElement(elements.manufacturerMarginValue, data.exworksPrice - data.baseCost);
+        updateElement(elements.customDutiesValue, data.customDutiesValue);
+        updateElement(elements.exciseTaxValue, data.exciseTaxValue);
+        updateElement(elements.importerMarginValue, data.importerMarginValue);
+        updateElement(elements.wholesalerMarginValue, data.wholesalerMarginValue);
+        updateElement(elements.retailerMarginValue, data.retailerMarginValue);
+    }
+};
+
+// Main function to tie it all together
+function updateCalculator(table, columnIndex) {
+    const elements = DOMElements.captureElements(table, columnIndex);
+    const inputs = {
+        unitsPerShipment: parseFloat(elements.unitsPerShipment.value) || 0,
+        productionCosts: parseFloat(elements.productionCosts.value) || 0,
+        manufacturerMargin: parseFloat(elements.manufacturerMargin.value) || 0,
+        freightInsurance: parseFloat(elements.freightInsurance.value) || 0,
+        customDuties: parseFloat(elements.customDuties.value) || 0,
+        exciseTax: parseFloat(elements.exciseTax.value) || 0,
+        domesticLogistics: parseFloat(elements.domesticLogistics.value) || 0,
+        storage: parseFloat(elements.storage.value) || 0,
+        importHandling: parseFloat(elements.importHandling.value) || 0,
+        importerMargin: parseFloat(elements.importerMargin.value) || 0,
+        wholesalerMargin: parseFloat(elements.wholesalerMargin.value) || 0,
+        retailerMargin: parseFloat(elements.retailerMargin.value) || 0,
+        marketingBudget: parseFloat(elements.marketingBudget.value) || 0
+    };
+
+    const data = Calculator.calculate(inputs);
+    Renderer.render(elements, data, elements.currency.value);
+}
+
+// Function to add a new calculator
 function addCalculator(defaults = {}) {
     const table = document.querySelector('table');
     const inputRows = table.querySelectorAll('tr:not(.heading):not(.delete-row)');
     const columnIndex = table.querySelector('tr').childElementCount;
 
-	const currencies = [
-    { code: 'JPY', name: 'Japanese Yen' },
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'EUR', name: 'Euro' },
-    { code: 'GBP', name: 'British Pound' },
-    { code: 'INR', name: 'Indian Rupee' },
-    { code: 'CNY', name: 'Chinese Yuan' },
-    { code: 'CAD', name: 'Canadian Dollar' },
-    { code: 'AUD', name: 'Australian Dollar' },
-    { code: 'CHF', name: 'Swiss Franc' },
-    { code: 'HKD', name: 'Hong Kong Dollar' },
-    { code: 'SGD', name: 'Singapore Dollar' },
-    { code: 'MXN', name: 'Mexican Peso' },
-    { code: 'BRL', name: 'Brazilian Real' },
-    { code: 'RUB', name: 'Russian Ruble' },
-    { code: 'ZAR', name: 'South African Rand' },
-    { code: 'TRY', name: 'Turkish Lira' },
-    { code: 'SEK', name: 'Swedish Krona' },
-    { code: 'NOK', name: 'Norwegian Krone' },
-    { code: 'DKK', name: 'Danish Krone' },
-    { code: 'NZD', name: 'New Zealand Dollar' },
-    { code: 'PLN', name: 'Polish Złoty' },
-    { code: 'THB', name: 'Thai Baht' },
-    { code: 'KRW', name: 'South Korean Won' },
-    { code: 'IDR', name: 'Indonesian Rupiah' },
-    { code: 'AED', name: 'United Arab Emirates Dirham' },
-    { code: 'SAR', name: 'Saudi Riyal' },
-    { code: 'MYR', name: 'Malaysian Ringgit' },
-    { code: 'PHP', name: 'Philippine Peso' },
-    { code: 'VND', name: 'Vietnamese Dong' }
-];
+    const currencies = [
+        { code: 'JPY', name: 'Japanese Yen' },
+        { code: 'USD', name: 'US Dollar' },
+        { code: 'EUR', name: 'Euro' },
+        { code: 'GBP', name: 'British Pound' },
+        { code: 'INR', name: 'Indian Rupee' },
+        { code: 'CNY', name: 'Chinese Yuan' },
+        { code: 'CAD', name: 'Canadian Dollar' },
+        { code: 'AUD', name: 'Australian Dollar' },
+        { code: 'CHF', name: 'Swiss Franc' },
+        { code: 'HKD', name: 'Hong Kong Dollar' },
+        { code: 'SGD', name: 'Singapore Dollar' },
+        { code: 'MXN', name: 'Mexican Peso' },
+        { code: 'BRL', name: 'Brazilian Real' },
+        { code: 'RUB', name: 'Russian Ruble' },
+        { code: 'ZAR', name: 'South African Rand' },
+        { code: 'TRY', name: 'Turkish Lira' },
+        { code: 'SEK', name: 'Swedish Krona' },
+        { code: 'NOK', name: 'Norwegian Krone' },
+        { code: 'DKK', name: 'Danish Krone' },
+        { code: 'NZD', name: 'New Zealand Dollar' },
+        { code: 'PLN', name: 'Polish Złoty' },
+        { code: 'THB', name: 'Thai Baht' },
+        { code: 'KRW', name: 'South Korean Won' },
+        { code: 'IDR', name: 'Indonesian Rupiah' },
+        { code: 'AED', name: 'United Arab Emirates Dirham' },
+        { code: 'SAR', name: 'Saudi Riyal' },
+        { code: 'MYR', name: 'Malaysian Ringgit' },
+        { code: 'PHP', name: 'Philippine Peso' },
+        { code: 'VND', name: 'Vietnamese Dong' }
+    ];
 
-		inputRows.forEach(row => {
+    inputRows.forEach(row => {
         const cell = document.createElement('td');
         if (row.classList.contains('currency-row')) {
             const currencySelect = document.createElement('select');
@@ -431,12 +639,12 @@ function addCalculator(defaults = {}) {
             const totalElement = document.createElement('p');
             totalElement.className = 'total-price-per-unit ' + row.classList[0].replace('-heading', '-total');
             cell.appendChild(totalElement);
-        }
-        
-        else {
+        } else {
             const input = row.querySelector('input, select');
             if (input) {
                 if (row.classList.contains('manufacturer-margin-row') || 
+                    row.classList.contains('custom-duties-row') ||
+                    row.classList.contains('excise-tax-row') ||
                     row.classList.contains('importer-margin-row') || 
                     row.classList.contains('wholesaler-margin-row') || 
                     row.classList.contains('retailer-margin-row')) {
@@ -457,6 +665,9 @@ function addCalculator(defaults = {}) {
                     newInput.value = defaults[input.className] || input.value;
                     cell.appendChild(newInput);
                 }
+                const priceAfterDiv = document.createElement('div');
+                priceAfterDiv.className = 'price-after-calculation ' + input.className + '-price';
+                cell.appendChild(priceAfterDiv);
             } else if (row.classList.contains('price-per-unit-row') || row.classList.contains('price-per-shipment-row')) {
                 cell.innerHTML = '<p><span></span></p>';
             }
@@ -477,9 +688,27 @@ function addCalculator(defaults = {}) {
     deleteRow.appendChild(deleteButtonCell);
 
     attachListeners();
-    calculateAll();
+    updateCalculator(table, columnIndex);
 }
 
+// Function to delete a calculator
+function deleteCalculator(columnIndex) {
+    const table = document.querySelector('table');
+    const calculatorCount = table.querySelector('tr').childElementCount - 1; // Subtract 1 for the label column
+
+    if (calculatorCount > 1 && columnIndex > 1) { // Ensure we're not deleting the initial calculator
+        table.querySelectorAll('tr').forEach(row => {
+            if (row.children[columnIndex]) {
+                row.children[columnIndex].remove();
+            }
+        });
+        updateCalculator(table, 1); // Update the first calculator after deletion
+    } else {
+        alert("Cannot delete this calculator.");
+    }
+}
+
+// Function to duplicate a calculator
 function duplicateCalculator() {
     const table = document.querySelector('table');
     const lastColumn = table.querySelectorAll('tr:not(.heading) td:last-child');
@@ -499,238 +728,25 @@ function duplicateCalculator() {
     addCalculator(defaults);
 }
 
-function deleteCalculator(columnIndex) {
-    const table = document.querySelector('table');
-    const calculatorCount = table.querySelector('tr').childElementCount - 1; // Subtract 1 for the label column and initial calculator
-
-    if (calculatorCount > 0 && columnIndex > 1) { // Ensure we're not deleting the initial calculator
-        table.querySelectorAll('tr').forEach(row => {
-            if (row.children[columnIndex]) {
-                row.children[columnIndex].remove();
-            }
-        });
-        calculateAll();
-    } else {
-        alert("Cannot delete this calculator.");
-    }
-}
-
-function formatCurrency(amount, currencyCode) {
-    const locales = {
-        'USD': 'en-US',
-        'EUR': 'de-DE',
-        'GBP': 'en-GB',
-        'INR': 'en-IN',
-        'JPY': 'ja-JP',
-        'CNY': 'zh-CN',
-        'CAD': 'en-CA',
-        'AUD': 'en-AU',
-        'CHF': 'de-CH',
-        'HKD': 'zh-HK',
-        'SGD': 'en-SG',
-        'MXN': 'es-MX',
-        'BRL': 'pt-BR',
-        'RUB': 'ru-RU',
-        'ZAR': 'en-ZA',
-        'TRY': 'tr-TR',
-        'SEK': 'sv-SE',
-        'NOK': 'nb-NO',
-        'DKK': 'da-DK',
-        'NZD': 'en-NZ',
-        'PLN': 'pl-PL',
-        'THB': 'th-TH',
-        'KRW': 'ko-KR',
-        'IDR': 'id-ID',
-        'AED': 'ar-AE',
-        'SAR': 'ar-SA',
-        'MYR': 'ms-MY',
-        'PHP': 'en-PH',
-        'VND': 'vi-VN'
-    };
-
-    const locale = locales[currencyCode] || 'en-US';
-    const options = {
-        style: 'currency',
-        currency: currencyCode
-    };
-
-    return new Intl.NumberFormat(locale, options).format(amount);
-}
-
-function displayMarginValue(table, columnIndex, marginType, value) {
-    const marginValueElement = table.querySelector(`tr.${marginType}-margin-row td:nth-child(${columnIndex + 1}) .margin-value`);
-    if (marginValueElement) {
-        const currencySelect = table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) .currency-select`);
-        const currency = currencySelect ? currencySelect.value : 'JPY';
-        marginValueElement.textContent = formatCurrency(value, currency);
-    }
-}
-
+// Attach event listeners
 function attachListeners() {
-    const inputs = document.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.addEventListener('input', calculateAll);
-    });
-}
-
-function calculateAll() {
     const table = document.querySelector('table');
-    const columns = table.querySelectorAll('tr:first-child td:not(:first-child)');
-    columns.forEach((_, columnIndex) => {
-        calculate(table, columnIndex + 1);
+    const inputs = table.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            const columnIndex = Array.from(input.closest('td').parentNode.children).indexOf(input.closest('td'));
+            updateCalculator(table, columnIndex);
+        });
     });
 }
-
-function calculate(table, columnIndex) {
-    const getValueFromColumn = (selector) => {
-        const input = table.querySelector(`tr:not(.heading) td:nth-child(${columnIndex + 1}) ${selector}`);
-        return input ? parseFloat(input.value) || 0 : 0;
-    };
-
-    const unitsPerShipment = getValueFromColumn('.units-per-shipment');
-    const productionCosts = getValueFromColumn('.production-costs');
-    const freightInsurance = getValueFromColumn('.freight-insurance');
-    const customDuties = getValueFromColumn('.custom-duties');
-    const exciseTax = getValueFromColumn('.excise-tax');
-    const domesticLogistics = getValueFromColumn('.domestic-logistics');
-    const storage = getValueFromColumn('.storage');
-    const importHandling = getValueFromColumn('.import-handling');
-    const manufacturerMargin = getValueFromColumn('.manufacturer-margin');
-    const importerMargin = getValueFromColumn('.importer-margin');
-    const wholesalerMargin = getValueFromColumn('.wholesaler-margin');
-    const retailerMargin = getValueFromColumn('.retailer-margin');
-    const marketingBudget = getValueFromColumn('.marketing-budget');
-
-    // Calculate Manufacturer Price
-    const baseCost = productionCosts + marketingBudget;
-    const exworksPrice = baseCost / (1 - manufacturerMargin / 100);
-
-    // Calculate CIF (Cost, Insurance, and Freight)
-    const cifPrice = exworksPrice + (freightInsurance/unitsPerShipment);
-
-    // Calculate Custom Duties as a percentage of CIF price
-    const customDutiesValue = (customDuties / 100) * cifPrice;
-
-    // Calculate Excise Tax as a normal value
-    const exciseTaxValue = exciseTax;
-
-    const priceAfterDuties = cifPrice + customDutiesValue + exciseTaxValue;
-
-    // Calculate CIF Total including all logistics and duties
-    const cifTotal = cifPrice + customDutiesValue + exciseTaxValue + importHandling + storage + domesticLogistics;
-
-    const cifLogisticsTotal = priceAfterDuties + domesticLogistics + storage + importHandling;
-
-    // Calculate Importer Price
-    const importerPrice = cifLogisticsTotal / (1 - importerMargin / 100);
-
-    // Calculate Wholesaler Price
-    const wholesalerPrice = importerPrice / (1 - wholesalerMargin / 100);
-
-    // Calculate Retailer Price
-    const retailerPrice = wholesalerPrice / (1 - retailerMargin / 100);
-
-    const currencySelect = table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) .currency-select`);
-    const currency = currencySelect ? currencySelect.value : 'JPY';
-
-    const freightInsuranceTotalElement = table.querySelector(`tr.freight-insurance-heading td:nth-child(${columnIndex + 1}) .freight-insurance-total`);
-    if (freightInsuranceTotalElement) {
-        freightInsuranceTotalElement.textContent = formatCurrency(cifPrice, currency);
-    }
-
-    const dutiesTotalElement = table.querySelector(`tr.duties-heading td:nth-child(${columnIndex + 1}) .duties-total`);
-    if (dutiesTotalElement) {
-        dutiesTotalElement.textContent = formatCurrency(priceAfterDuties, currency);
-    }
-
-    const cifLogisticsTotalElement = table.querySelector(`tr.cif-logistics-heading td:nth-child(${columnIndex + 1}) .cif-logistics-total`);
-    if (cifLogisticsTotalElement) {
-        cifLogisticsTotalElement.textContent = formatCurrency(cifLogisticsTotal, currency);
-    }
-
-        // Update the manufacturer price display
-        const manufacturerPriceElement = table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-price`);
-    if (manufacturerPriceElement) {
-        manufacturerPriceElement.textContent = `${formatCurrency(exworksPrice, currency)}`;
-    }
-
-    // Calculate per unit and per shipment price
-    const pricePerUnit = formatCurrency(retailerPrice, currency);
-    const pricePerShipment = formatCurrency(retailerPrice * unitsPerShipment, currency);
-
-    // Calculate margin values
-    const manufacturerMarginValue = exworksPrice - baseCost;
-    const importerMarginValue = importerPrice - cifTotal;
-    const wholesalerMarginValue = wholesalerPrice - importerPrice;
-    const retailerMarginValue = retailerPrice - wholesalerPrice;
-    const totalMargins = importerMarginValue + wholesalerMarginValue + retailerMarginValue + cifLogisticsTotal;
-
-        // Update the margins-total element
-        const marginsTotalElement = table.querySelector(`tr.margins-heading td:nth-child(${columnIndex + 1}) .margins-total`);
-    if (marginsTotalElement) {
-        marginsTotalElement.textContent = formatCurrency(totalMargins, currency);
-    }
-    
-    // Display margin values
-    displayMarginValue(table, columnIndex, 'manufacturer', manufacturerMarginValue);
-    displayMarginValue(table, columnIndex, 'importer', importerMarginValue);
-    displayMarginValue(table, columnIndex, 'wholesaler', wholesalerMarginValue);
-    displayMarginValue(table, columnIndex, 'retailer', retailerMarginValue);
-
-    // Display custom duties value
-    displayMarginValue(table, columnIndex, 'custom-duties', customDutiesValue);
-
-    // Display excise tax value
-    displayMarginValue(table, columnIndex, 'excise-tax', exciseTaxValue);
-
-    updateTotal('freight-insurance-heading', cifPrice);
-    updateTotal('duties-heading', priceAfterDuties);
-    updateTotal('cif-logistics-heading', cifLogisticsTotal);
-    updateTotal('margins-heading', totalMargins);
-
-    updatePriceDisplay('freight-insurance', cifPrice);
-    updatePriceDisplay('custom-duties', priceAfterDuties);
-    updatePriceDisplay('excise-tax', priceAfterDuties);
-    updatePriceDisplay('domestic-logistics', cifLogisticsTotal);
-    updatePriceDisplay('storage', cifLogisticsTotal);
-    updatePriceDisplay('import-handling', cifLogisticsTotal);
-    updatePriceDisplay('importer-margin', importerPrice);
-    updatePriceDisplay('wholesaler-margin', wholesalerPrice);
-    updatePriceDisplay('retailer-margin', retailerPrice);
-    updatePriceDisplay('marketing-budget', baseCost);
-
-
-    function updateTotal(rowClass, value) {
-        const totalElement = table.querySelector(`tr.${rowClass} td:nth-child(${columnIndex + 1}) .total-price-per-unit`);
-        if (totalElement) {
-            totalElement.textContent = formatCurrency(value, currency);
-        }
-    }
-
-    function updatePriceDisplay(className, value) {
-        const priceElement = table.querySelector(`tr.${className}-row td:nth-child(${columnIndex + 1}) .price-after-calculation`);
-        if (priceElement) {
-            priceElement.textContent = `${formatCurrency(value, currency)}`;
-        }
-    }
-
-    // Display results
-    const pricePerUnitSpan = table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`);
-    if (pricePerUnitSpan) {
-        pricePerUnitSpan.textContent = pricePerUnit;
-    }
-
-    const pricePerShipmentSpan = table.querySelector(`tr.price-per-shipment-row td:nth-child(${columnIndex + 1}) span`);
-    if (pricePerShipmentSpan) {
-        pricePerShipmentSpan.textContent = pricePerShipment;
-    }
-}
-
 
 // Initialize the calculator when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     attachListeners();
-    calculateAll();
+    updateCalculator(document.querySelector('table'), 1);
+
+    // Add event listener for the "Compare" button
+    document.getElementById('compare').addEventListener('click', duplicateCalculator);
 });
 
 
