@@ -133,6 +133,7 @@
 						</tr>
 						<tr>
 							<td><h2>Margins</h2></td>
+                            <td></td>
 						</tr>
 						<tr class="importer-margin-row">
 							<td><h3>Importer Margin (%)</h3></td>
@@ -170,6 +171,7 @@
                         </tr>
 						<tr class="additional-costs-heading">
 							<td><h2>Additional Costs</h2></td>
+                            <td></td>
 						</tr>
 						<tr class="marketing-budget-row">
 							<td><h3>Marketing Budget</h3></td>
@@ -180,6 +182,7 @@
 						</tr>
 						<tr class="results-heading">
 							<td><h2>Results</h2></td>
+                            <td></td>
 						</tr>
 						<tr class="price-per-unit-row">
 							<td><h3>Price per Unit</h3></td>
@@ -187,7 +190,7 @@
 						</tr>
 						<tr class="delete-row">
 							<td></td>
-							<td></td>
+							<td><button class="delete-calculator">Delete</button></td>
 						</tr>
 					</table>
 				</div>
@@ -426,53 +429,72 @@ select {
 		<div class="code-embed w-embed w-script"><script>
 
 // DOM Element Capture
-const DOMElements = {
-    captureElements(table, columnIndex) {
+function captureElements(table, columnIndex) {
+        const nchild = columnIndex + 2
+
         return {
-            unitsPerShipment: table.querySelector(`tr.units-per-shipment-row td:nth-child(${columnIndex + 1}) input`),
-            currency: table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) select`),
-            productionCosts: table.querySelector(`tr.production-costs-row td:nth-child(${columnIndex + 1}) input`),
-            manufacturerMargin: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) input`),
-            manufacturerMarginValue: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-margin-value`),
-            manufacturerMarginPrice: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-margin-price`),
-            freightInsurance: table.querySelector(`tr.freight-insurance-row td:nth-child(${columnIndex + 1}) input`),
-            freightInsurancePrice: table.querySelector(`tr.freight-insurance-row td:nth-child(${columnIndex + 1}) .freight-insurance-price`),
-            customDuties: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) input`),
-            customDutiesValue: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) .custom-duties-value`),
-            customDutiesPrice: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) .custom-duties-price`),
-            exciseTax: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) input`),
-            exciseTaxValue: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) .excise-tax-value`),
-            exciseTaxPrice: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) .excise-tax-price`),
-            domesticLogistics: table.querySelector(`tr.domestic-logistics-row td:nth-child(${columnIndex + 1}) input`),
-            domesticLogisticsPrice: table.querySelector(`tr.domestic-logistics-row td:nth-child(${columnIndex + 1}) .domestic-logistics-price`),
-            storage: table.querySelector(`tr.storage-row td:nth-child(${columnIndex + 1}) input`),
-            storagePrice: table.querySelector(`tr.storage-row td:nth-child(${columnIndex + 1}) .storage-price`),
-            importHandling: table.querySelector(`tr.import-handling-row td:nth-child(${columnIndex + 1}) input`),
-            importHandlingPrice: table.querySelector(`tr.import-handling-row td:nth-child(${columnIndex + 1}) .import-handling-price`),
-            importerMargin: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) input`),
-            importerMarginValue: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) .importer-margin-value`),
-            importerMarginPrice: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) .importer-margin-price`),
-            wholesalerMargin: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) input`),
-            wholesalerMarginValue: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) .wholesaler-margin-value`),
-            wholesalerMarginPrice: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) .wholesaler-margin-price`),
-            retailerMargin: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) input`),
-            retailerMarginValue: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) .retailer-margin-value`),
-            retailerMarginPrice: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) .retailer-margin-price`),
-            marketingBudget: table.querySelector(`tr.marketing-budget-row td:nth-child(${columnIndex + 1}) input`),
-            marketingBudgetPrice: table.querySelector(`tr.marketing-budget-row td:nth-child(${columnIndex + 1}) .marketing-budget-price`),
-            freightInsuranceTotal: table.querySelector(`tr.freight-insurance-heading td:nth-child(${columnIndex + 1}) .freight-insurance-total`),
-            dutiesTotal: table.querySelector(`tr.duties-heading td:nth-child(${columnIndex + 1}) .duties-total`),
-            cifLogisticsTotal: table.querySelector(`tr.cif-logistics-heading td:nth-child(${columnIndex + 1}) .cif-logistics-total`),
-            marginsTotal: table.querySelector(`tr.margins-heading td:nth-child(${columnIndex + 1}) .margins-total`),
-            pricePerUnit: table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`),
-            pricePerShipment: table.querySelector(`tr.price-per-shipment-row td:nth-child(${columnIndex + 1}) span`)
+            unitsPerShipment: table.querySelector(`tr.units-per-shipment-row td:nth-child(${nchild}) input`),
+            currency: table.querySelector(`tr.currency-row td:nth-child(${nchild}) select`),
+            productionCosts: table.querySelector(`tr.production-costs-row td:nth-child(${nchild}) input`),
+            manufacturerMargin: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${nchild}) input`),
+            manufacturerMarginValue: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${nchild}) .manufacturer-margin-value`),
+            manufacturerMarginPrice: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${nchild}) .manufacturer-margin-price`),
+            freightInsurance: table.querySelector(`tr.freight-insurance-row td:nth-child(${nchild}) input`),
+            freightInsurancePrice: table.querySelector(`tr.freight-insurance-row td:nth-child(${nchild}) .freight-insurance-price`),
+            customDuties: table.querySelector(`tr.custom-duties-row td:nth-child(${nchild}) input`),
+            customDutiesValue: table.querySelector(`tr.custom-duties-row td:nth-child(${nchild}) .custom-duties-value`),
+            customDutiesPrice: table.querySelector(`tr.custom-duties-row td:nth-child(${nchild}) .custom-duties-price`),
+            exciseTax: table.querySelector(`tr.excise-tax-row td:nth-child(${nchild}) input`),
+            exciseTaxValue: table.querySelector(`tr.excise-tax-row td:nth-child(${nchild}) .excise-tax-value`),
+            exciseTaxPrice: table.querySelector(`tr.excise-tax-row td:nth-child(${nchild}) .excise-tax-price`),
+            domesticLogistics: table.querySelector(`tr.domestic-logistics-row td:nth-child(${nchild}) input`),
+            domesticLogisticsPrice: table.querySelector(`tr.domestic-logistics-row td:nth-child(${nchild}) .domestic-logistics-price`),
+            storage: table.querySelector(`tr.storage-row td:nth-child(${nchild}) input`),
+            storagePrice: table.querySelector(`tr.storage-row td:nth-child(${nchild}) .storage-price`),
+            importHandling: table.querySelector(`tr.import-handling-row td:nth-child(${nchild}) input`),
+            importHandlingPrice: table.querySelector(`tr.import-handling-row td:nth-child(${nchild}) .import-handling-price`),
+            importerMargin: table.querySelector(`tr.importer-margin-row td:nth-child(${nchild}) input`),
+            importerMarginValue: table.querySelector(`tr.importer-margin-row td:nth-child(${nchild}) .importer-margin-value`),
+            importerMarginPrice: table.querySelector(`tr.importer-margin-row td:nth-child(${nchild}) .importer-margin-price`),
+            wholesalerMargin: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${nchild}) input`),
+            wholesalerMarginValue: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${nchild}) .wholesaler-margin-value`),
+            wholesalerMarginPrice: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${nchild}) .wholesaler-margin-price`),
+            retailerMargin: table.querySelector(`tr.retailer-margin-row td:nth-child(${nchild}) input`),
+            retailerMarginValue: table.querySelector(`tr.retailer-margin-row td:nth-child(${nchild}) .retailer-margin-value`),
+            retailerMarginPrice: table.querySelector(`tr.retailer-margin-row td:nth-child(${nchild}) .retailer-margin-price`),
+            marketingBudget: table.querySelector(`tr.marketing-budget-row td:nth-child(${nchild}) input`),
+            marketingBudgetPrice: table.querySelector(`tr.marketing-budget-row td:nth-child(${nchild}) .marketing-budget-price`),
+            freightInsuranceTotal: table.querySelector(`tr.freight-insurance-heading td:nth-child(${nchild}) .freight-insurance-total`),
+            dutiesTotal: table.querySelector(`tr.duties-heading td:nth-child(${nchild}) .duties-total`),
+            cifLogisticsTotal: table.querySelector(`tr.cif-logistics-heading td:nth-child(${nchild}) .cif-logistics-total`),
+            marginsTotal: table.querySelector(`tr.margins-heading td:nth-child(${nchild}) .margins-total`),
+            pricePerUnit: table.querySelector(`tr.price-per-unit-row td:nth-child(${nchild}) span`),
+            pricePerShipment: table.querySelector(`tr.price-per-shipment-row td:nth-child(${nchild}) span`),
+            deleteButton: table.querySelector(`tr.delete-row td:nth-child(${nchild}) button`),
         };
+    };
+
+function extractInputs(elements) {
+    return {
+        currency: elements.currency.value,
+        unitsPerShipment: parseFloat(elements.unitsPerShipment.value) || 0,
+        productionCosts: parseFloat(elements.productionCosts.value) || 0,
+        manufacturerMargin: parseFloat(elements.manufacturerMargin.value) || 0,
+        freightInsurance: parseFloat(elements.freightInsurance.value) || 0,
+        customDuties: parseFloat(elements.customDuties.value) || 0,
+        exciseTax: parseFloat(elements.exciseTax.value) || 0,
+        domesticLogistics: parseFloat(elements.domesticLogistics.value) || 0,
+        storage: parseFloat(elements.storage.value) || 0,
+        importHandling: parseFloat(elements.importHandling.value) || 0,
+        importerMargin: parseFloat(elements.importerMargin.value) || 0,
+        wholesalerMargin: parseFloat(elements.wholesalerMargin.value) || 0,
+        retailerMargin: parseFloat(elements.retailerMargin.value) || 0,
+        marketingBudget: parseFloat(elements.marketingBudget.value) || 0,
     }
-};
+}
 
 // Calculator Logic
-const Calculator = {
-    calculate(inputs) {
+function calculateOutputs(inputs) {
         const baseCost = inputs.productionCosts + inputs.marketingBudget;
         const exworksPrice = baseCost / (1 - inputs.manufacturerMargin / 100);
         const cifPrice = exworksPrice + (inputs.freightInsurance / inputs.unitsPerShipment);
@@ -507,12 +529,14 @@ const Calculator = {
             pricePerUnit: retailerPrice,
             pricePerShipment: retailerPrice * inputs.unitsPerShipment
         };
-    }
-};
+    };
 
 // Render Object
-const Renderer = {
-    render(elements, data, currency) {
+function renderCalculator(calculator) {
+        const currency = calculator.inputs.currency;
+        const elements = calculator.elements;
+        const data = calculator.outputs;
+
         const formatCurrency = (value) => new Intl.NumberFormat(undefined, { style: 'currency', currency: currency }).format(value);
 
         const updateElement = (element, value) => {
@@ -551,39 +575,61 @@ const Renderer = {
         updateElement(elements.importerMarginValue, data.importerMarginValue);
         updateElement(elements.wholesalerMarginValue, data.wholesalerMarginValue);
         updateElement(elements.retailerMarginValue, data.retailerMarginValue);
-    }
+    
 };
 
-// Main function to tie it all together
-function updateCalculator(table, columnIndex) {
-    const elements = DOMElements.captureElements(table, columnIndex);
-    const inputs = {
-        unitsPerShipment: parseFloat(elements.unitsPerShipment.value) || 0,
-        productionCosts: parseFloat(elements.productionCosts.value) || 0,
-        manufacturerMargin: parseFloat(elements.manufacturerMargin.value) || 0,
-        freightInsurance: parseFloat(elements.freightInsurance.value) || 0,
-        customDuties: parseFloat(elements.customDuties.value) || 0,
-        exciseTax: parseFloat(elements.exciseTax.value) || 0,
-        domesticLogistics: parseFloat(elements.domesticLogistics.value) || 0,
-        storage: parseFloat(elements.storage.value) || 0,
-        importHandling: parseFloat(elements.importHandling.value) || 0,
-        importerMargin: parseFloat(elements.importerMargin.value) || 0,
-        wholesalerMargin: parseFloat(elements.wholesalerMargin.value) || 0,
-        retailerMargin: parseFloat(elements.retailerMargin.value) || 0,
-        marketingBudget: parseFloat(elements.marketingBudget.value) || 0
-    };
+let calculators = new Set()
 
-    const data = Calculator.calculate(inputs);
-    Renderer.render(elements, data, elements.currency.value);
+function createCalculator() {
+    const index = calculators.size;
+    const column = index == 0 ? extractTableColumn(containerTable, index + 1)
+                        : cloneTableColumn(containerTable, index);
+    const elements = captureElements(containerTable, index); // find way to search through column instead
+    const inputs = extractInputs(elements);
+    const outputs = calculateOutputs(inputs);
+
+    const calculator = {
+        column, elements, inputs, outputs
+    };
+    calculators.add(calculator)
+    renderCalculator(calculator);
+
+    Object.keys(elements)
+        .filter((key) => { return elements[key] instanceof HTMLInputElement || elements[key] instanceof HTMLSelectElement })
+        .map((key) => {
+            return elements[key].addEventListener('input', () => {
+                updateCalculator(calculator);
+            });
+        });
+
+    elements.deleteButton.addEventListener('click', function() {
+        deleteCalculator(calculator);
+    });
+    
+    return calculator;
 }
 
-// Function to add a new calculator
-function addCalculator(defaults = {}) {
-    const table = document.querySelector('table');
-    const inputRows = table.querySelectorAll('tr:not(.heading):not(.delete-row)');
-    const columnIndex = table.querySelector('tr').childElementCount;
+// Main function to tie it all together
+function updateCalculator(calculator) {
+    calculator.inputs = extractInputs(calculator.elements);
+    calculator.outputs = calculateOutputs(calculator.inputs);
+    renderCalculator(calculator);
+}
 
-    const currencies = [
+// Function to delete a calculator
+function deleteCalculator(calculator) {
+    if(calculators.size < 2) { 
+        return alert("Cannot delete this calculator.");
+    }
+
+    calculator.column.forEach(element => {
+        element.remove()
+    });
+    calculators.delete(calculator);
+}
+
+
+const currencies = [
         { code: 'JPY', name: 'Japanese Yen' },
         { code: 'USD', name: 'US Dollar' },
         { code: 'EUR', name: 'Euro' },
@@ -615,136 +661,32 @@ function addCalculator(defaults = {}) {
         { code: 'VND', name: 'Vietnamese Dong' }
     ];
 
-    inputRows.forEach(row => {
-        const cell = document.createElement('td');
-        if (row.classList.contains('currency-row')) {
-            const currencySelect = document.createElement('select');
-            currencySelect.className = 'currency-select';
-            currencies.forEach(curr => {
-                const option = document.createElement('option');
-                option.value = curr.code;
-                option.textContent = `${curr.code} - ${curr.name}`;
-                if (curr.code === (defaults.currency || 'JPY')) option.selected = true;
-                currencySelect.appendChild(option);
-            });
-            cell.appendChild(currencySelect);
-        } else if (row.classList.contains('freight-insurance-heading') ||
-                   row.classList.contains('duties-heading') ||
-                   row.classList.contains('cif-logistics-heading') ||
-                   row.classList.contains('margins-heading')) {
-            const totalElement = document.createElement('p');
-            totalElement.className = 'total-price-per-unit ' + row.classList[0].replace('-heading', '-total');
-            cell.appendChild(totalElement);
-        } else {
-            const input = row.querySelector('input, select');
-            if (input) {
-                if (row.classList.contains('manufacturer-margin-row') || 
-                    row.classList.contains('custom-duties-row') ||
-                    row.classList.contains('excise-tax-row') ||
-                    row.classList.contains('importer-margin-row') || 
-                    row.classList.contains('wholesaler-margin-row') || 
-                    row.classList.contains('retailer-margin-row')) {
-                    const container = document.createElement('div');
-                    container.className = 'margin-input-container';
-                    
-                    const newInput = input.cloneNode(true);
-                    newInput.value = defaults[input.className] || input.value;
-                    container.appendChild(newInput);
-                    
-                    const marginValueDiv = document.createElement('div');
-                    marginValueDiv.className = 'margin-value ' + input.className + '-value';
-                    container.appendChild(marginValueDiv);
-                    
-                    cell.appendChild(container);
-                } else {
-                    const newInput = input.cloneNode(true);
-                    newInput.value = defaults[input.className] || input.value;
-                    cell.appendChild(newInput);
-                }
-                const priceAfterDiv = document.createElement('div');
-                priceAfterDiv.className = 'price-after-calculation ' + input.className + '-price';
-                cell.appendChild(priceAfterDiv);
-            } else if (row.classList.contains('price-per-unit-row') || row.classList.contains('price-per-shipment-row')) {
-                cell.innerHTML = '<p><span></span></p>';
-            }
-        }
-        row.appendChild(cell);
-    });
-
-    const deleteRow = table.querySelector('.delete-row');
-    const deleteButtonCell = document.createElement('td');
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('delete-calculator');
-    deleteButton.addEventListener('click', function() {
-        const currentIndex = Array.from(deleteRow.children).indexOf(deleteButtonCell);
-        deleteCalculator(currentIndex);
-    });
-    deleteButtonCell.appendChild(deleteButton);
-    deleteRow.appendChild(deleteButtonCell);
-
-    attachListeners();
-    updateCalculator(table, columnIndex);
+function extractTableColumn(table, index) {
+    const rows = table.querySelectorAll('tr');
+    return Array.from(rows).map((row) => { 
+        return row.children[index]
+    })
 }
 
-// Function to delete a calculator
-function deleteCalculator(columnIndex) {
-    const table = document.querySelector('table');
-    const calculatorCount = table.querySelector('tr').childElementCount - 1; // Subtract 1 for the label column
-
-    if (calculatorCount > 1 && columnIndex > 1) { // Ensure we're not deleting the initial calculator
-        table.querySelectorAll('tr').forEach(row => {
-            if (row.children[columnIndex]) {
-                row.children[columnIndex].remove();
-            }
-        });
-        updateCalculator(table, 1); // Update the first calculator after deletion
-    } else {
-        alert("Cannot delete this calculator.");
-    }
+function cloneTableColumn(table, index) {
+    const rows = table.querySelectorAll('tr');
+    return Array.from(rows).map((row) => { 
+        const element = row.children[index].cloneNode(true)
+        row.appendChild(element);
+        return element;
+    })
 }
 
-// Function to duplicate a calculator
-function duplicateCalculator() {
-    const table = document.querySelector('table');
-    const lastColumn = table.querySelectorAll('tr:not(.heading) td:last-child');
-    const defaults = {};
-
-    lastColumn.forEach(cell => {
-        const input = cell.querySelector('input, select');
-        if (input) {
-            if (input.classList.contains('currency-select')) {
-                defaults.currency = input.value;
-            } else {
-                defaults[input.className] = input.value;
-            }
-        }
-    });
-
-    addCalculator(defaults);
-}
-
-// Attach event listeners
-function attachListeners() {
-    const table = document.querySelector('table');
-    const inputs = table.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const columnIndex = Array.from(input.closest('td').parentNode.children).indexOf(input.closest('td'));
-            updateCalculator(table, columnIndex);
-        });
-    });
-}
+let containerTable;
 
 // Initialize the calculator when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    attachListeners();
-    updateCalculator(document.querySelector('table'), 1);
+    containerTable = document.querySelector('table')
+    createCalculator()
 
     // Add event listener for the "Compare" button
-    document.getElementById('compare').addEventListener('click', duplicateCalculator);
-});
-
+    document.getElementById('compare').addEventListener('click', createCalculator);
+    });
 
 			</script>
 		</div>
