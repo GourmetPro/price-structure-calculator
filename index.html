@@ -1,316 +1,514 @@
-
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8"/>
-		<title>calculator</title>
-		<meta content="calculator" property="og:title"/><meta content="calculator" property="twitter:title"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
-	</head>
-	<body>
-		<div class="w-embed">
-			<div class="comparison-container">
-				<div class="header-buttons">
-					<button id="add-comparator">Compare <span>+</span></button>
-					<button id="duplicate-comparator">Duplicate and Compare <span>+</span></button>
-				</div>
+  <head>
+    <meta charset="utf-8" />
+    <title>calculator</title>
+    <meta content="calculator" property="og:title" />
+    <meta content="calculator" property="twitter:title" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+  </head>
+  <body>
+    <div class="w-embed">
+      <div class="comparison-container">
+        <div class="header-buttons">
+          <button id="compare">Compare <span>+</span></button>
+        </div>
 
-				<div class="comparison-wrapper">
-					<!-- Static headings -->
-					<div class="static-headings">
-						<h2>Units Per Shipment</h2>
-						<h2>CIF+Custom Duty+Logistics</h2>
-						<h3>Domestic Logistics</h3>
-						<h3>Storage</h3>
-						<h3>Import Handling</h3>
-						<h3>Excise Tax</h3>
-						<h3>Custom Duties</h3>
-						<h2>Freight/Insurance</h2>
-						<h2>Margins</h2>
-						<h3>Manufacturer Margin (%)</h3>
-						<h3>Importer Margin (%)</h3>
-						<h3>Wholesaler Margin (%)</h3>
-						<h3>Retailer Margin (%)</h3>
-						<h2>Additional Costs</h2>
-						<h3>Marketing Budget</h3>
-						<h3>Production Costs</h3>
-						<h2>Results</h2>
-					</div>
+        <div class="comparison-wrapper">
+          <!-- Static headings and initial table structure -->
+          <table>
+            <tr class="units-per-shipment-row">
+              <td><h2>Units Per Shipment</h2></td>
+              <td>
+                <input
+                  type="number"
+                  class="units-per-shipment"
+                  value="1000"
+                  min="0"
+                />
+              </td>
+            </tr>
+            <tr class="currency-row">
+              <td><h3>Currency</h3></td>
+              <td>
+                <select class="currency-select">
+                  <option value="JPY">JPY - Japanese Yen</option>
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="INR">INR - Indian Rupee</option>
+                  <option value="CNY">CNY - Chinese Yuan</option>
+                  <option value="CAD">CAD - Canadian Dollar</option>
+                  <option value="AUD">AUD - Australian Dollar</option>
+                  <option value="CHF">CHF - Swiss Franc</option>
+                  <option value="HKD">HKD - Hong Kong Dollar</option>
+                  <option value="SGD">SGD - Singapore Dollar</option>
+                  <option value="MXN">MXN - Mexican Peso</option>
+                  <option value="BRL">BRL - Brazilian Real</option>
+                  <option value="RUB">RUB - Russian Ruble</option>
+                  <option value="ZAR">ZAR - South African Rand</option>
+                  <option value="TRY">TRY - Turkish Lira</option>
+                  <option value="SEK">SEK - Swedish Krona</option>
+                  <option value="NOK">NOK - Norwegian Krone</option>
+                  <option value="DKK">DKK - Danish Krone</option>
+                  <option value="NZD">NZD - New Zealand Dollar</option>
+                  <option value="PLN">PLN - Polish Złoty</option>
+                  <option value="THB">THB - Thai Baht</option>
+                  <option value="KRW">KRW - South Korean Won</option>
+                  <option value="IDR">IDR - Indonesian Rupiah</option>
+                  <option value="AED">AED - United Arab Emirates Dirham</option>
+                  <option value="SAR">SAR - Saudi Riyal</option>
+                  <option value="MYR">MYR - Malaysian Ringgit</option>
+                  <option value="PHP">PHP - Philippine Peso</option>
+                  <option value="VND">VND - Vietnamese Dong</option>
+                </select>
+              </td>
+            </tr>
+            <tr class="production-costs-row">
+              <td><h3>Production Costs</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="production-costs"
+                  value="500"
+                  min="0"
+                />
+              </td>
+            </tr>
+            <tr class="manufacturer-margin-row">
+              <td><h3>Manufacturer Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="manufacturer-margin"
+                    value="38"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value manufacturer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation manufacturer-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="freight-insurance-heading">
+              <td><h2>Freight/Insurance</h2></td>
+              <td>
+                <p class="total-price-per-unit freight-insurance-total"></p>
+              </td>
+            </tr>
+            <tr class="freight-insurance-row">
+              <td><h3>Freight/Insurance</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="freight-insurance"
+                  value="800"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation freight-insurance-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="duties-heading">
+              <td><h2>CIF</h2></td>
+              <td><p class="total-price-per-unit duties-total"></p></td>
+            </tr>
+            <tr class="custom-duties-row">
+              <td><h3>Custom Duties (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="custom-duties"
+                    value="9"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value custom-duties-value"></div>
+                </div>
+                <div class="price-after-calculation custom-duties-price"></div>
+              </td>
+            </tr>
+            <tr class="excise-tax-row">
+              <td><h3>Excise Tax</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input type="number" class="excise-tax" value="0" min="0" />
+                  <div class="margin-value excise-tax-value"></div>
+                </div>
+                <div class="price-after-calculation excise-tax-price"></div>
+              </td>
+            </tr>
+            <tr class="cif-logistics-heading">
+              <td><h2>DDP</h2></td>
+              <td><p class="total-price-per-unit cif-logistics-total"></p></td>
+            </tr>
+            <tr class="domestic-logistics-row">
+              <td><h3>Domestic Logistics</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="domestic-logistics"
+                  value="30"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation domestic-logistics-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="storage-row">
+              <td><h3>Storage</h3></td>
+              <td>
+                <input type="number" class="storage" value="40" min="0" />
+                <div class="price-after-calculation storage-price"></div>
+              </td>
+            </tr>
+            <tr class="import-handling-row">
+              <td><h3>Import Handling</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="import-handling"
+                  value="40"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation import-handling-price"
+                ></div>
+              </td>
+            </tr>
+            <tr>
+              <td><h2>Margins</h2></td>
+              <td></td>
+            </tr>
+            <tr class="importer-margin-row">
+              <td><h3>Importer Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="importer-margin"
+                    value="30"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value importer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation importer-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="wholesaler-margin-row">
+              <td><h3>Wholesaler Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="wholesaler-margin"
+                    value="15"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value wholesaler-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation wholesaler-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="retailer-margin-row">
+              <td><h3>Retailer Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="retailer-margin"
+                    value="25"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value retailer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation retailer-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="margins-heading product-total">
+              <td></td>
+              <td><p class="total-price-per-unit margins-total"></p></td>
+            </tr>
+            <tr class="additional-costs-heading">
+              <td><h2>Additional Costs</h2></td>
+              <td></td>
+            </tr>
+            <tr class="marketing-budget-row">
+              <td><h3>Marketing Budget</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="marketing-budget"
+                  value="0"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation marketing-budget-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="results-heading">
+              <td><h2>Results</h2></td>
+              <td></td>
+            </tr>
+            <tr class="price-per-unit-row">
+              <td><h3>Price per Unit</h3></td>
+              <td>
+                <p><span></span></p>
+              </td>
+            </tr>
+            <tr class="delete-row">
+              <td></td>
+              <td><button class="delete-calculator">Delete</button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="w-embed">
+      <style>
+        :root {
+          --background: #ffffff;
+          --foreground: #020817;
+          --muted: #f1f5f9;
+          --muted-foreground: #64748b;
+          --border: #e2e8f0;
+          --input: #e2e8f0;
+          --primary: #0f172a;
+          --primary-foreground: #f8fafc;
+          --secondary: #f1f5f9;
+          --secondary-foreground: #0f172a;
+          --radius: 0.5rem;
+        }
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 20px;
+        }
 
-					<!-- Calculator containers will be added here dynamically -->
-					<div id="calculator-container"></div>
-				</div>
-			</div>
-		</div>
-		<div class="w-embed">
-			<style>
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f4f4f4;
-	margin: 0;
-	padding: 20px;
-}
+        #calculator-container {
+          display: flex;
+        }
 
-#calculator-container {
-	display:flex;
-}
+        h2 {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--foreground);
+          margin-bottom: 8px;
+        }
 
-.comparison-container {
-	max-width: 1200px;
-	margin: auto;
-}
+        h3 {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--muted-foreground);
+          margin-bottom: 4px;
+        }
 
-.header-buttons {
-	display: flex;
-	justify-content: flex-end;
-	margin-bottom: 20px;
-}
+        td {
+          padding: 12px;
+          padding-right: 32px;
+          border-bottom: 1px solid var(--border);
+        }
 
-.header-buttons button {
-	padding: 10px 15px;
-	background-color: #007BFF;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 14px;
-	margin-left: 10px;
-	display: flex;
-	align-items: center;
-}
+        .comparison-container {
+          max-width: 1200px;
+          margin: auto;
+        }
 
-.header-buttons button span {
-	margin-left: 5px;
-	font-size: 18px;
-}
+        .header-buttons {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 20px;
+        }
 
-.comparison-wrapper {
-	display: flex;
-	overflow-x: auto;
-}
+        .header-buttons button {
+          padding: 10px 15px;
+          background-color: #ffd212;
+          color: black;
+          border: none;
+          border-radius: var(--radius);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          margin-left: 10px;
+          display: flex;
+          align-items: center;
+          transition: background-color 0.2s;
+        }
 
-.static-headings {
-	flex: 0 0 200px;
-	padding-right: 10px;
-	border-right: 2px solid #ddd;
-}
+        .header-buttons button:hover {
+          background-color: #f4c700;
+          color: var(--primary);
+        }
 
-.static-headings h2 {
-	border-top: 2px solid black;
-	padding-top: 10px;
-	font-size: 18px;
-	margin-bottom: 10px;
-	color: #333;
-}
+        .comparison-wrapper {
+          display: flex;
+          overflow-x: auto;
+        }
 
-.static-headings h3 {
-	font-size: 14px;
-	margin-bottom: 10px;
-	color: #555;
-}
+        .static-headings {
+          flex: 0 0 200px;
+          padding-right: 10px;
+          border-right: 2px solid #ddd;
+        }
 
-.calculator-block {
-	border-left: 2px solid #ddd;
-	padding-left: 10px;
-	min-width: 300px;
-}
+        .static-headings h2 {
+          border-top: 2px solid black;
+          padding-top: 10px;
+          font-size: 18px;
+          margin-bottom: 10px;
+          color: #333;
+        }
 
-.calculator-block h2 {
-	font-size: 18px;
-	margin-bottom: 20px;
-	color: #333;
-}
+        .static-headings h3 {
+          font-size: 14px;
+          margin-bottom: 10px;
+          color: #555;
+        }
 
-.form-group {
-	margin-bottom: 15px;
-}
+        .product-total {
+          text-align: right;
+        }
 
-input, select {
-	width: 100%;
-	padding: 8px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	font-size: 14px;
-}
+        .margin-input-container {
+          position: relative;
+          width: 100%;
+        }
 
-#result-container {
-	margin-top: 20px;
-}
+        .margin-input-container input {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 8px 12px;
+          padding-right: 50px;
+          border: 1px solid var(--input);
+          border-radius: var(--radius);
+          font-size: 14px;
+          background-color: var(--background);
+          color: var(--foreground);
+          transition: border-color 0.2s;
+        }
 
-#result-container h2 {
-	font-size: 18px;
-	color: #333;
-	text-align: left;
-	margin-bottom: 10px;
-}
+        .margin-input-container input:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+        }
 
-#result-container p {
-	font-size: 16px;
-	color: #333;
-	margin: 5px 0;
-}
+        .margin-value {
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 12px;
+          color: var(--muted-foreground);
+          background-color: var(--secondary);
+          padding: 2px 6px;
+          border-radius: var(--radius);
+        }
 
-			</style>
-		</div>
-		<div class="code-embed w-embed w-script"><script>
-				document.getElementById('add-comparator').addEventListener('click', function() {
-					addCalculator();
-				});
+        .calculator-block {
+          border-left: 2px solid #ddd;
+          padding-left: 10px;
+          min-width: 300px;
+        }
 
-				document.getElementById('duplicate-comparator').addEventListener('click', function() {
-					duplicateCalculator();
-				});
+        .calculator-block h2 {
+          font-size: 18px;
+          margin-bottom: 20px;
+          color: #333;
+        }
 
-				function addCalculator(defaults = {}) {
-					const calculatorContainer = document.getElementById('calculator-container');
+        .form-group {
+          margin-bottom: 15px;
+        }
 
-					const calculatorBlock = document.createElement('div');
-					calculatorBlock.className = 'calculator-block';
+        .total-price-per-unit {
+          font-weight: 600;
+          color: var(--foreground);
+        }
 
-					// Build the calculator block
-					calculatorBlock.innerHTML = `
-	<div class="form-group">
-	    <input type="number" class="units-per-shipment" value="${defaults.unitsPerShipment || 1000}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="domestic-logistics" value="${defaults.domesticLogistics || 30}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="storage" value="${defaults.storage || 40}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="import-handling" value="${defaults.importHandling || 40}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="excise-tax" value="${defaults.exciseTax || 0}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="custom-duties" value="${defaults.customDuties || 9}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="freight-insurance" value="${defaults.freightInsurance || 800}">
-	</div>
-	<div class="form-group">
-	    <select class="freight-type">
-		<option value="per_shipment" ${defaults.freightType === 'per_shipment' ? 'selected' : ''}>Per Shipment</option>
-		<option value="per_unit" ${defaults.freightType === 'per_unit' ? 'selected' : ''}>Per Unit</option>
-	    </select>
-	</div>
-	<div class="form-group">
-	    <input type="number" class="manufacturer-margin" value="${defaults.manufacturerMargin || 38}">
-	</div>
-	<div class="form-group">
-	    <input type="number" class="importer-margin" value="${defaults.importerMargin || 30}">
-	</div>
-				<div class="form-group">
-				<input type="number" class="wholesaler-margin" value="${defaults.wholesalerMargin || 15}">
-				</div>
-				<div class="form-group">
-				<input type="number" class="retailer-margin" value="${defaults.retailerMargin || 25}">
-				</div>
-				<div class="form-group">
-				<input type="number" class="marketing-budget" value="${defaults.marketingBudget || 0}">
-				</div>
-				<div class="form-group">
-				<input type="number" class="production-costs" value="${defaults.productionCosts || 500}">
-				</div>
-				<div id="result-container">
-				<h2>Results</h2>
-				<p class="price-per-unit">Price per Unit: <span></span></p>
-				<p class="price-per-shipment">Price per Shipment: <span></span></p>
-				</div>
-			`;
+        input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          font-size: 14px;
+        }
 
-					calculatorContainer.appendChild(calculatorBlock);
+        select {
+          width: 100%;
+          padding: 8px 12px;
+          border: 1px solid var(--input);
+          border-radius: var(--radius);
+          font-size: 14px;
+          background-color: var(--background);
+          color: var(--foreground);
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 8px center;
+          background-size: 16px;
+        }
 
-					// Attach event listeners for real-time calculations
-					attachListeners(calculatorBlock);
+        #result-container {
+          margin-top: 20px;
+        }
 
-					// Perform initial calculation
-					calculate(calculatorBlock);
-				}
+        #result-container h2 {
+          font-size: 18px;
+          color: #333;
+          text-align: left;
+          margin-bottom: 10px;
+        }
 
-				function duplicateCalculator() {
-					const calculators = document.querySelectorAll('.calculator-block');
-					const lastCalculator = calculators[calculators.length - 1];
-					const lastValues = {
-						unitsPerShipment: lastCalculator.querySelector('.units-per-shipment').value,
-						domesticLogistics: lastCalculator.querySelector('.domestic-logistics').value,
-						storage: lastCalculator.querySelector('.storage').value,
-						importHandling: lastCalculator.querySelector('.import-handling').value,
-						exciseTax: lastCalculator.querySelector('.excise-tax').value,
-						customDuties: lastCalculator.querySelector('.custom-duties').value,
-						freightInsurance: lastCalculator.querySelector('.freight-insurance').value,
-						freightType: lastCalculator.querySelector('.freight-type').value,
-						manufacturerMargin: lastCalculator.querySelector('.manufacturer-margin').value,
-						importerMargin: lastCalculator.querySelector('.importer-margin').value,
-						wholesalerMargin: lastCalculator.querySelector('.wholesaler-margin').value,
-						retailerMargin: lastCalculator.querySelector('.retailer-margin').value,
-						marketingBudget: lastCalculator.querySelector('.marketing-budget').value,
-						productionCosts: lastCalculator.querySelector('.production-costs').value,
-					};
-					addCalculator(lastValues);
-				}
+        #result-container p {
+          font-size: 16px;
+          color: #333;
+          margin: 5px 0;
+        }
 
-				function attachListeners(calculatorBlock) {
-					const inputs = calculatorBlock.querySelectorAll('input, select');
-					inputs.forEach(input => {
-						input.addEventListener('input', () => calculate(calculatorBlock));
-					});
-				}
+        .delete-calculator {
+          background-color: #ef4444;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: var(--radius);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background-color 0.2s;
+        }
 
-				function calculate(calculatorBlock) {
-					const unitsPerShipment = parseFloat(calculatorBlock.querySelector('.units-per-shipment').value);
-					const domesticLogistics = parseFloat(calculatorBlock.querySelector('.domestic-logistics').value);
-					const storage = parseFloat(calculatorBlock.querySelector('.storage').value);
-					const importHandling = parseFloat(calculatorBlock.querySelector('.import-handling').value);
-					const exciseTax = parseFloat(calculatorBlock.querySelector('.excise-tax').value);
-					const customDuties = parseFloat(calculatorBlock.querySelector('.custom-duties').value);
-					const freightInsurance = parseFloat(calculatorBlock.querySelector('.freight-insurance').value);
-					const freightType = calculatorBlock.querySelector('.freight-type').value;
-					const manufacturerMargin = parseFloat(calculatorBlock.querySelector('.manufacturer-margin').value);
-					const retailerMargin = parseFloat(calculatorBlock.querySelector('.retailer-margin').value);
-					const wholesalerMargin = parseFloat(calculatorBlock.querySelector('.wholesaler-margin').value);
-					const importerMargin = parseFloat(calculatorBlock.querySelector('.importer-margin').value);
-					const marketingBudget = parseFloat(calculatorBlock.querySelector('.marketing-budget').value);
-					const productionCosts = parseFloat(calculatorBlock.querySelector('.production-costs').value);
+        .delete-calculator:hover {
+          background-color: #dc2626;
+        }
 
-					// Calculate freight/insurance based on selection
-					let freightCost = freightInsurance;
-					if (freightType === 'per_unit') {
-						freightCost *= unitsPerShipment;
-					}
-
-					// Start calculations from the bottom to the top
-
-					// Calculate Manufacturer Price
-					const baseCost = productionCosts + marketingBudget;
-					const exworksPrice = baseCost / (1 - manufacturerMargin / 100);
-
-					// Calculate CIF Total including all logistics and duties
-					const cifTotal = exworksPrice + freightCost + customDuties + exciseTax + importHandling + storage + domesticLogistics;
-
-					// Calculate Importer Price
-					const importerPrice = cifTotal / (1 - importerMargin / 100);
-
-					// Calculate Wholesaler Price
-					const wholesalerPrice = importerPrice / (1 - wholesalerMargin / 100);
-
-					// Calculate Retailer Price
-					const retailerPrice = wholesalerPrice / (1 - retailerMargin / 100);
-
-					// Calculate per unit and per shipment price
-					const pricePerUnit = retailerPrice.toFixed(2);
-					const pricePerShipment = (retailerPrice * unitsPerShipment).toFixed(2);
-
-					// Display results
-					calculatorBlock.querySelector('.price-per-unit span').textContent = pricePerUnit + ' JPY';
-					calculatorBlock.querySelector('.price-per-shipment span').textContent = pricePerShipment + ' JPY';
-				}
-
-				// Add initial calculator on page load
-				addCalculator();
-
-			</script>
-		</div>
-	</body>
+        .price-after-calculation,
+        .price-after-margin {
+          font-size: 12px;
+          color: var(--muted-foreground);
+          margin-top: 4px;
+        }
+      </style>
+    </div>
+    <div class="code-embed w-embed w-script">
+        <script type="text/javascript" src="./index.js"></script>    
+    </div>
+  </body>
 </html>
