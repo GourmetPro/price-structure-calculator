@@ -1,756 +1,514 @@
-
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8"/>
-		<title>calculator</title>
-		<meta content="calculator" property="og:title"/><meta content="calculator" property="twitter:title"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
-		<script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"></script>
-	</head>
-	<body>
-		<div class="w-embed">
-			<div class="comparison-container">
-				<div class="header-buttons">
-					<button id="compare">Compare <span>+</span></button>
-				</div>
-			
-				<div class="comparison-wrapper">
-					<!-- Static headings and initial table structure -->
-					<table>
-						<tr class="units-per-shipment-row">
-							<td><h2>Units Per Shipment</h2></td>
-							<td><input type="number" class="units-per-shipment" value="1000" min="0"></td>
-						</tr>
-						<tr class="currency-row">
-							<td><h3>Currency</h3></td>
-							<td>
-								<select class="currency-select">
-									<option value="JPY">JPY - Japanese Yen</option>
-									<option value="USD">USD - US Dollar</option>
-									<option value="EUR">EUR - Euro</option>
-									<option value="GBP">GBP - British Pound</option>
-									<option value="INR">INR - Indian Rupee</option>
-									<option value="CNY">CNY - Chinese Yuan</option>
-									<option value="CAD">CAD - Canadian Dollar</option>
-									<option value="AUD">AUD - Australian Dollar</option>
-									<option value="CHF">CHF - Swiss Franc</option>
-									<option value="HKD">HKD - Hong Kong Dollar</option>
-									<option value="SGD">SGD - Singapore Dollar</option>
-									<option value="MXN">MXN - Mexican Peso</option>
-									<option value="BRL">BRL - Brazilian Real</option>
-									<option value="RUB">RUB - Russian Ruble</option>
-									<option value="ZAR">ZAR - South African Rand</option>
-									<option value="TRY">TRY - Turkish Lira</option>
-									<option value="SEK">SEK - Swedish Krona</option>
-									<option value="NOK">NOK - Norwegian Krone</option>
-									<option value="DKK">DKK - Danish Krone</option>
-									<option value="NZD">NZD - New Zealand Dollar</option>
-									<option value="PLN">PLN - Polish Złoty</option>
-									<option value="THB">THB - Thai Baht</option>
-									<option value="KRW">KRW - South Korean Won</option>
-									<option value="IDR">IDR - Indonesian Rupiah</option>
-									<option value="AED">AED - United Arab Emirates Dirham</option>
-									<option value="SAR">SAR - Saudi Riyal</option>
-									<option value="MYR">MYR - Malaysian Ringgit</option>
-									<option value="PHP">PHP - Philippine Peso</option>
-									<option value="VND">VND - Vietnamese Dong</option>
-								</select>
-							</td>
-						</tr>
-						<tr class="production-costs-row">
-							<td><h3>Production Costs</h3></td>
-							<td><input type="number" class="production-costs" value="500" min="0"></td>
-						</tr>
-                        <tr class="manufacturer-margin-row">
-                            <td><h3>Manufacturer Margin (%)</h3></td>
-                            <td>
-                                <div class="margin-input-container">
-                                    <input type="number" class="manufacturer-margin" value="38" min="0" max="100">
-                                    <div class="margin-value manufacturer-margin-value"></div>
-                                </div>
-                                <div class="price-after-calculation manufacturer-margin-price"></div>
-                            </td>
-                        </tr>
-						<tr class="freight-insurance-heading">
-							<td><h2>Freight/Insurance</h2></td>
-							<td><p class="total-price-per-unit freight-insurance-total"></p></td>
-						</tr>
-						<tr class="freight-insurance-row">
-							<td><h3>Freight/Insurance</h3></td>
-                            <td>
-                                <input type="number" class="freight-insurance" value="800" min="0">
-                                <div class="price-after-calculation freight-insurance-price"></div>
-                            </td>
-						</tr>
-						<tr class="duties-heading">
-							<td><h2>Duties</h2></td>
-							<td><p class="total-price-per-unit duties-total"></p></td>
-						</tr>
-						<tr class="custom-duties-row">
-							<td><h3>Custom Duties (%)</h3></td>
-                            <td>
-                                <div class="margin-input-container">
-                                    <input type="number" class="custom-duties" value="9" min="0" max="100">
-                                    <div class="margin-value custom-duties-value"></div>
-                                </div>
-                                <div class="price-after-calculation custom-duties-price"></div>
-                            </td>
-						</tr>
-						<tr class="excise-tax-row">
-							<td><h3>Excise Tax</h3></td>
-							<td>
-                                <div class="margin-input-container">
-                                    <input type="number" class="excise-tax" value="0" min="0">
-                                    <div class="margin-value excise-tax-value"></div>
-                                </div>
-                                <div class="price-after-calculation excise-tax-price"></div>
-                            </td>
-						</tr>
-						<tr class="cif-logistics-heading">
-							<td><h2>CIF+Logistics</h2></td>
-							<td><p class="total-price-per-unit cif-logistics-total"></p></td>
-						</tr>
-						<tr class="domestic-logistics-row">
-							<td><h3>Domestic Logistics</h3></td>
-                            <td>
-                                <input type="number" class="domestic-logistics" value="30" min="0">
-                                <div class="price-after-calculation domestic-logistics-price"></div>
-                            </td>
-						</tr>
-						<tr class="storage-row">
-							<td><h3>Storage</h3></td>
-                            <td>
-                                <input type="number" class="storage" value="40" min="0">
-                                <div class="price-after-calculation storage-price"></div>
-                            </td>
-						</tr>
-						<tr class="import-handling-row">
-							<td><h3>Import Handling</h3></td>
-                            <td>
-                                <input type="number" class="import-handling" value="40" min="0">
-                                <div class="price-after-calculation import-handling-price"></div>
-                            </td>
-						</tr>
-						<tr>
-							<td><h2>Margins</h2></td>
-						</tr>
-						<tr class="importer-margin-row">
-							<td><h3>Importer Margin (%)</h3></td>
-                            <td>
-                                <div class="margin-input-container">
-                                    <input type="number" class="importer-margin" value="30" min="0" max="100">
-                                    <div class="margin-value importer-margin-value"></div>
-                                </div>
-                                <div class="price-after-calculation importer-margin-price"></div>
-                            </td>
-						</tr>
-						<tr class="wholesaler-margin-row">
-							<td><h3>Wholesaler Margin (%)</h3></td>
-                            <td>
-                                <div class="margin-input-container">
-                                    <input type="number" class="wholesaler-margin" value="15" min="0" max="100">
-                                    <div class="margin-value wholesaler-margin-value"></div>
-                                </div>
-                                <div class="price-after-calculation wholesaler-margin-price"></div>
-                            </td>
-						</tr>
-						<tr class="retailer-margin-row">
-							<td><h3>Retailer Margin (%)</h3></td>
-                            <td>
-                                <div class="margin-input-container">
-                                    <input type="number" class="retailer-margin" value="25" min="0" max="100">
-                                    <div class="margin-value retailer-margin-value"></div>
-                                </div>
-                                <div class="price-after-calculation retailer-margin-price"></div>
-                            </td>
-						</tr>
-                        <tr class="margins-heading product-total">
-                            <td></td>
-                            <td><p class="total-price-per-unit margins-total"></p></td>
-                        </tr>
-						<tr class="additional-costs-heading">
-							<td><h2>Additional Costs</h2></td>
-						</tr>
-						<tr class="marketing-budget-row">
-							<td><h3>Marketing Budget</h3></td>
-                            <td>
-                                <input type="number" class="marketing-budget" value="0" min="0">
-                                <div class="price-after-calculation marketing-budget-price"></div>
-                            </td>
-						</tr>
-						<tr class="results-heading">
-							<td><h2>Results</h2></td>
-						</tr>
-						<tr class="price-per-unit-row">
-							<td><h3>Price per Unit</h3></td>
-							<td><p><span></span></p></td>
-						</tr>
-						<tr class="price-per-shipment-row">
-							<td><h3>Price per Shipment</h3></td>
-							<td><p><span></span></p></td>
-						</tr>
-						<tr class="delete-row">
-							<td></td>
-							<td></td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</div>
-		<div class="w-embed">
-			<style>
+  <head>
+    <meta charset="utf-8" />
+    <title>calculator</title>
+    <meta content="calculator" property="og:title" />
+    <meta content="calculator" property="twitter:title" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+  </head>
+  <body>
+    <div class="w-embed">
+      <div class="comparison-container">
+        <div class="header-buttons">
+          <button id="compare">Compare <span>+</span></button>
+        </div>
 
-:root {
-    --background: #ffffff;
-    --foreground: #020817;
-    --muted: #f1f5f9;
-    --muted-foreground: #64748b;
-    --border: #e2e8f0;
-    --input: #e2e8f0;
-    --primary: #0f172a;
-    --primary-foreground: #f8fafc;
-    --secondary: #f1f5f9;
-    --secondary-foreground: #0f172a;
-    --radius: 0.5rem;
-}
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f4f4f4;
-	margin: 0;
-	padding: 20px;
-}
-
-#calculator-container {
-	display:flex;
-}
-
-h2 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--foreground);
-    margin-bottom: 8px;
-}
-
-h3 {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--muted-foreground);
-    margin-bottom: 4px;
-}
-
-td {
-    padding: 12px;
-	padding-right: 32px;
-    border-bottom: 1px solid var(--border);
-}
-
-.comparison-container {
-	max-width: 1200px;
-	margin: auto;
-}
-
-.header-buttons {
-	display: flex;
-	justify-content: flex-end;
-	margin-bottom: 20px;
-}
-
-.header-buttons button {
-    padding: 10px 15px;
-    background-color: #ffd212;
-    color: black;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: 10px;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.2s;
-}
-
-.header-buttons button:hover {
-    background-color: #f4c700;
-    color: var(--primary);
-}
-
-
-.comparison-wrapper {
-	display: flex;
-	overflow-x: auto;
-}
-
-.static-headings {
-	flex: 0 0 200px;
-	padding-right: 10px;
-	border-right: 2px solid #ddd;
-}
-
-.static-headings h2 {
-	border-top: 2px solid black;
-	padding-top: 10px;
-	font-size: 18px;
-	margin-bottom: 10px;
-	color: #333;
-}
-
-.static-headings h3 {
-	font-size: 14px;
-	margin-bottom: 10px;
-	color: #555;
-}
-
-.product-total {
-
-    text-align: right;
-}
-
-.margin-input-container {
-    position: relative;
-    width: 100%;
-}
-
-.margin-input-container input {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 8px 12px;
-    padding-right: 50px;
-    border: 1px solid var(--input);
-    border-radius: var(--radius);
-    font-size: 14px;
-    background-color: var(--background);
-    color: var(--foreground);
-    transition: border-color 0.2s;
-}
-
-.margin-input-container input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
-}
-
-.margin-value {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    color: var(--muted-foreground);
-    background-color: var(--secondary);
-    padding: 2px 6px;
-    border-radius: var(--radius);
-}
-
-.calculator-block {
-	border-left: 2px solid #ddd;
-	padding-left: 10px;
-	min-width: 300px;
-}
-
-.calculator-block h2 {
-	font-size: 18px;
-	margin-bottom: 20px;
-	color: #333;
-}
-
-.form-group {
-	margin-bottom: 15px;
-}
-
-.total-price-per-unit {
-    font-weight: 600;
-    color: var(--foreground);
-}
-
-input{
-	width: 100%;
-	padding: 8px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	font-size: 14px;
-}
-
-select {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--input);
-    border-radius: var(--radius);
-    font-size: 14px;
-    background-color: var(--background);
-    color: var(--foreground);
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
-}
-
-#result-container {
-	margin-top: 20px;
-}
-
-#result-container h2 {
-	font-size: 18px;
-	color: #333;
-	text-align: left;
-	margin-bottom: 10px;
-}
-
-#result-container p {
-	font-size: 16px;
-	color: #333;
-	margin: 5px 0;
-}
-
-.delete-calculator {
-    background-color: #ef4444;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.2s;
-}
-
-.delete-calculator:hover {
-    background-color: #dc2626;
-}
-
-.price-after-calculation, .price-after-margin {
-    font-size: 12px;
-    color: var(--muted-foreground);
-    margin-top: 4px;
-}
-
-			</style>
-		</div>
-		<div class="code-embed w-embed w-script"><script>
-
-// DOM Element Capture
-const DOMElements = {
-    captureElements(table, columnIndex) {
-        return {
-            unitsPerShipment: table.querySelector(`tr.units-per-shipment-row td:nth-child(${columnIndex + 1}) input`),
-            currency: table.querySelector(`tr.currency-row td:nth-child(${columnIndex + 1}) select`),
-            productionCosts: table.querySelector(`tr.production-costs-row td:nth-child(${columnIndex + 1}) input`),
-            manufacturerMargin: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) input`),
-            manufacturerMarginValue: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-margin-value`),
-            manufacturerMarginPrice: table.querySelector(`tr.manufacturer-margin-row td:nth-child(${columnIndex + 1}) .manufacturer-margin-price`),
-            freightInsurance: table.querySelector(`tr.freight-insurance-row td:nth-child(${columnIndex + 1}) input`),
-            freightInsurancePrice: table.querySelector(`tr.freight-insurance-row td:nth-child(${columnIndex + 1}) .freight-insurance-price`),
-            customDuties: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) input`),
-            customDutiesValue: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) .custom-duties-value`),
-            customDutiesPrice: table.querySelector(`tr.custom-duties-row td:nth-child(${columnIndex + 1}) .custom-duties-price`),
-            exciseTax: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) input`),
-            exciseTaxValue: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) .excise-tax-value`),
-            exciseTaxPrice: table.querySelector(`tr.excise-tax-row td:nth-child(${columnIndex + 1}) .excise-tax-price`),
-            domesticLogistics: table.querySelector(`tr.domestic-logistics-row td:nth-child(${columnIndex + 1}) input`),
-            domesticLogisticsPrice: table.querySelector(`tr.domestic-logistics-row td:nth-child(${columnIndex + 1}) .domestic-logistics-price`),
-            storage: table.querySelector(`tr.storage-row td:nth-child(${columnIndex + 1}) input`),
-            storagePrice: table.querySelector(`tr.storage-row td:nth-child(${columnIndex + 1}) .storage-price`),
-            importHandling: table.querySelector(`tr.import-handling-row td:nth-child(${columnIndex + 1}) input`),
-            importHandlingPrice: table.querySelector(`tr.import-handling-row td:nth-child(${columnIndex + 1}) .import-handling-price`),
-            importerMargin: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) input`),
-            importerMarginValue: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) .importer-margin-value`),
-            importerMarginPrice: table.querySelector(`tr.importer-margin-row td:nth-child(${columnIndex + 1}) .importer-margin-price`),
-            wholesalerMargin: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) input`),
-            wholesalerMarginValue: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) .wholesaler-margin-value`),
-            wholesalerMarginPrice: table.querySelector(`tr.wholesaler-margin-row td:nth-child(${columnIndex + 1}) .wholesaler-margin-price`),
-            retailerMargin: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) input`),
-            retailerMarginValue: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) .retailer-margin-value`),
-            retailerMarginPrice: table.querySelector(`tr.retailer-margin-row td:nth-child(${columnIndex + 1}) .retailer-margin-price`),
-            marketingBudget: table.querySelector(`tr.marketing-budget-row td:nth-child(${columnIndex + 1}) input`),
-            marketingBudgetPrice: table.querySelector(`tr.marketing-budget-row td:nth-child(${columnIndex + 1}) .marketing-budget-price`),
-            freightInsuranceTotal: table.querySelector(`tr.freight-insurance-heading td:nth-child(${columnIndex + 1}) .freight-insurance-total`),
-            dutiesTotal: table.querySelector(`tr.duties-heading td:nth-child(${columnIndex + 1}) .duties-total`),
-            cifLogisticsTotal: table.querySelector(`tr.cif-logistics-heading td:nth-child(${columnIndex + 1}) .cif-logistics-total`),
-            marginsTotal: table.querySelector(`tr.margins-heading td:nth-child(${columnIndex + 1}) .margins-total`),
-            pricePerUnit: table.querySelector(`tr.price-per-unit-row td:nth-child(${columnIndex + 1}) span`),
-            pricePerShipment: table.querySelector(`tr.price-per-shipment-row td:nth-child(${columnIndex + 1}) span`)
-        };
-    }
-};
-
-// Calculator Logic
-const Calculator = {
-    calculate(inputs) {
-        const baseCost = inputs.productionCosts + inputs.marketingBudget;
-        const exworksPrice = baseCost / (1 - inputs.manufacturerMargin / 100);
-        const cifPrice = exworksPrice + (inputs.freightInsurance / inputs.unitsPerShipment);
-        const customDutiesValue = (inputs.customDuties / 100) * cifPrice;
-        const exciseTaxValue = inputs.exciseTax;
-        const priceAfterDuties = cifPrice + customDutiesValue + exciseTaxValue;
-        const cifLogisticsTotal = priceAfterDuties + inputs.domesticLogistics + inputs.storage + inputs.importHandling;
-        const importerPrice = cifLogisticsTotal / (1 - inputs.importerMargin / 100);
-        const wholesalerPrice = importerPrice / (1 - inputs.wholesalerMargin / 100);
-        const retailerPrice = wholesalerPrice / (1 - inputs.retailerMargin / 100);
-
-        const importerMarginValue = importerPrice - cifLogisticsTotal;
-        const wholesalerMarginValue = wholesalerPrice - importerPrice;
-        const retailerMarginValue = retailerPrice - wholesalerPrice;
-        const totalMargins = importerMarginValue + wholesalerMarginValue + retailerMarginValue + cifLogisticsTotal;
-
-        return {
-            baseCost,
-            exworksPrice,
-            cifPrice,
-            customDutiesValue,
-            exciseTaxValue,
-            priceAfterDuties,
-            cifLogisticsTotal,
-            importerPrice,
-            wholesalerPrice,
-            retailerPrice,
-            importerMarginValue,
-            wholesalerMarginValue,
-            retailerMarginValue,
-            totalMargins,
-            pricePerUnit: retailerPrice,
-            pricePerShipment: retailerPrice * inputs.unitsPerShipment
-        };
-    }
-};
-
-// Render Object
-const Renderer = {
-    render(elements, data, currency) {
-        const formatCurrency = (value) => new Intl.NumberFormat(undefined, { style: 'currency', currency: currency }).format(value);
-
-        const updateElement = (element, value) => {
-            if (element) {
-                element.textContent = formatCurrency(value);
-            }
-        };
-
-        // Update all the price displays
-        updateElement(elements.manufacturerMarginPrice, data.exworksPrice);
-        updateElement(elements.freightInsurancePrice, data.cifPrice);
-        updateElement(elements.customDutiesPrice, data.priceAfterDuties);
-        updateElement(elements.exciseTaxPrice, data.priceAfterDuties);
-        updateElement(elements.domesticLogisticsPrice, data.cifLogisticsTotal);
-        updateElement(elements.storagePrice, data.cifLogisticsTotal);
-        updateElement(elements.importHandlingPrice, data.cifLogisticsTotal);
-        updateElement(elements.importerMarginPrice, data.importerPrice);
-        updateElement(elements.wholesalerMarginPrice, data.wholesalerPrice);
-        updateElement(elements.retailerMarginPrice, data.retailerPrice);
-        updateElement(elements.marketingBudgetPrice, data.baseCost);
-
-        // Update totals
-        updateElement(elements.freightInsuranceTotal, data.cifPrice);
-        updateElement(elements.dutiesTotal, data.priceAfterDuties);
-        updateElement(elements.cifLogisticsTotal, data.cifLogisticsTotal);
-        updateElement(elements.marginsTotal, data.totalMargins);
-
-        // Update results
-        updateElement(elements.pricePerUnit, data.pricePerUnit);
-        updateElement(elements.pricePerShipment, data.pricePerShipment);
-
-        // Update margin values
-        updateElement(elements.manufacturerMarginValue, data.exworksPrice - data.baseCost);
-        updateElement(elements.customDutiesValue, data.customDutiesValue);
-        updateElement(elements.exciseTaxValue, data.exciseTaxValue);
-        updateElement(elements.importerMarginValue, data.importerMarginValue);
-        updateElement(elements.wholesalerMarginValue, data.wholesalerMarginValue);
-        updateElement(elements.retailerMarginValue, data.retailerMarginValue);
-    }
-};
-
-// Main function to tie it all together
-function updateCalculator(table, columnIndex) {
-    const elements = DOMElements.captureElements(table, columnIndex);
-    const inputs = {
-        unitsPerShipment: parseFloat(elements.unitsPerShipment.value) || 0,
-        productionCosts: parseFloat(elements.productionCosts.value) || 0,
-        manufacturerMargin: parseFloat(elements.manufacturerMargin.value) || 0,
-        freightInsurance: parseFloat(elements.freightInsurance.value) || 0,
-        customDuties: parseFloat(elements.customDuties.value) || 0,
-        exciseTax: parseFloat(elements.exciseTax.value) || 0,
-        domesticLogistics: parseFloat(elements.domesticLogistics.value) || 0,
-        storage: parseFloat(elements.storage.value) || 0,
-        importHandling: parseFloat(elements.importHandling.value) || 0,
-        importerMargin: parseFloat(elements.importerMargin.value) || 0,
-        wholesalerMargin: parseFloat(elements.wholesalerMargin.value) || 0,
-        retailerMargin: parseFloat(elements.retailerMargin.value) || 0,
-        marketingBudget: parseFloat(elements.marketingBudget.value) || 0
-    };
-
-    const data = Calculator.calculate(inputs);
-    Renderer.render(elements, data, elements.currency.value);
-}
-
-// Function to add a new calculator
-function addCalculator(defaults = {}) {
-    const table = document.querySelector('table');
-    const inputRows = table.querySelectorAll('tr:not(.heading):not(.delete-row)');
-    const columnIndex = table.querySelector('tr').childElementCount;
-
-    const currencies = [
-        { code: 'JPY', name: 'Japanese Yen' },
-        { code: 'USD', name: 'US Dollar' },
-        { code: 'EUR', name: 'Euro' },
-        { code: 'GBP', name: 'British Pound' },
-        { code: 'INR', name: 'Indian Rupee' },
-        { code: 'CNY', name: 'Chinese Yuan' },
-        { code: 'CAD', name: 'Canadian Dollar' },
-        { code: 'AUD', name: 'Australian Dollar' },
-        { code: 'CHF', name: 'Swiss Franc' },
-        { code: 'HKD', name: 'Hong Kong Dollar' },
-        { code: 'SGD', name: 'Singapore Dollar' },
-        { code: 'MXN', name: 'Mexican Peso' },
-        { code: 'BRL', name: 'Brazilian Real' },
-        { code: 'RUB', name: 'Russian Ruble' },
-        { code: 'ZAR', name: 'South African Rand' },
-        { code: 'TRY', name: 'Turkish Lira' },
-        { code: 'SEK', name: 'Swedish Krona' },
-        { code: 'NOK', name: 'Norwegian Krone' },
-        { code: 'DKK', name: 'Danish Krone' },
-        { code: 'NZD', name: 'New Zealand Dollar' },
-        { code: 'PLN', name: 'Polish Złoty' },
-        { code: 'THB', name: 'Thai Baht' },
-        { code: 'KRW', name: 'South Korean Won' },
-        { code: 'IDR', name: 'Indonesian Rupiah' },
-        { code: 'AED', name: 'United Arab Emirates Dirham' },
-        { code: 'SAR', name: 'Saudi Riyal' },
-        { code: 'MYR', name: 'Malaysian Ringgit' },
-        { code: 'PHP', name: 'Philippine Peso' },
-        { code: 'VND', name: 'Vietnamese Dong' }
-    ];
-
-    inputRows.forEach(row => {
-        const cell = document.createElement('td');
-        if (row.classList.contains('currency-row')) {
-            const currencySelect = document.createElement('select');
-            currencySelect.className = 'currency-select';
-            currencies.forEach(curr => {
-                const option = document.createElement('option');
-                option.value = curr.code;
-                option.textContent = `${curr.code} - ${curr.name}`;
-                if (curr.code === (defaults.currency || 'JPY')) option.selected = true;
-                currencySelect.appendChild(option);
-            });
-            cell.appendChild(currencySelect);
-        } else if (row.classList.contains('freight-insurance-heading') ||
-                   row.classList.contains('duties-heading') ||
-                   row.classList.contains('cif-logistics-heading') ||
-                   row.classList.contains('margins-heading')) {
-            const totalElement = document.createElement('p');
-            totalElement.className = 'total-price-per-unit ' + row.classList[0].replace('-heading', '-total');
-            cell.appendChild(totalElement);
-        } else {
-            const input = row.querySelector('input, select');
-            if (input) {
-                if (row.classList.contains('manufacturer-margin-row') || 
-                    row.classList.contains('custom-duties-row') ||
-                    row.classList.contains('excise-tax-row') ||
-                    row.classList.contains('importer-margin-row') || 
-                    row.classList.contains('wholesaler-margin-row') || 
-                    row.classList.contains('retailer-margin-row')) {
-                    const container = document.createElement('div');
-                    container.className = 'margin-input-container';
-                    
-                    const newInput = input.cloneNode(true);
-                    newInput.value = defaults[input.className] || input.value;
-                    container.appendChild(newInput);
-                    
-                    const marginValueDiv = document.createElement('div');
-                    marginValueDiv.className = 'margin-value ' + input.className + '-value';
-                    container.appendChild(marginValueDiv);
-                    
-                    cell.appendChild(container);
-                } else {
-                    const newInput = input.cloneNode(true);
-                    newInput.value = defaults[input.className] || input.value;
-                    cell.appendChild(newInput);
-                }
-                const priceAfterDiv = document.createElement('div');
-                priceAfterDiv.className = 'price-after-calculation ' + input.className + '-price';
-                cell.appendChild(priceAfterDiv);
-            } else if (row.classList.contains('price-per-unit-row') || row.classList.contains('price-per-shipment-row')) {
-                cell.innerHTML = '<p><span></span></p>';
-            }
+        <div class="comparison-wrapper">
+          <!-- Static headings and initial table structure -->
+          <table>
+            <tr class="units-per-shipment-row">
+              <td><h2>Units Per Shipment</h2></td>
+              <td>
+                <input
+                  type="number"
+                  class="units-per-shipment"
+                  value="1000"
+                  min="0"
+                />
+              </td>
+            </tr>
+            <tr class="currency-row">
+              <td><h3>Currency</h3></td>
+              <td>
+                <select class="currency-select">
+                  <option value="JPY">JPY - Japanese Yen</option>
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="INR">INR - Indian Rupee</option>
+                  <option value="CNY">CNY - Chinese Yuan</option>
+                  <option value="CAD">CAD - Canadian Dollar</option>
+                  <option value="AUD">AUD - Australian Dollar</option>
+                  <option value="CHF">CHF - Swiss Franc</option>
+                  <option value="HKD">HKD - Hong Kong Dollar</option>
+                  <option value="SGD">SGD - Singapore Dollar</option>
+                  <option value="MXN">MXN - Mexican Peso</option>
+                  <option value="BRL">BRL - Brazilian Real</option>
+                  <option value="RUB">RUB - Russian Ruble</option>
+                  <option value="ZAR">ZAR - South African Rand</option>
+                  <option value="TRY">TRY - Turkish Lira</option>
+                  <option value="SEK">SEK - Swedish Krona</option>
+                  <option value="NOK">NOK - Norwegian Krone</option>
+                  <option value="DKK">DKK - Danish Krone</option>
+                  <option value="NZD">NZD - New Zealand Dollar</option>
+                  <option value="PLN">PLN - Polish Złoty</option>
+                  <option value="THB">THB - Thai Baht</option>
+                  <option value="KRW">KRW - South Korean Won</option>
+                  <option value="IDR">IDR - Indonesian Rupiah</option>
+                  <option value="AED">AED - United Arab Emirates Dirham</option>
+                  <option value="SAR">SAR - Saudi Riyal</option>
+                  <option value="MYR">MYR - Malaysian Ringgit</option>
+                  <option value="PHP">PHP - Philippine Peso</option>
+                  <option value="VND">VND - Vietnamese Dong</option>
+                </select>
+              </td>
+            </tr>
+            <tr class="production-costs-row">
+              <td><h3>Production Costs</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="production-costs"
+                  value="500"
+                  min="0"
+                />
+              </td>
+            </tr>
+            <tr class="manufacturer-margin-row">
+              <td><h3>Manufacturer Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="manufacturer-margin"
+                    value="38"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value manufacturer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation manufacturer-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="freight-insurance-heading">
+              <td><h2>Freight/Insurance</h2></td>
+              <td>
+                <p class="total-price-per-unit freight-insurance-total"></p>
+              </td>
+            </tr>
+            <tr class="freight-insurance-row">
+              <td><h3>Freight/Insurance</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="freight-insurance"
+                  value="800"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation freight-insurance-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="duties-heading">
+              <td><h2>CIF</h2></td>
+              <td><p class="total-price-per-unit duties-total"></p></td>
+            </tr>
+            <tr class="custom-duties-row">
+              <td><h3>Custom Duties (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="custom-duties"
+                    value="9"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value custom-duties-value"></div>
+                </div>
+                <div class="price-after-calculation custom-duties-price"></div>
+              </td>
+            </tr>
+            <tr class="excise-tax-row">
+              <td><h3>Excise Tax</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input type="number" class="excise-tax" value="0" min="0" />
+                  <div class="margin-value excise-tax-value"></div>
+                </div>
+                <div class="price-after-calculation excise-tax-price"></div>
+              </td>
+            </tr>
+            <tr class="cif-logistics-heading">
+              <td><h2>DDP</h2></td>
+              <td><p class="total-price-per-unit cif-logistics-total"></p></td>
+            </tr>
+            <tr class="domestic-logistics-row">
+              <td><h3>Domestic Logistics</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="domestic-logistics"
+                  value="30"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation domestic-logistics-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="storage-row">
+              <td><h3>Storage</h3></td>
+              <td>
+                <input type="number" class="storage" value="40" min="0" />
+                <div class="price-after-calculation storage-price"></div>
+              </td>
+            </tr>
+            <tr class="import-handling-row">
+              <td><h3>Import Handling</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="import-handling"
+                  value="40"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation import-handling-price"
+                ></div>
+              </td>
+            </tr>
+            <tr>
+              <td><h2>Margins</h2></td>
+              <td></td>
+            </tr>
+            <tr class="importer-margin-row">
+              <td><h3>Importer Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="importer-margin"
+                    value="30"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value importer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation importer-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="wholesaler-margin-row">
+              <td><h3>Wholesaler Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="wholesaler-margin"
+                    value="15"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value wholesaler-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation wholesaler-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="retailer-margin-row">
+              <td><h3>Retailer Margin (%)</h3></td>
+              <td>
+                <div class="margin-input-container">
+                  <input
+                    type="number"
+                    class="retailer-margin"
+                    value="25"
+                    min="0"
+                    max="100"
+                  />
+                  <div class="margin-value retailer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation retailer-margin-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="margins-heading product-total">
+              <td></td>
+              <td><p class="total-price-per-unit margins-total"></p></td>
+            </tr>
+            <tr class="additional-costs-heading">
+              <td><h2>Additional Costs</h2></td>
+              <td></td>
+            </tr>
+            <tr class="marketing-budget-row">
+              <td><h3>Marketing Budget</h3></td>
+              <td>
+                <input
+                  type="number"
+                  class="marketing-budget"
+                  value="0"
+                  min="0"
+                />
+                <div
+                  class="price-after-calculation marketing-budget-price"
+                ></div>
+              </td>
+            </tr>
+            <tr class="results-heading">
+              <td><h2>Results</h2></td>
+              <td></td>
+            </tr>
+            <tr class="price-per-unit-row">
+              <td><h3>Price per Unit</h3></td>
+              <td>
+                <p><span></span></p>
+              </td>
+            </tr>
+            <tr class="delete-row">
+              <td></td>
+              <td><button class="delete-calculator">Delete</button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="w-embed">
+      <style>
+        :root {
+          --background: #ffffff;
+          --foreground: #020817;
+          --muted: #f1f5f9;
+          --muted-foreground: #64748b;
+          --border: #e2e8f0;
+          --input: #e2e8f0;
+          --primary: #0f172a;
+          --primary-foreground: #f8fafc;
+          --secondary: #f1f5f9;
+          --secondary-foreground: #0f172a;
+          --radius: 0.5rem;
         }
-        row.appendChild(cell);
-    });
-
-    const deleteRow = table.querySelector('.delete-row');
-    const deleteButtonCell = document.createElement('td');
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('delete-calculator');
-    deleteButton.addEventListener('click', function() {
-        const currentIndex = Array.from(deleteRow.children).indexOf(deleteButtonCell);
-        deleteCalculator(currentIndex);
-    });
-    deleteButtonCell.appendChild(deleteButton);
-    deleteRow.appendChild(deleteButtonCell);
-
-    attachListeners();
-    updateCalculator(table, columnIndex);
-}
-
-// Function to delete a calculator
-function deleteCalculator(columnIndex) {
-    const table = document.querySelector('table');
-    const calculatorCount = table.querySelector('tr').childElementCount - 1; // Subtract 1 for the label column
-
-    if (calculatorCount > 1 && columnIndex > 1) { // Ensure we're not deleting the initial calculator
-        table.querySelectorAll('tr').forEach(row => {
-            if (row.children[columnIndex]) {
-                row.children[columnIndex].remove();
-            }
-        });
-        updateCalculator(table, 1); // Update the first calculator after deletion
-    } else {
-        alert("Cannot delete this calculator.");
-    }
-}
-
-// Function to duplicate a calculator
-function duplicateCalculator() {
-    const table = document.querySelector('table');
-    const lastColumn = table.querySelectorAll('tr:not(.heading) td:last-child');
-    const defaults = {};
-
-    lastColumn.forEach(cell => {
-        const input = cell.querySelector('input, select');
-        if (input) {
-            if (input.classList.contains('currency-select')) {
-                defaults.currency = input.value;
-            } else {
-                defaults[input.className] = input.value;
-            }
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 20px;
         }
-    });
 
-    addCalculator(defaults);
-}
+        #calculator-container {
+          display: flex;
+        }
 
-// Attach event listeners
-function attachListeners() {
-    const table = document.querySelector('table');
-    const inputs = table.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const columnIndex = Array.from(input.closest('td').parentNode.children).indexOf(input.closest('td'));
-            updateCalculator(table, columnIndex);
-        });
-    });
-}
+        h2 {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--foreground);
+          margin-bottom: 8px;
+        }
 
-// Initialize the calculator when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    attachListeners();
-    updateCalculator(document.querySelector('table'), 1);
+        h3 {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--muted-foreground);
+          margin-bottom: 4px;
+        }
 
-    // Add event listener for the "Compare" button
-    document.getElementById('compare').addEventListener('click', duplicateCalculator);
-});
+        td {
+          padding: 12px;
+          padding-right: 32px;
+          border-bottom: 1px solid var(--border);
+        }
 
+        .comparison-container {
+          max-width: 1200px;
+          margin: auto;
+        }
 
-			</script>
-		</div>
-	</body>
+        .header-buttons {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 20px;
+        }
+
+        .header-buttons button {
+          padding: 10px 15px;
+          background-color: #ffd212;
+          color: black;
+          border: none;
+          border-radius: var(--radius);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          margin-left: 10px;
+          display: flex;
+          align-items: center;
+          transition: background-color 0.2s;
+        }
+
+        .header-buttons button:hover {
+          background-color: #f4c700;
+          color: var(--primary);
+        }
+
+        .comparison-wrapper {
+          display: flex;
+          overflow-x: auto;
+        }
+
+        .static-headings {
+          flex: 0 0 200px;
+          padding-right: 10px;
+          border-right: 2px solid #ddd;
+        }
+
+        .static-headings h2 {
+          border-top: 2px solid black;
+          padding-top: 10px;
+          font-size: 18px;
+          margin-bottom: 10px;
+          color: #333;
+        }
+
+        .static-headings h3 {
+          font-size: 14px;
+          margin-bottom: 10px;
+          color: #555;
+        }
+
+        .product-total {
+          text-align: right;
+        }
+
+        .margin-input-container {
+          position: relative;
+          width: 100%;
+        }
+
+        .margin-input-container input {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 8px 12px;
+          padding-right: 50px;
+          border: 1px solid var(--input);
+          border-radius: var(--radius);
+          font-size: 14px;
+          background-color: var(--background);
+          color: var(--foreground);
+          transition: border-color 0.2s;
+        }
+
+        .margin-input-container input:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+        }
+
+        .margin-value {
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 12px;
+          color: var(--muted-foreground);
+          background-color: var(--secondary);
+          padding: 2px 6px;
+          border-radius: var(--radius);
+        }
+
+        .calculator-block {
+          border-left: 2px solid #ddd;
+          padding-left: 10px;
+          min-width: 300px;
+        }
+
+        .calculator-block h2 {
+          font-size: 18px;
+          margin-bottom: 20px;
+          color: #333;
+        }
+
+        .form-group {
+          margin-bottom: 15px;
+        }
+
+        .total-price-per-unit {
+          font-weight: 600;
+          color: var(--foreground);
+        }
+
+        input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          font-size: 14px;
+        }
+
+        select {
+          width: 100%;
+          padding: 8px 12px;
+          border: 1px solid var(--input);
+          border-radius: var(--radius);
+          font-size: 14px;
+          background-color: var(--background);
+          color: var(--foreground);
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 8px center;
+          background-size: 16px;
+        }
+
+        #result-container {
+          margin-top: 20px;
+        }
+
+        #result-container h2 {
+          font-size: 18px;
+          color: #333;
+          text-align: left;
+          margin-bottom: 10px;
+        }
+
+        #result-container p {
+          font-size: 16px;
+          color: #333;
+          margin: 5px 0;
+        }
+
+        .delete-calculator {
+          background-color: #ef4444;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: var(--radius);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background-color 0.2s;
+        }
+
+        .delete-calculator:hover {
+          background-color: #dc2626;
+        }
+
+        .price-after-calculation,
+        .price-after-margin {
+          font-size: 12px;
+          color: var(--muted-foreground);
+          margin-top: 4px;
+        }
+      </style>
+    </div>
+    <div class="code-embed w-embed w-script">
+        <script type="text/javascript" src="./index.js"></script>    
+    </div>
+  </body>
 </html>
