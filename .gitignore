@@ -128,3 +128,42 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore environment variables file
+excel-generator/.dev.vars
+
+# Ignore node_modules in all directories
+**/node_modules/
+
+# Ignore build output
+excel-generator/dist/
+
+# Ignore logs
+*.log
+
+# Ignore .DS_Store files (for macOS users)
+.DS_Store
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore npm debug log
+npm-debug.log*
+
+# Ignore yarn debug log
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore .env files (if you're using them anywhere)
+**/.env
+
+# Ignore any local configuration files
+*.local
+
+# Ignore coverage directory
+coverage/
+
+# Ignore temporary files
+*.tmp
+*.temp

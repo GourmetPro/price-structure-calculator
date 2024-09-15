@@ -367,3 +367,50 @@ function cloneTableColumn(table, index) {
       .getElementById("compare")
       .addEventListener("click", createCalculator);
   });
+
+  document.getElementById("export").addEventListener("click", async function () {
+    const calculatorsData = Array.from(calculators).map(calculator => ({
+      unitsPerShipment: calculator.inputs.unitsPerShipment,
+      currency: calculator.inputs.currency,
+      productionCosts: calculator.inputs.productionCosts,
+      manufacturerMargin: calculator.inputs.manufacturerMargin,
+      freightInsurance: calculator.inputs.freightInsurance,
+      customDuties: calculator.inputs.customDuties,
+      exciseTax: calculator.inputs.exciseTax,
+      domesticLogistics: calculator.inputs.domesticLogistics,
+      storage: calculator.inputs.storage,
+      importHandling: calculator.inputs.importHandling,
+      importerMargin: calculator.inputs.importerMargin,
+      wholesalerMargin: calculator.inputs.wholesalerMargin,
+      retailerMargin: calculator.inputs.retailerMargin,
+      marketingBudget: calculator.inputs.marketingBudget,
+      pricePerUnit: calculator.outputs.pricePerUnit,
+      pricePerShipment: calculator.outputs.pricePerShipment,
+    }));
+  
+    try {
+      const response = await fetch('https://excel-generator.flat-salad-5e06.workers.dev', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ calculators: calculatorsData }),
+      });
+  
+      if (response.ok) {
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'calculators.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.error('Failed to export data');
+      }
+    } catch (error) {
+      console.error('Error exporting data:', error);
+    }
+  });
+
+  // https://excel-generator.flat-salad-5e06.workers.dev
