@@ -95,11 +95,9 @@
                 ></div>
               </td>
             </tr>
-            <tr class="freight-insurance-heading">
+            <tr>
               <td><h2>Freight/Insurance</h2></td>
-              <td>
-                <p class="total-price-per-unit freight-insurance-total"></p>
-              </td>
+              <td></td>
             </tr>
             <tr class="freight-insurance-row">
               <td><h3>Freight/Insurance</h3></td>
@@ -115,9 +113,15 @@
                 ></div>
               </td>
             </tr>
-            <tr class="duties-heading">
+            <tr class="freight-insurance-heading">
+              <td></td>
+              <td>
+                <p class="total-price-per-unit freight-insurance-total"></p>
+              </td>
+            </tr>
+            <tr>
               <td><h2>CIF</h2></td>
-              <td><p class="total-price-per-unit duties-total"></p></td>
+              <td></td>
             </tr>
             <tr class="custom-duties-row">
               <td><h3>Custom Duties (%)</h3></td>
@@ -145,9 +149,13 @@
                 <div class="price-after-calculation excise-tax-price"></div>
               </td>
             </tr>
-            <tr class="cif-logistics-heading">
+            <tr class="duties-heading">
+              <td></td>
+              <td><p class="total-price-per-unit duties-total"></p></td>
+            </tr>
+            <tr>
               <td><h2>DDP</h2></td>
-              <td><p class="total-price-per-unit cif-logistics-total"></p></td>
+              <td></td>
             </tr>
             <tr class="domestic-logistics-row">
               <td><h3>Domestic Logistics</h3></td>
@@ -183,6 +191,10 @@
                   class="price-after-calculation import-handling-price"
                 ></div>
               </td>
+            </tr>
+            <tr class="cif-logistics-heading">
+              <td></td>
+              <td><p class="total-price-per-unit cif-logistics-total"></p></td>
             </tr>
             <tr>
               <td><h2>Margins</h2></td>
@@ -246,6 +258,7 @@
               <td></td>
               <td><p class="total-price-per-unit margins-total"></p></td>
             </tr>
+            <!--
             <tr class="additional-costs-heading">
               <td><h2>Additional Costs</h2></td>
               <td></td>
@@ -264,13 +277,14 @@
                 ></div>
               </td>
             </tr>
+            -->
             <tr class="results-heading">
               <td><h2>Results</h2></td>
               <td></td>
             </tr>
             <tr class="price-per-unit-row">
               <td><h3>Price per Unit</h3></td>
-              <td>
+              <td class="result-value">
                 <p><span></span></p>
               </td>
             </tr>
@@ -282,6 +296,14 @@
         </div>
       </div>
     </div>
+<div id="emailPopupWrapper" class="popup-wrapper" style="display: none;">
+  <div class="popup-container">
+    <h2>Enter your email to receive the Excel file</h2>
+    <input type="email" id="userEmail" placeholder="Your email address">
+    <button id="submitEmail">Send Excel</button>
+    <button id="cancelEmail">Cancel</button>
+  </div>
+</div>
     <div class="w-embed">
       <style>
         :root {
@@ -326,6 +348,37 @@
           padding: 12px;
           padding-right: 32px;
           border-bottom: 1px solid var(--border);
+        }
+
+        .popup-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0,0,0,0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .popup-container {
+          background: white;
+          padding: 20px;
+          border-radius: 5px;
+          width: 300px;
+        }
+
+        #userEmail {
+          width: 100%;
+          padding: 5px;
+          margin-bottom: 10px;
+        }
+
+        #submitEmail, #cancelEmail {
+          padding: 5px 10px;
+          margin-right: 10px;
         }
 
         .comparison-container {
@@ -382,6 +435,17 @@
           font-size: 14px;
           margin-bottom: 10px;
           color: #555;
+        }
+
+        .total-price-per-unit {
+          text-align: right;
+        }
+
+        .result-value {
+          text-align: right;
+          font-size: 20px;
+          font-weight: 600;
+          color: #333;
         }
 
         .product-total {

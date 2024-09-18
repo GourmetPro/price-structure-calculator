@@ -90,12 +90,12 @@ function captureElements(table, columnIndex) {
       retailerMarginPrice: table.querySelector(
         `tr.retailer-margin-row td:nth-child(${nchild}) .retailer-margin-price`
       ),
-      marketingBudget: table.querySelector(
-        `tr.marketing-budget-row td:nth-child(${nchild}) input`
-      ),
-      marketingBudgetPrice: table.querySelector(
-        `tr.marketing-budget-row td:nth-child(${nchild}) .marketing-budget-price`
-      ),
+      //marketingBudget: table.querySelector(
+      //  `tr.marketing-budget-row td:nth-child(${nchild}) input`
+      //),
+      //marketingBudgetPrice: table.querySelector(
+      //  `tr.marketing-budget-row td:nth-child(${nchild}) .marketing-budget-price`
+      //),
       freightInsuranceTotal: table.querySelector(
         `tr.freight-insurance-heading td:nth-child(${nchild}) .freight-insurance-total`
       ),
@@ -135,13 +135,13 @@ function captureElements(table, columnIndex) {
       importerMargin: parseFloat(elements.importerMargin.value) || 0,
       wholesalerMargin: parseFloat(elements.wholesalerMargin.value) || 0,
       retailerMargin: parseFloat(elements.retailerMargin.value) || 0,
-      marketingBudget: parseFloat(elements.marketingBudget.value) || 0,
+      //marketingBudget: parseFloat(elements.marketingBudget.value) || 0,
     };
   }
   
   // Calculator Logic
   function calculateOutputs(inputs) {
-    const baseCost = inputs.productionCosts + inputs.marketingBudget;
+    const baseCost = inputs.productionCosts;
     const exworksPrice = baseCost / (1 - inputs.manufacturerMargin / 100);
     const cifPrice =
       exworksPrice + inputs.freightInsurance / inputs.unitsPerShipment;
@@ -215,7 +215,7 @@ function captureElements(table, columnIndex) {
     updateElement(elements.importerMarginPrice, data.importerPrice);
     updateElement(elements.wholesalerMarginPrice, data.wholesalerPrice);
     updateElement(elements.retailerMarginPrice, data.retailerPrice);
-    updateElement(elements.marketingBudgetPrice, data.baseCost);
+    //updateElement(elements.marketingBudgetPrice, data.baseCost);
   
     // Update totals
     updateElement(elements.freightInsuranceTotal, data.cifPrice);
@@ -368,7 +368,17 @@ function cloneTableColumn(table, index) {
       .addEventListener("click", createCalculator);
   });
 
-  document.getElementById("export").addEventListener("click", async function () {
+  document.getElementById("export").addEventListener("click", function() {
+    document.getElementById("emailPopupWrapper").style.display = "flex";
+  });
+  
+  document.getElementById("submitEmail").addEventListener("click", async function() {
+    const email = document.getElementById("userEmail").value;
+    if (!email) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+  
     const calculatorsData = Array.from(calculators).map(calculator => ({
       unitsPerShipment: calculator.inputs.unitsPerShipment,
       currency: calculator.inputs.currency,
@@ -383,7 +393,7 @@ function cloneTableColumn(table, index) {
       importerMargin: calculator.inputs.importerMargin,
       wholesalerMargin: calculator.inputs.wholesalerMargin,
       retailerMargin: calculator.inputs.retailerMargin,
-      marketingBudget: calculator.inputs.marketingBudget,
+      //marketingBudget: calculator.inputs.marketingBudget,
       pricePerUnit: calculator.outputs.pricePerUnit,
       pricePerShipment: calculator.outputs.pricePerShipment,
     }));
@@ -394,23 +404,22 @@ function cloneTableColumn(table, index) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ calculators: calculatorsData }),
+        body: JSON.stringify({ calculators: calculatorsData, email: email }),
       });
   
       if (response.ok) {
-        const blob = await response.blob();
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'calculators.xlsx';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        alert("Excel file has been sent to your email.");
       } else {
-        console.error('Failed to export data');
+        alert("Failed to send Excel file. Please try again.");
       }
     } catch (error) {
-      console.error('Error exporting data:', error);
+      console.error('Error sending data:', error);
+      alert("An error occurred. Please try again.");
     }
+  
+    document.getElementById("emailPopupWrapper").style.display = "none";
   });
-
-  // https://excel-generator.flat-salad-5e06.workers.dev
+  
+  document.getElementById("cancelEmail").addEventListener("click", function() {
+    document.getElementById("emailPopupWrapper").style.display = "none";
+  });
