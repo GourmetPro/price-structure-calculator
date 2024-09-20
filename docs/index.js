@@ -379,6 +379,11 @@ function cloneTableColumn(table, index) {
       showToast("Please enter a valid email address.", "#ff6347", "white");
       return;
     }
+
+    // Show loading spinner
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.className = 'loading-spinner';
+    document.querySelector(".popup-container").appendChild(loadingSpinner);
   
     const calculatorsData = Array.from(calculators).map(calculator => ({
       unitsPerShipment: calculator.inputs.unitsPerShipment,
@@ -407,6 +412,9 @@ function cloneTableColumn(table, index) {
         },
         body: JSON.stringify({ calculators: calculatorsData, email: email }),
       });
+
+      // Remove loading spinner
+      loadingSpinner.remove();
   
       if (response.ok) {
         // Close the email popup
@@ -416,12 +424,13 @@ function cloneTableColumn(table, index) {
         showToast("Excel file has been sent to your email.", "#ffd212");
       } else {
         // Show error toast
-        showToast("Failed to send Excel file. Please try again.", "#ff6347");
+        showToast("Failed to send Excel file. Please try again.", "#ff6347", "white");
       }
     } catch (error) {
       console.error('Error sending data:', error);
+      loadingSpinner.remove();
       // Show error toast
-      showToast("An error occurred. Please try again.", "#ff6347");
+      showToast("An error occurred. Please try again.", "#ff6347", "white");
     }
   
     document.getElementById("emailPopupWrapper").style.display = "none";
@@ -443,6 +452,7 @@ function cloneTableColumn(table, index) {
       stopOnFocus: true,
       style: {
         color: textColor,
+        borderRadius: "0.5rem",
       },
       closeOnClick: true,
       onClick: function(){} // Prevents closing on click

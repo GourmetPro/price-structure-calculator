@@ -94,11 +94,11 @@
               </td>
             </tr>
             <tr>
-              <td><h2>Freight/Insurance</h2></td>
+              <td><h2>Freight/ Insurance</h2></td>
               <td></td>
             </tr>
             <tr class="freight-insurance-row">
-              <td><h3>Freight/Insurance</h3></td>
+              <td><h3>Freight/ Insurance</h3></td>
               <td>
                 <input
                   type="number"
@@ -340,7 +340,7 @@
           font-size: 14px;
           font-weight: 500;
           color: white;
-          margin-bottom: 32px;
+          margin-bottom: 16px;
         }
 
         td {
@@ -391,6 +391,7 @@
           padding: 32px;
           border-radius: 5px;
           width: 320px;
+          position: relative;
         }
 
         #userEmail {
@@ -646,11 +647,53 @@
           color: #bfc2c5;
           margin-top: 4px;
         }
+
+        .loading-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffd212;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+      position: absolute;
+      bottom: 32px;
+      right: 16px;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+        @media screen and (max-width: 480px) {
+          h2 {
+            font-size: 16px;
+          }
+          td:first-child {
+            min-width: 85px;
+            max-width: 85px;
+            padding-right: 0px;
+          }
+          td input[type="number"] {
+            width: calc((100vw - 157px) / 2);
+          }
+          select {
+            width: calc((100vw - 157px) / 2);
+            padding-right: 25px;
+          }
+        }
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-      <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script>
-      <!-- <script type="text/javascript" src="index.js"></script> --> 
+       <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script>
+     <!-- <script type="text/javascript" src="index.js"></script> --> 
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
   </body>
