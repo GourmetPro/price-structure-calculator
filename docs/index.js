@@ -290,7 +290,8 @@ function captureElements(table, columnIndex) {
   // Function to delete a calculator
   function deleteCalculator(calculator) {
     if (calculators.size < 2) {
-      return alert("Cannot delete this calculator.");
+      showToast("Cannot delete the last calculator.", "#ff6347", "white");
+      return;
     }
   
     calculator.column.forEach((element) => {
@@ -375,7 +376,7 @@ function cloneTableColumn(table, index) {
   document.getElementById("submitEmail").addEventListener("click", async function() {
     const email = document.getElementById("userEmail").value;
     if (!email) {
-      alert("Please enter a valid email address.");
+      showToast("Please enter a valid email address.", "#ff6347", "white");
       return;
     }
   
@@ -408,13 +409,19 @@ function cloneTableColumn(table, index) {
       });
   
       if (response.ok) {
-        alert("Excel file has been sent to your email.");
+        // Close the email popup
+        document.getElementById("emailPopupWrapper").style.display = "none";
+        
+        // Show success toast
+        showToast("Excel file has been sent to your email.", "#ffd212");
       } else {
-        alert("Failed to send Excel file. Please try again.");
+        // Show error toast
+        showToast("Failed to send Excel file. Please try again.", "#ff6347");
       }
     } catch (error) {
       console.error('Error sending data:', error);
-      alert("An error occurred. Please try again.");
+      // Show error toast
+      showToast("An error occurred. Please try again.", "#ff6347");
     }
   
     document.getElementById("emailPopupWrapper").style.display = "none";
@@ -423,3 +430,30 @@ function cloneTableColumn(table, index) {
   document.getElementById("cancelEmail").addEventListener("click", function() {
     document.getElementById("emailPopupWrapper").style.display = "none";
   });
+
+  // Helper function to show toast
+  function showToast(message, backgroundColor, textColor = "black") {
+    Toastify({
+      text: message,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: backgroundColor,
+      stopOnFocus: true,
+      style: {
+        color: textColor,
+      },
+      closeOnClick: true,
+      onClick: function(){} // Prevents closing on click
+    }).showToast();
+  
+    // Change close button color to match text color
+    const toastElement = document.querySelector('.toastify');
+    if (toastElement) {
+      const closeButton = toastElement.querySelector('.toast-close');
+      if (closeButton) {
+        closeButton.style.color = textColor;
+      }
+    }
+  }

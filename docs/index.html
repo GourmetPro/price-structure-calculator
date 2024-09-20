@@ -6,7 +6,7 @@
     <meta content="calculator" property="og:title" />
     <meta content="calculator" property="twitter:title" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   </head>
   <body>
     <div class="w-embed">
@@ -15,9 +15,7 @@
           <button id="compare">Compare <span>+</span></button>
           <button id="export">Export to Excel</button>
         </div>
-
         <div class="comparison-wrapper">
-          <!-- Static headings and initial table structure -->
           <table>
             <tr class="units-per-shipment-row">
               <td><h2>Units Per Shipment</h2></td>
@@ -290,7 +288,7 @@
             </tr>
             <tr class="delete-row">
               <td></td>
-              <td><button class="delete-calculator">Delete</button></td>
+              <td class="delete-button-cell"><button class="delete-calculator">Delete</button></td>
             </tr>
           </table>
         </div>
@@ -298,7 +296,7 @@
     </div>
 <div id="emailPopupWrapper" class="popup-wrapper" style="display: none;">
   <div class="popup-container">
-    <h2>Enter your email to receive the Excel file</h2>
+    <h2 class="popup-title">Enter your email to receive the Excel file</h2>
     <input type="email" id="userEmail" placeholder="Your email address">
     <button id="submitEmail">Send Excel</button>
     <button id="cancelEmail">Cancel</button>
@@ -321,9 +319,10 @@
         }
         body {
           font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
+          background-color: black;
           margin: 0;
           padding: 20px;
+          font-family: 'Lato', sans-serif;
         }
 
         #calculator-container {
@@ -333,21 +332,43 @@
         h2 {
           font-size: 18px;
           font-weight: 600;
-          color: var(--foreground);
+          color: #ffd212;
           margin-bottom: 8px;
         }
 
         h3 {
           font-size: 14px;
           font-weight: 500;
-          color: var(--muted-foreground);
-          margin-bottom: 4px;
+          color: white;
+          margin-bottom: 32px;
         }
 
         td {
           padding: 12px;
-          padding-right: 32px;
+          padding-right: 0px;
           border-bottom: 1px solid var(--border);
+        }
+
+        td:first-child {
+          padding-right: 32px;
+          padding-left: 0px;
+        }
+
+        td input[type="number"] {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 8px 12px;
+          border: 1px solid #4f4f4f;
+          border-radius: var(--radius);
+          font-size: 14px;
+          background-color: #141414;
+          color: white;
+          transition: border-color 0.2s;
+        }
+
+        td input[type="number"]:focus {
+          border-color: #ffd212;
+          outline: none;
         }
 
         .popup-wrapper {
@@ -364,16 +385,16 @@
         }
 
         .popup-container {
-          background: white;
-          padding: 20px;
+          background: #141414;
+          padding: 32px;
           border-radius: 5px;
-          width: 300px;
+          width: 320px;
         }
 
         #userEmail {
           width: 100%;
           padding: 5px;
-          margin-bottom: 10px;
+          margin-bottom: 16px;
         }
 
         #submitEmail, #cancelEmail {
@@ -439,13 +460,14 @@
 
         .total-price-per-unit {
           text-align: right;
+          color: #ffd212 !important;
         }
 
         .result-value {
           text-align: right;
           font-size: 20px;
           font-weight: 600;
-          color: #333;
+          color: #ffd212;
         }
 
         .product-total {
@@ -472,7 +494,7 @@
 
         .margin-input-container input:focus {
           outline: none;
-          border-color: var(--primary);
+          border-color: #ffd212;
           box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
         }
 
@@ -520,16 +542,23 @@
         select {
           width: 100%;
           padding: 8px 12px;
-          border: 1px solid var(--input);
+          border: 1px solid #4f4f4f;
           border-radius: var(--radius);
           font-size: 14px;
-          background-color: var(--background);
-          color: var(--foreground);
+          background-color: #141414;
+          color: white;
           appearance: none;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
           background-repeat: no-repeat;
           background-position: right 8px center;
           background-size: 16px;
+          transition: border-color 0.2s;
+        }
+
+        select:focus,
+        select:active {
+          border-color: #ffd212;
+          outline: none;
         }
 
         #result-container {
@@ -549,6 +578,11 @@
           margin: 5px 0;
         }
 
+        .delete-button-cell {
+          text-align: right;
+          padding-right: 0 !important; /* Override the general td padding */
+        }
+
         .delete-calculator {
           background-color: #ef4444;
           color: white;
@@ -565,17 +599,57 @@
           background-color: #dc2626;
         }
 
+        .popup-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: white;
+          margin-bottom: 16px;
+          margin-top: 0px;
+        }
+
+        #submitEmail {
+          background-color: #ffd212;
+          color: black;
+          border: none;
+          border-radius: var(--radius);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background-color 0.2s;
+        }
+
+        #submitEmail:hover {
+          background-color: #f4c700;
+          color: var(--primary);
+        }
+
+        #cancelEmail {
+          background-color: #ef4444;
+          color: white;
+          border: none;
+          border-radius: var(--radius);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background-color 0.2s;
+        }
+
+        #cancelEmail:hover {
+          background-color: #dc2626;
+        }
+
         .price-after-calculation,
         .price-after-margin {
           font-size: 12px;
-          color: var(--muted-foreground);
+          color: #bfc2c5;
           margin-top: 4px;
         }
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-        <script type="text/javascript" src="https://raw.githubusercontent.com/GourmetPro/price-structure-calculator/excel-email/index.js"></script>
-
+      <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> 
+     <!--  <script type="text/javascript" src="index.js"></script> -->
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
   </body>
 </html>
