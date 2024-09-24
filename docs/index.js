@@ -3,6 +3,9 @@ function captureElements(table, columnIndex) {
     const nchild = columnIndex + 2;
   
     return {
+      name: table.querySelector(
+        `tr.name-row td:nth-child(${nchild}) input.name-input`
+      ),
       unitsPerShipment: table.querySelector(
         `tr.units-per-shipment-row td:nth-child(${nchild}) input`
       ),
@@ -122,6 +125,7 @@ function captureElements(table, columnIndex) {
   
   function extractInputs(elements) {
     return {
+      name: elements.name.value,
       currency: elements.currency.value,
       unitsPerShipment: parseFloat(elements.unitsPerShipment.value) || 0,
       productionCosts: parseFloat(elements.productionCosts.value) || 0,
@@ -345,6 +349,18 @@ function cloneTableColumn(table, index) {
       const originalElement = row.children[index];
       const clonedElement = originalElement.cloneNode(true);
 
+      // Handle the name input field
+      if (row.classList.contains('name-row')) {
+        const originalInput = originalElement.querySelector('input.name-input');
+        const clonedInput = clonedElement.querySelector('input.name-input');
+        
+        if (originalInput && originalInput.value.trim() !== '') {
+          clonedInput.value = `${originalInput.value} copy`;
+        } else {
+          clonedInput.value = '';
+        }
+      }
+
     // Copy the value of the select element if it exists
     if (originalElement.querySelector('select')) {
       const originalSelect = originalElement.querySelector('select');
@@ -369,9 +385,9 @@ function cloneTableColumn(table, index) {
       .addEventListener("click", createCalculator);
   });
 
-  document.getElementById("export").addEventListener("click", function() {
-    document.getElementById("emailPopupWrapper").style.display = "flex";
-  });
+  //document.getElementById("export").addEventListener("click", function() {
+  //  document.getElementById("emailPopupWrapper").style.display = "flex";
+ // });
   
   document.getElementById("submitEmail").addEventListener("click", async function() {
     const email = document.getElementById("userEmail").value;
@@ -386,6 +402,7 @@ function cloneTableColumn(table, index) {
     document.querySelector(".popup-container").appendChild(loadingSpinner);
   
     const calculatorsData = Array.from(calculators).map(calculator => ({
+      name: calculator.inputs.name,
       unitsPerShipment: calculator.inputs.unitsPerShipment,
       currency: calculator.inputs.currency,
       productionCosts: calculator.inputs.productionCosts,
@@ -417,8 +434,9 @@ function cloneTableColumn(table, index) {
       loadingSpinner.remove();
   
       if (response.ok) {
-        // Close the email popup
-        document.getElementById("emailPopupWrapper").style.display = "none";
+
+        // Clear the email input field
+        document.getElementById("userEmail").value = "";
         
         // Show success toast
         showToast("Excel file has been sent to your email.", "#ffd212");
@@ -433,12 +451,12 @@ function cloneTableColumn(table, index) {
       showToast("An error occurred. Please try again.", "#ff6347", "white");
     }
   
-    document.getElementById("emailPopupWrapper").style.display = "none";
+    //document.getElementById("emailPopupWrapper").style.display = "none";
   });
   
-  document.getElementById("cancelEmail").addEventListener("click", function() {
-    document.getElementById("emailPopupWrapper").style.display = "none";
-  });
+  //document.getElementById("cancelEmail").addEventListener("click", function() {
+   // document.getElementById("emailPopupWrapper").style.display = "none";
+  //});
 
   // Helper function to show toast
   function showToast(message, backgroundColor, textColor = "black") {
@@ -467,3 +485,48 @@ function cloneTableColumn(table, index) {
       }
     }
   }
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+  
+  function updateComparisonContainerAndHeaderButtonsPadding() {
+    const navContainer = document.querySelector('.nav-container');
+    const comparisonContainer = document.querySelector('.comparison-container');
+    const headerButtons = document.querySelector('.header-buttons');
+    
+    if (window.innerWidth > 480) {
+      if (navContainer && comparisonContainer) {
+        const leftDistance = navContainer.getBoundingClientRect().left;
+        comparisonContainer.style.paddingLeft = `${leftDistance}px`;
+      }
+      
+      if (navContainer && headerButtons) {
+        const rightDistance = window.innerWidth - navContainer.getBoundingClientRect().right;
+        headerButtons.style.paddingRight = `${rightDistance}px`;
+      }
+    } else {
+      // Reset padding for mobile views
+      if (comparisonContainer) {
+        comparisonContainer.style.paddingLeft = '0';
+      }
+      if (headerButtons) {
+        headerButtons.style.paddingRight = '0';
+      }
+    }
+  }
+  
+  const debouncedUpdatePadding = debounce(updateComparisonContainerAndHeaderButtonsPadding, 250);
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    updateComparisonContainerAndHeaderButtonsPadding();
+    window.addEventListener('resize', debouncedUpdatePadding);
+  });
