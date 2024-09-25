@@ -27,6 +27,9 @@ function captureElements(table, columnIndex) {
       freightInsurance: table.querySelector(
         `tr.freight-insurance-row td:nth-child(${nchild}) input`
       ),
+      cogsTotal: table.querySelector(
+        `tr.cogs-heading td:nth-child(${nchild}) .cogs-total`
+      ),
       freightInsurancePrice: table.querySelector(
         `tr.freight-insurance-row td:nth-child(${nchild}) .freight-insurance-price`
       ),
@@ -210,6 +213,7 @@ function captureElements(table, columnIndex) {
   
     // Update all the price displays
     updateElement(elements.manufacturerMarginPrice, data.exworksPrice);
+    updateElement(elements.cogsTotal, data.exworksPrice);
     updateElement(elements.freightInsurancePrice, data.cifPrice);
     updateElement(elements.customDutiesPrice, data.priceAfterDuties);
     updateElement(elements.exciseTaxPrice, data.priceAfterDuties);

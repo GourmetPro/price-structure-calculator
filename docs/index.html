@@ -32,8 +32,8 @@
               <td><h3>Currency</h3></td>
               <td>
                 <select class="currency-select">
-                  <option value="JPY">JPY - Japanese Yen</option>
                   <option value="USD">USD - US Dollar</option>
+                  <option value="JPY">JPY - Japanese Yen</option>
                   <option value="EUR">EUR - Euro</option>
                   <option value="GBP">GBP - British Pound</option>
                   <option value="INR">INR - Indian Rupee</option>
@@ -80,7 +80,7 @@
               </td>
             </tr>
             <tr class="manufacturer-margin-row">
-              <td><h3>Manufacturer Margin (%)</h3></td>
+              <td><h3>Manufacturer Margin<br><span class="subtext">percentage</span></h3></td>
               <td>
                 <div class="margin-input-container">
                   <input
@@ -95,6 +95,12 @@
                 <div
                   class="price-after-calculation manufacturer-margin-price"
                 ></div>
+              </td>
+            </tr>
+            <tr class="cogs-heading">
+              <td></td>
+              <td>
+                <p class="total-price-per-unit cogs-total"></p>
               </td>
             </tr>
             <tr>
@@ -137,7 +143,7 @@
               <td></td>
             </tr>
             <tr class="custom-duties-row">
-              <td><h3>Custom Duties (%)</h3></td>
+              <td><h3>Custom Duties<br><span class="subtext">percentage</span></h3></td>
               <td>
                 <div class="margin-input-container">
                   <input
@@ -153,7 +159,7 @@
               </td>
             </tr>
             <tr class="excise-tax-row">
-              <td><h3>Excise Tax</h3></td>
+              <td><h3>Excise Tax<br><span class="subtext">per unit</span></h3></td>
               <td>
                 <div class="margin-input-container">
                   <input type="number" class="excise-tax" value="0" min="0" />
@@ -171,7 +177,7 @@
               <td></td>
             </tr>
             <tr class="domestic-logistics-row">
-              <td><h3>Domestic Logistics</h3></td>
+              <td><h3>Domestic Logistics<br><span class="subtext">per unit</span></h3></td>
               <td>
                 <input
                   type="number"
@@ -185,14 +191,14 @@
               </td>
             </tr>
             <tr class="storage-row">
-              <td><h3>Storage</h3></td>
+              <td><h3>Storage<br><span class="subtext">per unit</span></h3></td>
               <td>
                 <input type="number" class="storage" value="40" min="0" />
                 <div class="price-after-calculation storage-price"></div>
               </td>
             </tr>
             <tr class="import-handling-row">
-              <td><h3>Import Handling</h3></td>
+              <td><h3>Import Handling<br><span class="subtext">per unit</span></h3></td>
               <td>
                 <input
                   type="number"
@@ -214,8 +220,8 @@
               <td></td>
             </tr>
             <tr class="importer-margin-row">
-              <td><h3>Importer Margin (%)</h3></td>
-              <td>
+              <td><h3>Importer Margin<br><span class="subtext">percentage</span></h3></td>
+              <!-- <td>
                 <div class="margin-input-container">
                   <input
                     type="number"
@@ -229,19 +235,26 @@
                 <div
                   class="price-after-calculation importer-margin-price"
                 ></div>
+              </td> -->
+              <td>
+                <div class="margin-input-holder">
+                  <div class="margin-input-shadow">
+                    <input type="number" class="importer-margin" placeholder="Importer Margin (%)" value="30" min="0" max="100">
+                  </div>
+                  <div class="margin-value importer-margin-value"></div>
+                </div>
+                <div
+                  class="price-after-calculation importer-margin-price"
+                ></div>
               </td>
             </tr>
             <tr class="wholesaler-margin-row">
-              <td><h3>Wholesaler Margin (%)</h3></td>
+              <td><h3>Wholesaler Margin<br><span class="subtext">percentage</span></h3></td>
               <td>
-                <div class="margin-input-container">
-                  <input
-                    type="number"
-                    class="wholesaler-margin"
-                    value="15"
-                    min="0"
-                    max="100"
-                  />
+                <div class="margin-input-holder">
+  <div class="margin-input-shadow">
+    <input type="number" class="wholesaler-margin" value="15" min="0" max="100">
+  </div>
                   <div class="margin-value wholesaler-margin-value"></div>
                 </div>
                 <div
@@ -250,16 +263,12 @@
               </td>
             </tr>
             <tr class="retailer-margin-row">
-              <td><h3>Retailer Margin (%)</h3></td>
+              <td><h3>Retailer Margin<br><span class="subtext">percentage</span></h3></td>
               <td>
-                <div class="margin-input-container">
-                  <input
-                    type="number"
-                    class="retailer-margin"
-                    value="25"
-                    min="0"
-                    max="100"
-                  />
+                <div class="margin-input-holder">
+                  <div class="margin-input-shadow">
+                    <input type="number" class="retailer-margin" value="25" min="0" max="100">
+                  </div>
                   <div class="margin-value retailer-margin-value"></div>
                 </div>
                 <div
@@ -268,7 +277,7 @@
               </td>
             </tr>
             <tr class="margins-heading product-total">
-              <td></td>
+              <td><h2 style="text-align: left;">Results</h2></td>
               <td><p class="total-price-per-unit margins-total"></p></td>
             </tr>
             <!--
@@ -291,11 +300,8 @@
               </td>
             </tr>
             -->
-            <tr class="results-heading">
-              <td><h2>Results</h2></td>
-              <td></td>
-            </tr>
-            <tr class="price-per-unit-row">
+
+            <tr style="display:none" class="price-per-unit-row">
               <td><h3>Price per Unit</h3></td>
               <td class="result-value">
                 <p><span></span></p>
@@ -386,6 +392,14 @@
           border-color: #ffd212;
           outline: none;
         }
+        .subtext {
+    font-size: 12px; /* Smaller font size */
+    color: #bfc2c5; /* Grey color, matching .price-after-calculation */
+    font-weight: normal; /* Remove bold styling if present */
+    display: block; /* Makes the subtext appear on its own line */
+    margin-top: 2px; /* Add a small gap between the main text and subtext */
+    font-style: italic; /* Italicize the subtext */
+  }
 
         .name-input {
           text-align: center;
@@ -427,13 +441,13 @@
 
         #userEmail {
           width: 100%;
-          padding: 5px;
+          padding: 10px 10px;
           margin-bottom: 16px;
           box-sizing: border-box;
         }
 
-        #submitEmail, #cancelEmail {
-          padding: 5px 10px;
+        #submitEmail {
+          padding: 10px 10px;
           margin-right: 10px;
           width: 100%;
         }
@@ -540,7 +554,7 @@
           top: 50%;
           transform: translateY(-50%);
           font-size: 12px;
-          color: var(--muted-foreground);
+          color: black;
           background-color: var(--secondary);
           padding: 2px 6px;
           border-radius: var(--radius);
@@ -563,6 +577,7 @@
         }
 
         .total-price-per-unit {
+          font-size: 20px;
           font-weight: 600;
           color: var(--foreground);
         }
@@ -570,9 +585,145 @@
         input {
           width: 245px;
           padding: 8px;
-          border: 1px solid #ddd;
+
           border-radius: 5px;
           font-size: 14px;
+        }
+
+
+
+
+
+
+        .margin-input-holder {
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.margin-input-shadow {
+  position: relative;
+  width: 100%;
+  padding-right: 0;
+  border-radius: 9999px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  background: white;
+}
+
+.margin-input-shadow input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 9999px;
+  border: 0;
+  background: transparent;
+  color: #333;
+}
+
+.margin-input-shadow input:focus {
+  outline: none;
+}
+
+.margin-input-shadow:before, .margin-input-shadow:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  border-radius: 10px;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+}
+
+.margin-input-shadow:after {
+  z-index: -2;
+  top: 0.625rem;
+  left: 50%;
+  display: block;
+  width: 98%;
+  height: calc(100% + 6px);
+  transform: translateX(-50%);
+  filter: blur(0.625rem);
+  opacity: 0.25;
+}
+
+/* Importer Margin */
+.margin-input-shadow:has(.importer-margin):before,
+.margin-input-shadow:has(.importer-margin):after {
+  background: linear-gradient(45deg, #ffd212 0%, #ffdb4d 50%, #ffe680 100%);
+}
+
+/* Wholesaler Margin */
+.margin-input-shadow:has(.wholesaler-margin):before,
+.margin-input-shadow:has(.wholesaler-margin):after {
+  background: linear-gradient(45deg, #e6bc00 0%, #ffd212 50%, #ffdb4d 100%);
+}
+
+/* Retailer Margin */
+.margin-input-shadow:has(.retailer-margin):before,
+.margin-input-shadow:has(.retailer-margin):after {
+  background: linear-gradient(45deg, #cca300 0%, #e6bc00 50%, #ffd212 100%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .importer-margin,
+        .wholesaler-margin,
+        .retailer-margin {
+          width: 245px;
+          padding: 8px;
+          /* border: 1px solid #ffd212 !important; */
+          border-radius: var(--radius);
+          font-size: 14px;
+          color: #ffd212;
+          transition: border-color 0.2s;
+        }
+
+        .importer-margin:focus,
+        .wholesaler-margin:focus,
+        .retailer-margin:focus {
+          outline: none;
+          border-color: #ffd212;
+          box-shadow: 0 0 0 2px rgba(255, 210, 18, 0.2);
+        }
+
+        .importer-margin::placeholder,
+        .wholesaler-margin::placeholder,
+        .retailer-margin::placeholder {
+          color: #888;
+        }
+
+        .importer-margin-price,
+        .wholesaler-margin-price,
+        .retailer-margin-price {
+          color: #ffd212 !important;
+          font-weight: 600;
+          font-size: 14px !important;
+        }
+
+        .wholesaler-margin-price,
+        .retailer-margin-price,
+        .importer-margin-price {
+          background-color: black;
+          padding: 4px 10px !important;
+          display: inline-block;
+          border-radius: 10px;
+          background-color: #ffd212;
+          color: black!important;
+          
         }
 
         select {
@@ -738,8 +889,8 @@
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-       <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> 
-     <!--  <script type="text/javascript" src="index.js"></script> -->
+    <!--    <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> -->
+      <script type="text/javascript" src="index.js"></script> 
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
   </body>
