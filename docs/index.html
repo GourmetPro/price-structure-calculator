@@ -215,13 +215,13 @@
               <td></td>
               <td><p class="total-price-per-unit cif-logistics-total"></p></td>
             </tr>
-            <tr>
-              <td><h2>Margins</h2></td>
+            <tr class="spacer-row large">
               <td></td>
-            </tr>
+              <td></td>
+            </tr>  
             <tr class="importer-margin-row">
               <td><h3>Importer Margin<br><span class="subtext">percentage</span></h3></td>
-              <!-- <td>
+               <td>
                 <div class="margin-input-container">
                   <input
                     type="number"
@@ -235,47 +235,53 @@
                 <div
                   class="price-after-calculation importer-margin-price"
                 ></div>
-              </td> -->
-              <td>
-                <div class="margin-input-holder">
-                  <div class="margin-input-shadow">
-                    <input type="number" class="importer-margin" placeholder="Importer Margin (%)" value="30" min="0" max="100">
-                  </div>
-                  <div class="margin-value importer-margin-value"></div>
-                </div>
-                <div
-                  class="price-after-calculation importer-margin-price"
-                ></div>
-              </td>
+              </td> 
             </tr>
-            <tr class="wholesaler-margin-row">
-              <td><h3>Wholesaler Margin<br><span class="subtext">percentage</span></h3></td>
-              <td>
-                <div class="margin-input-holder">
-  <div class="margin-input-shadow">
-    <input type="number" class="wholesaler-margin" value="15" min="0" max="100">
-  </div>
-                  <div class="margin-value wholesaler-margin-value"></div>
-                </div>
-                <div
-                  class="price-after-calculation wholesaler-margin-price"
-                ></div>
-              </td>
-            </tr>
-            <tr class="retailer-margin-row">
-              <td><h3>Retailer Margin<br><span class="subtext">percentage</span></h3></td>
-              <td>
-                <div class="margin-input-holder">
-                  <div class="margin-input-shadow">
-                    <input type="number" class="retailer-margin" value="25" min="0" max="100">
-                  </div>
-                  <div class="margin-value retailer-margin-value"></div>
-                </div>
-                <div
-                  class="price-after-calculation retailer-margin-price"
-                ></div>
-              </td>
-            </tr>
+          </tr>
+          <tr class="spacer-row">
+            <td></td>
+            <td></td>
+          </tr>  
+          <tr class="wholesaler-margin-row">
+            <td><h3>Wholesaler Margin<br><span class="subtext">percentage</span></h3></td>
+            <td>
+              <div class="margin-input-container">
+                <input
+                  type="number"
+                  class="wholesaler-margin"
+                  value="15"
+                  min="0"
+                  max="100"
+                />
+                <div class="margin-value wholesaler-margin-value"></div>
+              </div>
+              <div
+                class="price-after-calculation wholesaler-margin-price"
+              ></div>
+            </td>
+          </tr>
+          <tr class="spacer-row">
+            <td></td>
+            <td></td>
+          </tr>  
+          <tr class="retailer-margin-row">
+            <td><h3>Retailer Margin<br><span class="subtext">percentage</span></h3></td>
+            <td>
+              <div class="margin-input-container">
+                <input
+                  type="number"
+                  class="retailer-margin"
+                  value="25"
+                  min="0"
+                  max="100"
+                />
+                <div class="margin-value retailer-margin-value"></div>
+              </div>
+              <div
+                class="price-after-calculation retailer-margin-price"
+              ></div>
+            </td>
+          </tr>
             <tr class="margins-heading product-total">
               <td><h2 style="text-align: left;">Results</h2></td>
               <td><p class="total-price-per-unit margins-total"></p></td>
@@ -392,14 +398,108 @@
           border-color: #ffd212;
           outline: none;
         }
-        .subtext {
-    font-size: 12px; /* Smaller font size */
-    color: #bfc2c5; /* Grey color, matching .price-after-calculation */
-    font-weight: normal; /* Remove bold styling if present */
-    display: block; /* Makes the subtext appear on its own line */
-    margin-top: 2px; /* Add a small gap between the main text and subtext */
-    font-style: italic; /* Italicize the subtext */
-  }
+
+          .subtext {
+            font-size: 12px; /* Smaller font size */
+            color: #bfc2c5; /* Grey color, matching .price-after-calculation */
+            font-weight: normal; /* Remove bold styling if present */
+            display: block; /* Makes the subtext appear on its own line */
+            margin-top: 2px; /* Add a small gap between the main text and subtext */
+            font-style: italic; /* Italicize the subtext */
+        }
+
+
+          table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .spacer-row td {
+         border: none !important;
+         height: 30px;
+        }
+        
+        .spacer-row.large td {
+         height: 30px;
+        }
+
+        .importer-margin-row td:first-child {
+          border-top-left-radius: 10px !important;
+          border-bottom-left-radius: 10px !important;
+          padding-left: 10px;
+          border-left: 2px solid #ffd212 !important;
+        }
+
+        .importer-margin-row td:last-child {
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 10px;
+          padding-right: 12px;
+          border-right: 2px solid #ffd212 !important;
+        }
+
+        .importer-margin-row td {
+           border-top: 2px solid #ffd212 !important;
+           border-bottom: 2px solid #ffd212 !important;
+           background-color: rgba(255, 210, 18, 0.35)
+        }
+
+        .importer-margin-row h3 {
+          color: #ffd212;
+          font-size: 18px;
+          font-weight: 700;
+        }
+
+        .wholesaler-margin-row td:first-child {
+          border-top-left-radius: 10px !important;
+          border-bottom-left-radius: 10px !important;
+          padding-left: 10px;
+          border-left: 2px solid #ffd212 !important;
+        }
+
+        .wholesaler-margin-row td:last-child {
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 10px;
+          padding-right: 12px;
+          border-right: 2px solid #ffd212 !important;
+        }
+
+        .wholesaler-margin-row td {
+           border-top: 2px solid #ffd212 !important;
+           border-bottom: 2px solid #ffd212 !important;
+           background-color: rgba(255, 210, 18, 0.35)
+        }
+
+        .wholesaler-margin-row h3 {
+          color: #ffd212;
+          font-size: 18px;
+          font-weight: 700;
+        }
+
+        .retailer-margin-row td:first-child {
+          border-top-left-radius: 10px !important;
+          border-bottom-left-radius: 10px !important;
+          padding-left: 10px;
+          border-left: 2px solid #ffd212 !important;
+        }
+
+        .retailer-margin-row td:last-child {
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 10px;
+          padding-right: 12px;
+          border-right: 2px solid #ffd212 !important;
+        }
+
+        .retailer-margin-row td {
+           border-top: 2px solid #ffd212 !important;
+           border-bottom: 2px solid #ffd212 !important;
+           background-color: rgba(255, 210, 18, 0.35)
+        }
+
+        .retailer-margin-row h3 {
+          color: #ffd212;
+          font-size: 18px;
+          font-weight: 700;
+        }
 
         .name-input {
           text-align: center;
@@ -667,29 +767,18 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         .importer-margin,
         .wholesaler-margin,
         .retailer-margin {
+          background-color: rgba(255, 210, 18, 0.35) !important;
           width: 245px;
           padding: 8px;
-          /* border: 1px solid #ffd212 !important; */
           border-radius: var(--radius);
           font-size: 14px;
           color: #ffd212;
           transition: border-color 0.2s;
+          border-color: #ffd212 !important;
+          margin-bottom: 3px;
         }
 
         .importer-margin:focus,
@@ -711,7 +800,7 @@
         .retailer-margin-price {
           color: #ffd212 !important;
           font-weight: 600;
-          font-size: 14px !important;
+          font-size: 16px !important;
         }
 
         .wholesaler-margin-price,
