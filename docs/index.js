@@ -490,6 +490,15 @@ function cloneTableColumn(table, index) {
     }
   }
 
+
+
+
+
+
+  
+
+  
+
   function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {

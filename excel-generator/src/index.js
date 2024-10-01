@@ -31,7 +31,8 @@ async function handleRequest(request, env) {
       const data = await request.json();
       const { calculators, email } = data;
 
-      const templateResponse = await fetch(TEMPLATE_URL);
+      //const templateResponse = await fetch(TEMPLATE_URL);
+      const templateResponse = await fetch("https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66fbe66e292776a717331119_price_calculator_template_2.xlsx");
       if (!templateResponse.ok) {
         throw new Error(`Failed to fetch template: ${templateResponse.statusText}`);
       }
@@ -44,19 +45,20 @@ async function handleRequest(request, env) {
 
       data.calculators.forEach((calculator, index) => {
         const column = String.fromCharCode(67 + index);
-        worksheet.getCell(`${column}4`).value = calculator.unitsPerShipment;
-        worksheet.getCell(`${column}5`).value = calculator.currency;
+        worksheet.getCell(`${column}3`).value = calculator.name;
+        worksheet.getCell(`${column}11`).value = calculator.unitsPerShipment;
+        worksheet.getCell(`${column}4`).value = calculator.currency;
         worksheet.getCell(`${column}6`).value = calculator.productionCosts;
         worksheet.getCell(`${column}7`).value = calculator.manufacturerMargin;
-        worksheet.getCell(`${column}9`).value = calculator.freightInsurance;
-        worksheet.getCell(`${column}12`).value = calculator.customDuties;
-        worksheet.getCell(`${column}13`).value = calculator.exciseTax;
-        worksheet.getCell(`${column}16`).value = calculator.domesticLogistics;
-        worksheet.getCell(`${column}17`).value = calculator.storage;
-        worksheet.getCell(`${column}18`).value = calculator.importHandling;
-        worksheet.getCell(`${column}21`).value = calculator.importerMargin;
-        worksheet.getCell(`${column}22`).value = calculator.wholesalerMargin;
-        worksheet.getCell(`${column}23`).value = calculator.retailerMargin;
+        worksheet.getCell(`${column}10`).value = calculator.freightInsurance;
+        worksheet.getCell(`${column}14`).value = calculator.customDuties;
+        worksheet.getCell(`${column}15`).value = calculator.exciseTax;
+        worksheet.getCell(`${column}18`).value = calculator.domesticLogistics;
+        worksheet.getCell(`${column}19`).value = calculator.storage;
+        worksheet.getCell(`${column}20`).value = calculator.importHandling;
+        worksheet.getCell(`${column}23`).value = calculator.importerMargin;
+        worksheet.getCell(`${column}24`).value = calculator.wholesalerMargin;
+        worksheet.getCell(`${column}25`).value = calculator.retailerMargin;
       });
 
       workbook.calcProperties.fullCalcOnLoad = true;
