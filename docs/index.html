@@ -443,7 +443,9 @@
            background-color: rgba(255, 210, 18, 0.35)
         }
 
-        .importer-margin-row h3 {
+        .importer-margin-row h3,
+        .wholesaler-margin-row h3,
+        .retailer-margin-row h3 {
           color: #ffd212;
           font-size: 18px;
           font-weight: 700;
@@ -469,12 +471,6 @@
            background-color: rgba(255, 210, 18, 0.35)
         }
 
-        .wholesaler-margin-row h3 {
-          color: #ffd212;
-          font-size: 18px;
-          font-weight: 700;
-        }
-
         .retailer-margin-row td:first-child {
           border-top-left-radius: 10px !important;
           border-bottom-left-radius: 10px !important;
@@ -493,12 +489,6 @@
            border-top: 2px solid #ffd212 !important;
            border-bottom: 2px solid #ffd212 !important;
            background-color: rgba(255, 210, 18, 0.35)
-        }
-
-        .retailer-margin-row h3 {
-          color: #ffd212;
-          font-size: 18px;
-          font-weight: 700;
         }
 
         .name-input {
@@ -961,11 +951,9 @@
             max-width: 85px;
             padding-right: 0px;
           }
-          td input[type="number"] {
-            width: calc((100vw - 157px) / 2);
-          }
+
           select {
-            width: calc((100vw - 157px) / 2);
+            width: 100%;
             padding-right: 25px;
           }
           .name-input::placeholder {
@@ -974,7 +962,25 @@
         .name-input {
             font-size: 12px;
         }
+
+        td:first-child {
+          width: auto;
         }
+
+        .importer-margin-row h3,
+        .wholesaler-margin-row h3,
+        .retailer-margin-row h3 {
+          color: #ffd212;
+          font-size: 14px;
+          font-weight: 700;
+        }
+
+        .importer-margin-price,
+        .wholesaler-margin-price,
+        .retailer-margin-price {
+          font-size: 13px !important;
+        }
+      }
       </style>
     </div>
     <div class="code-embed w-embed w-script">
