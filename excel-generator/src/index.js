@@ -31,8 +31,7 @@ async function handleRequest(request, env) {
       const data = await request.json();
       const { calculators, email } = data;
 
-      //const templateResponse = await fetch(TEMPLATE_URL);
-      const templateResponse = await fetch("https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66fbe66e292776a717331119_price_calculator_template_2.xlsx");
+      const templateResponse = await fetch(TEMPLATE_URL);
       if (!templateResponse.ok) {
         throw new Error(`Failed to fetch template: ${templateResponse.statusText}`);
       }

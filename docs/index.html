@@ -326,6 +326,7 @@
     <h2 class="popup-title">Enter your email to receive the Excel file</h2>
     <input type="email" id="userEmail" placeholder="Your email address">
     <button id="submitEmail">Send Excel</button>
+    <p class="info-warn">Please enable editing in the excel file to view the calculated prices</p>
   </div>
 </div>
     <div class="w-embed">
@@ -412,6 +413,12 @@
           table {
             border-collapse: separate;
             border-spacing: 0;
+        }
+
+        .info-warn {
+          color: white;
+          font-size: 12px;
+          font-style: italic;
         }
 
         .spacer-row td {
@@ -984,8 +991,8 @@
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-     <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> 
-     <!--    <script type="text/javascript" src="index.js"></script>  -->
+      <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script>  
+       <!-- <script type="text/javascript" src="index.js"></script> -->
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
   </body>
