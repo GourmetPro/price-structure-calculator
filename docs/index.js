@@ -268,10 +268,13 @@ function captureElements(table, columnIndex) {
     calculators.add(calculator);
     renderCalculator(calculator);
   
-    attachEventListeners(calculator); // Use the new function
+    attachEventListeners(calculator);
+  
+    serializeCalculators(calculators);
   
     return calculator;
   }
+  
   
   
   // Main function to tie it all together
@@ -294,6 +297,7 @@ function captureElements(table, columnIndex) {
       element.remove();
     });
     calculators.delete(calculator);
+    updateURLWithCalculators();
   }
   
   const currencies = [
@@ -369,14 +373,17 @@ function cloneTableColumn(table, index) {
   // Initialize the calculator when the DOM is fully loaded
   document.addEventListener("DOMContentLoaded", function () {
     containerTable = document.querySelector("table");
-    loadCalculatorsFromURL();
+    deserializeCalculators();
   
-    document.getElementById("compare").addEventListener("click", function () {
+    document
+      .getElementById("compare")
+      .addEventListener("click", function () {
         const calculator = createCalculator();
         calculators.add(calculator);
-        updateURLWithCalculators();
+        serializeCalculators(calculators);
       });
   });
+  
   
   //document.getElementById("export").addEventListener("click", function() {
   //  document.getElementById("emailPopupWrapper").style.display = "flex";
@@ -531,7 +538,7 @@ function cloneTableColumn(table, index) {
       if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
         element.addEventListener('input', function () {
           updateCalculator(calculator);
-          updateURLWithCalculators();
+          serializeCalculators(calculators);
         });
       }
     });
@@ -539,9 +546,10 @@ function cloneTableColumn(table, index) {
     // Delete button listener
     calculator.elements.deleteButton.addEventListener('click', function () {
       deleteCalculator(calculator);
-      updateURLWithCalculators();
+      serializeCalculators(calculators);
     });
   }
+  
   
 
   function serializeCalculatorInputs(inputs) {
@@ -565,11 +573,30 @@ function cloneTableColumn(table, index) {
   }
   
   function serializeCalculators(calculators) {
-    const serializedCalculators = Array.from(calculators).map(calculator => {
-      return serializeCalculatorInputs(calculator.inputs);
+    const urlParams = new URLSearchParams();
+    let index = 1;
+    calculators.forEach(calculator => {
+      const inputs = calculator.inputs;
+      const prefix = index++; // Increment index for each calculator
+      urlParams.set(`n${prefix}`, inputs.name);
+      urlParams.set(`c${prefix}`, inputs.currency);
+      urlParams.set(`us${prefix}`, inputs.unitsPerShipment);
+      urlParams.set(`pc${prefix}`, inputs.productionCosts);
+      urlParams.set(`mm${prefix}`, inputs.manufacturerMargin);
+      urlParams.set(`fi${prefix}`, inputs.freightInsurance);
+      urlParams.set(`cd${prefix}`, inputs.customDuties);
+      urlParams.set(`et${prefix}`, inputs.exciseTax);
+      urlParams.set(`dl${prefix}`, inputs.domesticLogistics);
+      urlParams.set(`s${prefix}`, inputs.storage);
+      urlParams.set(`ih${prefix}`, inputs.importHandling);
+      urlParams.set(`im${prefix}`, inputs.importerMargin);
+      urlParams.set(`wm${prefix}`, inputs.wholesalerMargin);
+      urlParams.set(`rm${prefix}`, inputs.retailerMargin);
+      // Add more parameters here as needed
     });
-    return serializedCalculators.join('|');
+    window.history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
   }
+  
   
   function updateURLWithCalculators() {
     const serializedData = serializeCalculators(calculators);
@@ -578,31 +605,51 @@ function cloneTableColumn(table, index) {
   }
   
   // Deserialization Functions
-  function deserializeCalculatorData(dataString) {
-    const values = dataString.split(',').map(decodeURIComponent);
-    const [
-      name, currency, unitsPerShipment, productionCosts, manufacturerMargin,
-      freightInsurance, customDuties, exciseTax, domesticLogistics, storage,
-      importHandling, importerMargin, wholesalerMargin, retailerMargin
-    ] = values;
+  function deserializeCalculators() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const calculatorsMap = new Map();
   
-    return {
-      name,
-      currency,
-      unitsPerShipment: parseFloat(unitsPerShipment) || 0,
-      productionCosts: parseFloat(productionCosts) || 0,
-      manufacturerMargin: parseFloat(manufacturerMargin) || 0,
-      freightInsurance: parseFloat(freightInsurance) || 0,
-      customDuties: parseFloat(customDuties) || 0,
-      exciseTax: parseFloat(exciseTax) || 0,
-      domesticLogistics: parseFloat(domesticLogistics) || 0,
-      storage: parseFloat(storage) || 0,
-      importHandling: parseFloat(importHandling) || 0,
-      importerMargin: parseFloat(importerMargin) || 0,
-      wholesalerMargin: parseFloat(wholesalerMargin) || 0,
-      retailerMargin: parseFloat(retailerMargin) || 0,
-    };
+    // Determine the number of calculators by finding the highest index
+    let maxIndex = 0;
+    for (const key of urlParams.keys()) {
+      const match = key.match(/\d+$/);
+      if (match) {
+        const index = parseInt(match[0]);
+        if (index > maxIndex) maxIndex = index;
+      }
+    }
+  
+    // Reconstruct calculators
+    for (let i = 1; i <= maxIndex; i++) {
+      const inputs = {
+        name: urlParams.get(`n${i}`) || '',
+        currency: urlParams.get(`c${i}`) || 'USD',
+        unitsPerShipment: parseFloat(urlParams.get(`us${i}`)) || 0,
+        productionCosts: parseFloat(urlParams.get(`pc${i}`)) || 0,
+        manufacturerMargin: parseFloat(urlParams.get(`mm${i}`)) || 0,
+        freightInsurance: parseFloat(urlParams.get(`fi${i}`)) || 0,
+        customDuties: parseFloat(urlParams.get(`cd${i}`)) || 0,
+        exciseTax: parseFloat(urlParams.get(`et${i}`)) || 0,
+        domesticLogistics: parseFloat(urlParams.get(`dl${i}`)) || 0,
+        storage: parseFloat(urlParams.get(`s${i}`)) || 0,
+        importHandling: parseFloat(urlParams.get(`ih${i}`)) || 0,
+        importerMargin: parseFloat(urlParams.get(`im${i}`)) || 0,
+        wholesalerMargin: parseFloat(urlParams.get(`wm${i}`)) || 0,
+        retailerMargin: parseFloat(urlParams.get(`rm${i}`)) || 0,
+        // Add more parameters here as needed
+      };
+  
+      const calculator = createCalculatorWithInputs(inputs);
+      calculators.add(calculator);
+    }
+  
+    if (maxIndex === 0) {
+      // No calculators in URL, create a default one
+      const calculator = createCalculator();
+      calculators.add(calculator);
+    }
   }
+  
   
   function loadCalculatorsFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -610,7 +657,7 @@ function cloneTableColumn(table, index) {
     if (calculatorsParam) {
       const calculatorDataStrings = calculatorsParam.split('|');
       calculatorDataStrings.forEach(dataString => {
-        const inputs = deserializeCalculatorData(dataString);
+        const inputs = deserializeCalculators(dataString);
         const calculator = createCalculatorWithInputs(inputs);
         calculators.add(calculator);
       });
@@ -623,11 +670,13 @@ function cloneTableColumn(table, index) {
   
   function createCalculatorWithInputs(inputs) {
     const index = calculators.size;
-    const column = index === 0
-      ? extractTableColumn(containerTable, index + 1)
-      : cloneTableColumn(containerTable, index);
+    const column =
+      index === 0
+        ? extractTableColumn(containerTable, index + 1)
+        : cloneTableColumn(containerTable, index);
   
     const elements = captureElements(containerTable, index);
+  
     // Set element values based on inputs
     Object.keys(inputs).forEach(key => {
       if (elements[key]) {
@@ -643,4 +692,5 @@ function cloneTableColumn(table, index) {
     attachEventListeners(calculator);
     return calculator;
   }
+  
   
