@@ -9,6 +9,7 @@ export default {
 async function handleRequest(request, env) {
  // const TEMPLATE_URL_TEST = env.TEMPLATE_URL_TEST;
   const TEMPLATE_URL = env.TEMPLATE_URL;
+  const TEMPLATE_URL_TEST = env.TEMPLATE_URL_TEST;
   const BREVO_API_KEY = env.BREVO_API_KEY;
   const SENDER_EMAIL = env.SENDER_EMAIL;
 
