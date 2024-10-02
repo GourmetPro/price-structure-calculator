@@ -282,8 +282,9 @@ function captureElements(table, columnIndex) {
     calculator.inputs = extractInputs(calculator.elements);
     calculator.outputs = calculateOutputs(calculator.inputs);
     renderCalculator(calculator);
-    updateURLWithCalculators(); // Add this line
+    serializeCalculators(calculators); // Update URL
   }
+  
   
   
   // Function to delete a calculator
@@ -297,7 +298,7 @@ function captureElements(table, columnIndex) {
       element.remove();
     });
     calculators.delete(calculator);
-    updateURLWithCalculators();
+    serializeCalculators(calculators); // Ensure URL is updated
   }
   
   const currencies = [
@@ -383,6 +384,7 @@ function cloneTableColumn(table, index) {
         serializeCalculators(calculators);
       });
   });
+  
   
   
   //document.getElementById("export").addEventListener("click", function() {
@@ -538,7 +540,6 @@ function cloneTableColumn(table, index) {
       if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
         element.addEventListener('input', function () {
           updateCalculator(calculator);
-          serializeCalculators(calculators);
         });
       }
     });
@@ -546,9 +547,9 @@ function cloneTableColumn(table, index) {
     // Delete button listener
     calculator.elements.deleteButton.addEventListener('click', function () {
       deleteCalculator(calculator);
-      serializeCalculators(calculators);
     });
   }
+  
   
   
 
@@ -574,28 +575,43 @@ function cloneTableColumn(table, index) {
   
   function serializeCalculators(calculators) {
     const urlParams = new URLSearchParams();
-    let index = 1;
+    const paramKeys = ['n', 'c', 'us', 'pc', 'mm', 'fi', 'cd', 'et', 'dl', 's', 'ih', 'im', 'wm', 'rm'];
+    
+    // Initialize an object to hold arrays for each parameter
+    const paramValues = {};
+    paramKeys.forEach(key => paramValues[key] = []);
+    
     calculators.forEach(calculator => {
       const inputs = calculator.inputs;
-      const prefix = index++; // Increment index for each calculator
-      urlParams.set(`n${prefix}`, inputs.name);
-      urlParams.set(`c${prefix}`, inputs.currency);
-      urlParams.set(`us${prefix}`, inputs.unitsPerShipment);
-      urlParams.set(`pc${prefix}`, inputs.productionCosts);
-      urlParams.set(`mm${prefix}`, inputs.manufacturerMargin);
-      urlParams.set(`fi${prefix}`, inputs.freightInsurance);
-      urlParams.set(`cd${prefix}`, inputs.customDuties);
-      urlParams.set(`et${prefix}`, inputs.exciseTax);
-      urlParams.set(`dl${prefix}`, inputs.domesticLogistics);
-      urlParams.set(`s${prefix}`, inputs.storage);
-      urlParams.set(`ih${prefix}`, inputs.importHandling);
-      urlParams.set(`im${prefix}`, inputs.importerMargin);
-      urlParams.set(`wm${prefix}`, inputs.wholesalerMargin);
-      urlParams.set(`rm${prefix}`, inputs.retailerMargin);
+      paramValues['n'].push(encodeURIComponent(inputs.name || ''));
+      paramValues['c'].push(encodeURIComponent(inputs.currency || 'USD'));
+      paramValues['us'].push(inputs.unitsPerShipment || '');
+      paramValues['pc'].push(inputs.productionCosts || '');
+      paramValues['mm'].push(inputs.manufacturerMargin || '');
+      paramValues['fi'].push(inputs.freightInsurance || '');
+      paramValues['cd'].push(inputs.customDuties || '');
+      paramValues['et'].push(inputs.exciseTax || '');
+      paramValues['dl'].push(inputs.domesticLogistics || '');
+      paramValues['s'].push(inputs.storage || '');
+      paramValues['ih'].push(inputs.importHandling || '');
+      paramValues['im'].push(inputs.importerMargin || '');
+      paramValues['wm'].push(inputs.wholesalerMargin || '');
+      paramValues['rm'].push(inputs.retailerMargin || '');
       // Add more parameters here as needed
     });
+    
+    // Set the URL parameters
+    paramKeys.forEach(key => {
+      const values = paramValues[key];
+      // Only include the parameter if there are non-empty values
+      if (values.some(value => value !== '')) {
+        urlParams.set(key, values.join(','));
+      }
+    });
+    
     window.history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
   }
+  
   
   
   function updateURLWithCalculators() {
@@ -607,48 +623,53 @@ function cloneTableColumn(table, index) {
   // Deserialization Functions
   function deserializeCalculators() {
     const urlParams = new URLSearchParams(window.location.search);
-    const calculatorsMap = new Map();
-  
-    // Determine the number of calculators by finding the highest index
-    let maxIndex = 0;
-    for (const key of urlParams.keys()) {
-      const match = key.match(/\d+$/);
-      if (match) {
-        const index = parseInt(match[0]);
-        if (index > maxIndex) maxIndex = index;
+    const paramKeys = ['n', 'c', 'us', 'pc', 'mm', 'fi', 'cd', 'et', 'dl', 's', 'ih', 'im', 'wm', 'rm'];
+    const paramValues = {};
+    
+    // Extract parameter values as arrays
+    paramKeys.forEach(key => {
+      const value = urlParams.get(key);
+      if (value !== null) {
+        paramValues[key] = value.split(',').map(decodeURIComponent);
+      } else {
+        paramValues[key] = [];
       }
-    }
-  
+    });
+    
+    // Determine the number of calculators (length of the longest parameter array)
+    const numCalculators = Math.max(...paramKeys.map(key => paramValues[key].length));
+    
     // Reconstruct calculators
-    for (let i = 1; i <= maxIndex; i++) {
+    for (let i = 0; i < numCalculators; i++) {
       const inputs = {
-        name: urlParams.get(`n${i}`) || '',
-        currency: urlParams.get(`c${i}`) || 'USD',
-        unitsPerShipment: parseFloat(urlParams.get(`us${i}`)) || 0,
-        productionCosts: parseFloat(urlParams.get(`pc${i}`)) || 0,
-        manufacturerMargin: parseFloat(urlParams.get(`mm${i}`)) || 0,
-        freightInsurance: parseFloat(urlParams.get(`fi${i}`)) || 0,
-        customDuties: parseFloat(urlParams.get(`cd${i}`)) || 0,
-        exciseTax: parseFloat(urlParams.get(`et${i}`)) || 0,
-        domesticLogistics: parseFloat(urlParams.get(`dl${i}`)) || 0,
-        storage: parseFloat(urlParams.get(`s${i}`)) || 0,
-        importHandling: parseFloat(urlParams.get(`ih${i}`)) || 0,
-        importerMargin: parseFloat(urlParams.get(`im${i}`)) || 0,
-        wholesalerMargin: parseFloat(urlParams.get(`wm${i}`)) || 0,
-        retailerMargin: parseFloat(urlParams.get(`rm${i}`)) || 0,
+        name: paramValues['n'][i] || '',
+        currency: paramValues['c'][i] || 'USD',
+        unitsPerShipment: parseFloat(paramValues['us'][i]) || 0,
+        productionCosts: parseFloat(paramValues['pc'][i]) || 0,
+        manufacturerMargin: parseFloat(paramValues['mm'][i]) || 0,
+        freightInsurance: parseFloat(paramValues['fi'][i]) || 0,
+        customDuties: parseFloat(paramValues['cd'][i]) || 0,
+        exciseTax: parseFloat(paramValues['et'][i]) || 0,
+        domesticLogistics: parseFloat(paramValues['dl'][i]) || 0,
+        storage: parseFloat(paramValues['s'][i]) || 0,
+        importHandling: parseFloat(paramValues['ih'][i]) || 0,
+        importerMargin: parseFloat(paramValues['im'][i]) || 0,
+        wholesalerMargin: parseFloat(paramValues['wm'][i]) || 0,
+        retailerMargin: parseFloat(paramValues['rm'][i]) || 0,
         // Add more parameters here as needed
       };
-  
+      
       const calculator = createCalculatorWithInputs(inputs);
       calculators.add(calculator);
     }
-  
-    if (maxIndex === 0) {
+    
+    if (numCalculators === 0) {
       // No calculators in URL, create a default one
       const calculator = createCalculator();
       calculators.add(calculator);
     }
   }
+  
   
   
   function loadCalculatorsFromURL() {
