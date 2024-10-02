@@ -252,10 +252,10 @@ function captureElements(table, columnIndex) {
   function createCalculator() {
     const index = calculators.size;
     const column =
-      index == 0
+      index === 0
         ? extractTableColumn(containerTable, index + 1)
         : cloneTableColumn(containerTable, index);
-    const elements = captureElements(containerTable, index); // find way to search through column instead
+    const elements = captureElements(containerTable, index);
     const inputs = extractInputs(elements);
     const outputs = calculateOutputs(inputs);
   
@@ -268,32 +268,20 @@ function captureElements(table, columnIndex) {
     calculators.add(calculator);
     renderCalculator(calculator);
   
-    Object.keys(elements)
-      .filter((key) => {
-        return (
-          elements[key] instanceof HTMLInputElement ||
-          elements[key] instanceof HTMLSelectElement
-        );
-      })
-      .map((key) => {
-        return elements[key].addEventListener("input", () => {
-          updateCalculator(calculator);
-        });
-      });
-  
-    elements.deleteButton.addEventListener("click", function () {
-      deleteCalculator(calculator);
-    });
+    attachEventListeners(calculator); // Use the new function
   
     return calculator;
   }
+  
   
   // Main function to tie it all together
   function updateCalculator(calculator) {
     calculator.inputs = extractInputs(calculator.elements);
     calculator.outputs = calculateOutputs(calculator.inputs);
     renderCalculator(calculator);
+    updateURLWithCalculators(); // Add this line
   }
+  
   
   // Function to delete a calculator
   function deleteCalculator(calculator) {
@@ -381,14 +369,15 @@ function cloneTableColumn(table, index) {
   // Initialize the calculator when the DOM is fully loaded
   document.addEventListener("DOMContentLoaded", function () {
     containerTable = document.querySelector("table");
-    createCalculator();
+    loadCalculatorsFromURL();
   
-    // Add event listener for the "Compare" button
-    document
-      .getElementById("compare")
-      .addEventListener("click", createCalculator);
+    document.getElementById("compare").addEventListener("click", function () {
+        const calculator = createCalculator();
+        calculators.add(calculator);
+        updateURLWithCalculators();
+      });
   });
-
+  
   //document.getElementById("export").addEventListener("click", function() {
   //  document.getElementById("emailPopupWrapper").style.display = "flex";
  // });
@@ -490,15 +479,6 @@ function cloneTableColumn(table, index) {
     }
   }
 
-
-
-
-
-
-  
-
-  
-
   function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -543,3 +523,124 @@ function cloneTableColumn(table, index) {
     updateComparisonContainerAndHeaderButtonsPadding();
     window.addEventListener('resize', debouncedUpdatePadding);
   });
+
+
+  function attachEventListeners(calculator) {
+    // Add input listeners to update calculator and URL
+    Object.values(calculator.elements).forEach(element => {
+      if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+        element.addEventListener('input', function () {
+          updateCalculator(calculator);
+          updateURLWithCalculators();
+        });
+      }
+    });
+  
+    // Delete button listener
+    calculator.elements.deleteButton.addEventListener('click', function () {
+      deleteCalculator(calculator);
+      updateURLWithCalculators();
+    });
+  }
+  
+
+  function serializeCalculatorInputs(inputs) {
+    const values = [
+      inputs.name,
+      inputs.currency,
+      inputs.unitsPerShipment,
+      inputs.productionCosts,
+      inputs.manufacturerMargin,
+      inputs.freightInsurance,
+      inputs.customDuties,
+      inputs.exciseTax,
+      inputs.domesticLogistics,
+      inputs.storage,
+      inputs.importHandling,
+      inputs.importerMargin,
+      inputs.wholesalerMargin,
+      inputs.retailerMargin,
+    ];
+    return values.map(encodeURIComponent).join(',');
+  }
+  
+  function serializeCalculators(calculators) {
+    const serializedCalculators = Array.from(calculators).map(calculator => {
+      return serializeCalculatorInputs(calculator.inputs);
+    });
+    return serializedCalculators.join('|');
+  }
+  
+  function updateURLWithCalculators() {
+    const serializedData = serializeCalculators(calculators);
+    const newURL = `${window.location.pathname}?calculators=${serializedData}`;
+    window.history.replaceState(null, '', newURL);
+  }
+  
+  // Deserialization Functions
+  function deserializeCalculatorData(dataString) {
+    const values = dataString.split(',').map(decodeURIComponent);
+    const [
+      name, currency, unitsPerShipment, productionCosts, manufacturerMargin,
+      freightInsurance, customDuties, exciseTax, domesticLogistics, storage,
+      importHandling, importerMargin, wholesalerMargin, retailerMargin
+    ] = values;
+  
+    return {
+      name,
+      currency,
+      unitsPerShipment: parseFloat(unitsPerShipment) || 0,
+      productionCosts: parseFloat(productionCosts) || 0,
+      manufacturerMargin: parseFloat(manufacturerMargin) || 0,
+      freightInsurance: parseFloat(freightInsurance) || 0,
+      customDuties: parseFloat(customDuties) || 0,
+      exciseTax: parseFloat(exciseTax) || 0,
+      domesticLogistics: parseFloat(domesticLogistics) || 0,
+      storage: parseFloat(storage) || 0,
+      importHandling: parseFloat(importHandling) || 0,
+      importerMargin: parseFloat(importerMargin) || 0,
+      wholesalerMargin: parseFloat(wholesalerMargin) || 0,
+      retailerMargin: parseFloat(retailerMargin) || 0,
+    };
+  }
+  
+  function loadCalculatorsFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const calculatorsParam = urlParams.get('calculators');
+    if (calculatorsParam) {
+      const calculatorDataStrings = calculatorsParam.split('|');
+      calculatorDataStrings.forEach(dataString => {
+        const inputs = deserializeCalculatorData(dataString);
+        const calculator = createCalculatorWithInputs(inputs);
+        calculators.add(calculator);
+      });
+    } else {
+      // No calculators in URL, create a default one
+      const calculator = createCalculator();
+      calculators.add(calculator);
+    }
+  }
+  
+  function createCalculatorWithInputs(inputs) {
+    const index = calculators.size;
+    const column = index === 0
+      ? extractTableColumn(containerTable, index + 1)
+      : cloneTableColumn(containerTable, index);
+  
+    const elements = captureElements(containerTable, index);
+    // Set element values based on inputs
+    Object.keys(inputs).forEach(key => {
+      if (elements[key]) {
+        if (elements[key] instanceof HTMLInputElement || elements[key] instanceof HTMLSelectElement) {
+          elements[key].value = inputs[key];
+        }
+      }
+    });
+  
+    const outputs = calculateOutputs(inputs);
+    const calculator = { column, elements, inputs, outputs };
+    renderCalculator(calculator);
+    attachEventListeners(calculator);
+    return calculator;
+  }
+  

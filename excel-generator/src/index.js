@@ -7,6 +7,7 @@ export default {
 };
 
 async function handleRequest(request, env) {
+ // const TEMPLATE_URL_TEST = env.TEMPLATE_URL_TEST;
   const TEMPLATE_URL = env.TEMPLATE_URL;
   const BREVO_API_KEY = env.BREVO_API_KEY;
   const SENDER_EMAIL = env.SENDER_EMAIL;
@@ -30,8 +31,9 @@ async function handleRequest(request, env) {
     try {
       const data = await request.json();
       const { calculators, email } = data;
-
+      
       const templateResponse = await fetch(TEMPLATE_URL);
+      //const templateResponse = await fetch(TEMPLATE_URL_TEST);
       if (!templateResponse.ok) {
         throw new Error(`Failed to fetch template: ${templateResponse.statusText}`);
       }
