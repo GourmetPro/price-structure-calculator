@@ -550,29 +550,6 @@ function cloneTableColumn(table, index) {
     });
   }
   
-  
-  
-
-  function serializeCalculatorInputs(inputs) {
-    const values = [
-      inputs.name,
-      inputs.currency,
-      inputs.unitsPerShipment,
-      inputs.productionCosts,
-      inputs.manufacturerMargin,
-      inputs.freightInsurance,
-      inputs.customDuties,
-      inputs.exciseTax,
-      inputs.domesticLogistics,
-      inputs.storage,
-      inputs.importHandling,
-      inputs.importerMargin,
-      inputs.wholesalerMargin,
-      inputs.retailerMargin,
-    ];
-    return values.map(encodeURIComponent).join(',');
-  }
-  
   function serializeCalculators(calculators) {
     const urlParams = new URLSearchParams();
     const paramKeys = ['n', 'c', 'us', 'pc', 'mm', 'fi', 'cd', 'et', 'dl', 's', 'ih', 'im', 'wm', 'rm'];
@@ -713,5 +690,81 @@ function cloneTableColumn(table, index) {
     attachEventListeners(calculator);
     return calculator;
   }
+
+  function closeSharePopup() {
+    document.querySelector('.share-popup').style.display = 'none';
+  }
+
+  function openSharePopup() {
+    document.querySelector('.share-popup').style.display = 'flex';
+    
+    const currentURL = window.location.href;
+    document.querySelector('.url-text').textContent = currentURL;
+  }
+
+  function handleCopyButtonClick(button) {
+    button.disabled = true; // Disable button to prevent multiple clicks
+  
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      button.textContent = 'Copied';
+  
+      setTimeout(() => {
+        button.textContent = 'Copy';
+        button.disabled = false; // Re-enable button after 2 seconds
+      }, 2000);
+    }).catch(err => {
+      console.error('Copy to clipboard failed:', err);
+      showToast("Failed to copy URL. Please try again.", "#ff6347", "white");
+      button.disabled = false; // Re-enable button even if copy fails
+    });
+  }
+
+  function handleShareClick(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(document.title);
+  
+    let shareURL = '';
+  
+    switch (platform) {
+      case 'x':
+        // X (formerly Twitter)
+        shareURL = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+        break;
+      case 'facebook':
+        shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'linkedin':
+        shareURL = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+        break;
+      case 'email':
+        shareURL = `mailto:?subject=${text}&body=Check out this link: ${url}`;
+        break;
+      default:
+        showToast("Unsupported sharing platform.", "#ff6347", "white");
+        return;
+    }
+  
+    // Open the share URL in a new window/tab
+    window.open(shareURL, '_blank', 'noopener,noreferrer');
+  }
+  
+  // Function to initialize share buttons
+  function initializeShareButtons() {
+    const shareElements = document.querySelectorAll('[share-link]');
+  
+    shareElements.forEach(element => {
+      const platform = element.getAttribute('share-link');
+  
+      element.addEventListener('click', () => {
+        handleShareClick(platform);
+      });
+    });
+  }
+
+  document.querySelector('.close').addEventListener('click', closeSharePopup);
+  document.querySelector('.share-button').addEventListener('click', openSharePopup);
+  document.querySelector('.copy-button').addEventListener('click', function() {handleCopyButtonClick(this);});
+  document.addEventListener('DOMContentLoaded', () => {initializeShareButtons();});
+
   
   

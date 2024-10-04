@@ -263,7 +263,7 @@
           <tr class="spacer-row">
             <td></td>
             <td></td>
-          </tr>  
+          </tr>
           <tr class="retailer-margin-row">
             <td><h3>Retailer Margin<br><span class="subtext">percentage</span></h3></td>
             <td>
@@ -327,6 +327,38 @@
     <input type="email" id="userEmail" placeholder="Your email address">
     <button id="submitEmail">Send Excel</button>
     <p class="info-warn">Please enable editing in the excel file to view the calculated prices</p>
+  </div>
+</div>
+<div class="share-button">Share</div>
+</div>
+<div class="share-popup">
+  <div class="share-wrapper">
+     <div class="share-heading-wrapper">
+        <p class="share-heading">Share</p>
+        <div class="close"><img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66ff9a07edcd6f719bbf264e_close.svg" loading="lazy" alt="" class="close-icon"></div>
+     </div>
+     <div class="share-icon-wrapper">
+        <div class="share-icon" share-link="x">
+           <img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66ff8b43da5fa65f143b6bac_x.svg" loading="lazy" alt="" class="icon">
+           <p class="share-site">X</p>
+        </div>
+        <div class="share-icon" share-link="facebook">
+           <img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66ff8b4312bb5e582736fa09_facebook.svg" loading="lazy" alt="" class="icon">
+           <p class="share-site">Facebook</p>
+        </div>
+        <div class="share-icon" share-link="linkedin">
+           <img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66ff9adfccb60417d0861a62_linkedin.svg" loading="lazy" alt="" class="icon">
+           <p class="share-site">Linkedin</p>
+        </div>
+        <div class="share-icon" share-link="email">
+           <img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66ff8da4aa9de72eaebeed14_email.svg" loading="lazy" alt="" class="icon">
+           <p class="share-site">Email</p>
+        </div>
+     </div>
+     <div class="copy-wrapper">
+        <p class="url-text">This is some text inside and its very big</p>
+        <div class="copy-button">Copy</div>
+     </div>
   </div>
 </div>
     <div class="w-embed">
@@ -401,12 +433,12 @@
         }
 
           .subtext {
-            font-size: 12px; /* Smaller font size */
-            color: #bfc2c5; /* Grey color, matching .price-after-calculation */
-            font-weight: normal; /* Remove bold styling if present */
-            display: block; /* Makes the subtext appear on its own line */
-            margin-top: 2px; /* Add a small gap between the main text and subtext */
-            font-style: italic; /* Italicize the subtext */
+            font-size: 12px;
+            color: #bfc2c5;
+            font-weight: normal;
+            display: block;
+            margin-top: 2px;
+            font-style: italic;
         }
 
 
@@ -687,11 +719,6 @@
           font-size: 14px;
         }
 
-
-
-
-
-
         .margin-input-holder {
   position: relative;
   width: 100%;
@@ -859,7 +886,7 @@
 
         .delete-button-cell {
           text-align: right;
-          padding-right: 0 !important; /* Override the general td padding */
+          padding-right: 0 !important;
         }
 
         .delete-calculator {
@@ -925,7 +952,7 @@
           margin-top: 4px;
         }
 
-        .loading-spinner {
+    .loading-spinner {
       width: 16px;
       height: 16px;
       border: 2px solid #ffd212;
@@ -939,6 +966,140 @@
       left: 50%;
       transform: translate(-50%, -50%);
     }
+
+    .share-button {
+      background-color: #ffd212;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 400;
+      color: #000;
+    }
+
+    .share-popup {
+    z-index: 1000;
+    background-color: #00000080;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    position: fixed;
+    inset: 0%
+    }
+
+    .share-wrapper {
+    font-family: Lato,sans-serif;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    display: flex
+    }
+
+.share-heading {
+    color: #000;
+    margin: 0;
+    font-weight: 400
+}
+
+.share-heading-wrapper {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    display: flex
+}
+
+.share-icon-wrapper {
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    display: grid;
+    cursor: pointer;
+}
+
+.share-icon {
+    grid-column-gap: 4px;
+    grid-row-gap: 4px;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex
+}
+
+.share-site {
+    color: #000;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.icon {
+    width: 45px
+}
+
+.copy-wrapper {
+    height: 48px;
+    color: #000;
+    border: 1px solid #e7e7e7;
+    border-radius: 6px;
+    width: 100%;
+    padding-right: 76px;
+    padding-left: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.url-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copy-button {
+    background-color: #ffd212;
+    color: #000;
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    height: 33px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 15px;
+    line-height: 15px;
+    display: flex;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 8px;
+    cursor: pointer;
+}
+
+.copy-text {
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 15px
+}
+
+.close {
+  cursor: pointer;
+}
+
 
     @keyframes rotation {
       0% {
@@ -991,8 +1152,8 @@
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-      <!--<script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script>  -->
-        <script type="text/javascript" src="index.js"></script> 
+      <!-- <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> -->
+       <script type="text/javascript" src="index.js"></script>
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
   </body>
