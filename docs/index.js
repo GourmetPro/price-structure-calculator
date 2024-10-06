@@ -374,22 +374,26 @@ function cloneTableColumn(table, index) {
   // Initialize the calculator when the DOM is fully loaded
   document.addEventListener("DOMContentLoaded", function () {
     containerTable = document.querySelector("table");
-    deserializeCalculators();
+    const calculatorsInputs = deserializeCalculators();
+    
+    if (calculatorsInputs.length > 0) {
+      calculatorsInputs.forEach(inputs => {
+        const calculator = createCalculatorWithInputs(inputs);
+        calculators.add(calculator);
+      });
+    } else {
+      // No calculators in URL, create a default one
+      const calculator = createCalculator();
+      calculators.add(calculator);
+    }
   
     document
       .getElementById("compare")
       .addEventListener("click", function () {
         const calculator = createCalculator();
         calculators.add(calculator);
-        serializeCalculators(calculators);
       });
   });
-  
-  
-  
-  //document.getElementById("export").addEventListener("click", function() {
-  //  document.getElementById("emailPopupWrapper").style.display = "flex";
- // });
   
   document.getElementById("submitEmail").addEventListener("click", async function() {
     const email = document.getElementById("userEmail").value;
@@ -589,14 +593,6 @@ function cloneTableColumn(table, index) {
     window.history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
   }
   
-  
-  
-  function updateURLWithCalculators() {
-    const serializedData = serializeCalculators(calculators);
-    const newURL = `${window.location.pathname}?calculators=${serializedData}`;
-    window.history.replaceState(null, '', newURL);
-  }
-  
   // Deserialization Functions
   function deserializeCalculators() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -616,7 +612,10 @@ function cloneTableColumn(table, index) {
     // Determine the number of calculators (length of the longest parameter array)
     const numCalculators = Math.max(...paramKeys.map(key => paramValues[key].length));
     
-    // Reconstruct calculators
+    // Create an array to hold the inputs for each calculator
+    const calculatorsInputs = [];
+    
+    // Reconstruct input objects
     for (let i = 0; i < numCalculators; i++) {
       const inputs = {
         name: paramValues['n'][i] || '',
@@ -636,35 +635,11 @@ function cloneTableColumn(table, index) {
         // Add more parameters here as needed
       };
       
-      const calculator = createCalculatorWithInputs(inputs);
-      calculators.add(calculator);
+      calculatorsInputs.push(inputs);
     }
     
-    if (numCalculators === 0) {
-      // No calculators in URL, create a default one
-      const calculator = createCalculator();
-      calculators.add(calculator);
-    }
-  }
-  
-  
-  
-  function loadCalculatorsFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const calculatorsParam = urlParams.get('calculators');
-    if (calculatorsParam) {
-      const calculatorDataStrings = calculatorsParam.split('|');
-      calculatorDataStrings.forEach(dataString => {
-        const inputs = deserializeCalculators(dataString);
-        const calculator = createCalculatorWithInputs(inputs);
-        calculators.add(calculator);
-      });
-    } else {
-      // No calculators in URL, create a default one
-      const calculator = createCalculator();
-      calculators.add(calculator);
-    }
-  }
+    return calculatorsInputs;
+  }  
   
   function createCalculatorWithInputs(inputs) {
     const index = calculators.size;
@@ -689,7 +664,7 @@ function cloneTableColumn(table, index) {
     renderCalculator(calculator);
     attachEventListeners(calculator);
     return calculator;
-  }
+  }  
 
   function closeSharePopup() {
     document.querySelector('.share-popup').style.display = 'none';
@@ -727,7 +702,6 @@ function cloneTableColumn(table, index) {
   
     switch (platform) {
       case 'x':
-        // X (formerly Twitter)
         shareURL = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
         break;
       case 'facebook':
@@ -737,7 +711,8 @@ function cloneTableColumn(table, index) {
         shareURL = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
         break;
       case 'email':
-        shareURL = `mailto:?subject=${text}&body=Check out this link: ${url}`;
+        const body = encodeURIComponent("Check out this calculator: ") + url;
+        shareURL = `mailto:?subject=${text}&body=${body}`;
         break;
       default:
         showToast("Unsupported sharing platform.", "#ff6347", "white");
@@ -766,5 +741,62 @@ function cloneTableColumn(table, index) {
   document.querySelector('.copy-button').addEventListener('click', function() {handleCopyButtonClick(this);});
   document.addEventListener('DOMContentLoaded', () => {initializeShareButtons();});
 
-  
-  
+
+  // Utility functions for handling cookies
+function setCookie(name, value, days) {
+  const expires = days
+    ? `; expires=${new Date(Date.now() + days * 864e5).toUTCString()}`
+    : "";
+  document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/`;
+}
+
+function getCookie(name) {
+  return document.cookie.split("; ").reduce((r, v) => {
+    const parts = v.split("=");
+    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+  }, "");
+}
+
+// Function to show the How-To-Use popup
+function showHowToUsePopup() {
+  const popup = document.querySelector('.how-to-use-popup');
+  if (popup) {
+    popup.style.display = 'flex';
+  }
+}
+
+// Function to hide the How-To-Use popup and set a cookie
+function hideHowToUsePopup() {
+  const popup = document.querySelector('.how-to-use-popup');
+  if (popup) {
+    popup.style.display = 'none';
+    setCookie('howToUseShown', 'true', 365); // Cookie expires in 1 year
+  }
+}
+
+// Initialize the How-To-Use popup based on the cookie
+function initializeHowToUsePopup() {
+  const howToUseShown = getCookie('howToUseShown');
+
+  if (!howToUseShown) {
+    showHowToUsePopup();
+  }
+
+  // Event listener for closing the popup
+  const closeButton = document.querySelector('.how-to-use-close');
+  if (closeButton) {
+    closeButton.addEventListener('click', hideHowToUsePopup);
+  }
+
+  // Event listener for the "How to use" button to show the popup again
+  const howToUseButton = document.getElementById('how-to-use');
+  if (howToUseButton) {
+    howToUseButton.addEventListener('click', showHowToUsePopup);
+  }
+}
+
+// Initialize all functionalities on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initializeShareButtons(); // Existing function for share buttons
+  initializeHowToUsePopup(); // Initialize the How-To-Use popup
+});

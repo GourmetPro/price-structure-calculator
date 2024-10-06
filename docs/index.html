@@ -13,7 +13,7 @@
       <div class="comparison-container">
         <div class="header-buttons">
           <button id="compare">Compare <span>+</span></button>
-          <!-- <button id="export">Export to Excel</button> -->
+          <button id="how-to-use">How to use</button>
         </div>
         <div class="comparison-wrapper">
           <table>
@@ -359,6 +359,15 @@
         <p class="url-text">This is some text inside and its very big</p>
         <div class="copy-button">Copy</div>
      </div>
+  </div>
+</div>
+<div class="how-to-use-popup">
+  <div class="how-to-use-container">
+     <div class="how-to-use-heading-wrapper">
+        <p class="how-to-use-heading">How to use</p>
+        <div class="how-to-use-close"><img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/66ff9a07edcd6f719bbf264e_close.svg" loading="lazy" alt=""></div>
+     </div>
+     <img src="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/670281be6b703da0536dba14_how%20to%20use.avif" loading="lazy" sizes="100vw" srcset="https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/670281be6b703da0536dba14_how%20to%20use-p-500.avif 500w, https://cdn.prod.website-files.com/668bb4b664dd092ac1620cea/670281be6b703da0536dba14_how%20to%20use.avif 1066w" alt="" class="how-to-use-image">
   </div>
 </div>
     <div class="w-embed">
@@ -1067,6 +1076,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin:0;
 }
 
 .copy-button {
@@ -1098,6 +1108,52 @@
 
 .close {
   cursor: pointer;
+}
+
+.how-to-use-popup {
+    z-index: 2000;
+    background-color: #00000080;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    position: fixed;
+    inset: 0%
+}
+
+.how-to-use-container {
+    background-color: #141414;
+    border-radius: 8px;
+    padding: 32px;
+    font-family: Lato,sans-serif
+}
+
+.how-to-use-image {
+    max-width: 750px
+}
+
+.how-to-use-heading {
+    color: #fff;
+    margin-bottom: 32px;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 32px
+}
+
+.how-to-use-heading-wrapper {
+    justify-content: space-between;
+    align-items: flex-start;
+    display: flex
+}
+
+.how-to-use-close {
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    display: flex
 }
 
 
