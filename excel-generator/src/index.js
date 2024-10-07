@@ -59,8 +59,8 @@ async function handleRequest(request, env) {
         worksheet.getCell(`${column}19`).value = calculator.storage;
         worksheet.getCell(`${column}20`).value = calculator.importHandling;
         worksheet.getCell(`${column}23`).value = calculator.importerMargin;
-        worksheet.getCell(`${column}24`).value = calculator.wholesalerMargin;
-        worksheet.getCell(`${column}25`).value = calculator.retailerMargin;
+        worksheet.getCell(`${column}27`).value = calculator.wholesalerMargin;
+        worksheet.getCell(`${column}31`).value = calculator.retailerMargin;
       });
 
       workbook.calcProperties.fullCalcOnLoad = true;

@@ -711,7 +711,7 @@ function cloneTableColumn(table, index) {
         shareURL = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
         break;
       case 'email':
-        const body = encodeURIComponent("Check out this calculator: ") + url;
+        const body = encodeURIComponent("Calculator Link: ") + url;
         shareURL = `mailto:?subject=${text}&body=${body}`;
         break;
       default:
