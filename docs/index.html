@@ -322,14 +322,14 @@
       </div>
     </div>
 <div id="emailPopupWrapper" class="popup-wrapper">
+  <div class="share-button">SHARE YOUR CALCULATION</div>
+  <p style = "margin: 20px 0px; color: white">OR</p>
   <div class="popup-container">
     <h2 class="popup-title">Enter your email to receive the Excel file</h2>
     <input type="email" id="userEmail" placeholder="Your email address">
     <button id="submitEmail">SEND EXCEL</button>
     <p class="info-warn">Please enable editing in the excel file to view the calculated prices</p>
   </div>
-  <p style = "margin: 20px 0px; color: white">OR</p>
-  <div class="share-button">SHARE CALCULATOR</div>
 </div>
 </div>
 <div class="share-popup">
@@ -576,10 +576,10 @@
           justify-content: center;
           align-items: center;
           z-index: 1000;
+          margin: 64px 0px;
         }
 
         .popup-container {
-          padding-top: 64px;
           border-radius: 5px;
           width: 100%;
           max-width: 400px;
@@ -998,7 +998,6 @@
       font-size: 15px;
       font-weight: 700;
       color: #000;
-      margin-bottom: 64px;
     }
 
     .share-popup {
@@ -1169,7 +1168,6 @@
     display: flex
 }
 
-
     @keyframes rotation {
       0% {
         transform: translate(-50%, -50%) rotate(0deg);
@@ -1250,7 +1248,7 @@
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-       <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> 
+       <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.min.js"></script> 
       <!-- <script type="text/javascript" src="index.js"></script> -->
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
