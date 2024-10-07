@@ -283,7 +283,7 @@
             </td>
           </tr>
             <tr class="margins-heading product-total">
-              <td><h2 style="text-align: left;">Results</h2></td>
+              <td><h2 class = "results-text" style="text-align: left;">Results</h2></td>
               <td><p class="total-price-per-unit margins-total"></p></td>
             </tr>
             <!--
@@ -322,14 +322,15 @@
       </div>
     </div>
 <div id="emailPopupWrapper" class="popup-wrapper">
+  <div class="share-button">SHARE YOUR CALCULATION</div>
+  <p style = "margin: 20px 0px; color: white">OR</p>
   <div class="popup-container">
     <h2 class="popup-title">Enter your email to receive the Excel file</h2>
     <input type="email" id="userEmail" placeholder="Your email address">
-    <button id="submitEmail">Send Excel</button>
+    <button id="submitEmail">SEND EXCEL</button>
     <p class="info-warn">Please enable editing in the excel file to view the calculated prices</p>
   </div>
 </div>
-<div class="share-button">Share</div>
 </div>
 <div class="share-popup">
   <div class="share-wrapper">
@@ -441,7 +442,13 @@
           outline: none;
         }
 
-          .subtext {
+        #how-to-use {
+          background-color: black;
+          color: #ffd212;
+          border: 1px solid #ffd212;
+        }
+
+        .subtext {
             font-size: 12px;
             color: #bfc2c5;
             font-weight: normal;
@@ -451,7 +458,7 @@
         }
 
 
-          table {
+        table {
             border-collapse: separate;
             border-spacing: 0;
         }
@@ -460,6 +467,7 @@
           color: white;
           font-size: 12px;
           font-style: italic;
+          margin-bottom: 0px;
         }
 
         .spacer-row td {
@@ -564,13 +572,14 @@
         .popup-wrapper {
           position: relative;
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
           z-index: 1000;
+          margin: 64px 0px;
         }
 
         .popup-container {
-          padding: 64px 0;
           border-radius: 5px;
           width: 100%;
           max-width: 400px;
@@ -929,8 +938,8 @@
           border: none;
           border-radius: var(--radius);
           cursor: pointer;
-          font-size: 16px;
-          font-weight: 500;
+          font-size: 15px;
+          font-weight: 700;
           transition: background-color 0.2s;
         }
 
@@ -977,14 +986,17 @@
     }
 
     .share-button {
+      width: 100%;
+      max-width: 400px;
       background-color: #ffd212;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 10px 20px;
-      border-radius: 5px;
+      border-radius: 0.5rem;
       cursor: pointer;
-      font-weight: 400;
+      font-size: 15px;
+      font-weight: 700;
       color: #000;
     }
 
@@ -1156,7 +1168,6 @@
     display: flex
 }
 
-
     @keyframes rotation {
       0% {
         transform: translate(-50%, -50%) rotate(0deg);
@@ -1167,9 +1178,20 @@
     }
 
         @media screen and (max-width: 480px) {
+
+          body {
+            padding: 0px 10px;
+          }
+
           h2 {
             font-size: 16px;
+            line-height: 150%;
           }
+
+          h3 {
+            line-height: 150%;
+          }
+
           td:first-child {
             min-width: 85px;
             max-width: 85px;
@@ -1180,16 +1202,26 @@
             width: 100%;
             padding-right: 25px;
           }
+
+          .results-text {
+            margin-bottom: 32px;
+          }
+
           .name-input::placeholder {
             font-size: 12px;
-        }
-        .name-input {
-            font-size: 12px;
-        }
+          }
 
-        td:first-child {
-          width: auto;
-        }
+          .name-input {
+            font-size: 12px;
+          }
+
+          .popup-title {
+            max-width: 240px;
+          }
+
+          td:first-child {
+           width: auto;
+          }
 
         .importer-margin-row h3,
         .wholesaler-margin-row h3,
@@ -1197,6 +1229,7 @@
           color: #ffd212;
           font-size: 14px;
           font-weight: 700;
+          line-height: 150%;
         }
 
         .importer-margin-price,
@@ -1204,12 +1237,19 @@
         .retailer-margin-price {
           font-size: 13px !important;
         }
+
+        .importer-margin-value,
+        .wholesaler-margin-value,
+        .retailer-margin-value {
+          font-size: 10px;
+          top: 46%;
+        }
       }
       </style>
     </div>
     <div class="code-embed w-embed w-script">
-      <!-- <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.js"></script> -->
-       <script type="text/javascript" src="index.js"></script>
+       <script type="text/javascript" src="https://gourmetpro.github.io/price-structure-calculator/index.min.js"></script> 
+      <!-- <script type="text/javascript" src="index.js"></script> -->
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </div>
   </body>
