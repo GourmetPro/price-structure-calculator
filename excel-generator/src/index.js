@@ -7,6 +7,7 @@ export default {
 };
 
 async function handleRequest(request, env) {
+
   const TEMPLATE_URL = env.TEMPLATE_URL;
   const TEMPLATE_URL_TEST = env.TEMPLATE_URL_TEST;
   const BREVO_API_KEY = env.BREVO_API_KEY;
@@ -76,7 +77,7 @@ async function handleRequest(request, env) {
 
       const buffer = await workbook.xlsx.writeBuffer();
       const base64File = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
-
+      
       const emailPayload = {
         sender: { name: 'GourmetPro', email: SENDER_EMAIL },
         to: [{ email: email, name: 'Valued Customer' }],

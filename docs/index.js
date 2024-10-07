@@ -252,10 +252,10 @@ function captureElements(table, columnIndex) {
   function createCalculator() {
     const index = calculators.size;
     const column =
-      index == 0
+      index === 0
         ? extractTableColumn(containerTable, index + 1)
         : cloneTableColumn(containerTable, index);
-    const elements = captureElements(containerTable, index); // find way to search through column instead
+    const elements = captureElements(containerTable, index);
     const inputs = extractInputs(elements);
     const outputs = calculateOutputs(inputs);
   
@@ -268,32 +268,24 @@ function captureElements(table, columnIndex) {
     calculators.add(calculator);
     renderCalculator(calculator);
   
-    Object.keys(elements)
-      .filter((key) => {
-        return (
-          elements[key] instanceof HTMLInputElement ||
-          elements[key] instanceof HTMLSelectElement
-        );
-      })
-      .map((key) => {
-        return elements[key].addEventListener("input", () => {
-          updateCalculator(calculator);
-        });
-      });
+    attachEventListeners(calculator);
   
-    elements.deleteButton.addEventListener("click", function () {
-      deleteCalculator(calculator);
-    });
+    serializeCalculators(calculators);
   
     return calculator;
   }
+  
+  
   
   // Main function to tie it all together
   function updateCalculator(calculator) {
     calculator.inputs = extractInputs(calculator.elements);
     calculator.outputs = calculateOutputs(calculator.inputs);
     renderCalculator(calculator);
+    serializeCalculators(calculators); // Update URL
   }
+  
+  
   
   // Function to delete a calculator
   function deleteCalculator(calculator) {
@@ -306,6 +298,7 @@ function captureElements(table, columnIndex) {
       element.remove();
     });
     calculators.delete(calculator);
+    serializeCalculators(calculators); // Ensure URL is updated
   }
   
   const currencies = [
@@ -381,17 +374,26 @@ function cloneTableColumn(table, index) {
   // Initialize the calculator when the DOM is fully loaded
   document.addEventListener("DOMContentLoaded", function () {
     containerTable = document.querySelector("table");
-    createCalculator();
+    const calculatorsInputs = deserializeCalculators();
+    
+    if (calculatorsInputs.length > 0) {
+      calculatorsInputs.forEach(inputs => {
+        const calculator = createCalculatorWithInputs(inputs);
+        calculators.add(calculator);
+      });
+    } else {
+      // No calculators in URL, create a default one
+      const calculator = createCalculator();
+      calculators.add(calculator);
+    }
   
-    // Add event listener for the "Compare" button
     document
       .getElementById("compare")
-      .addEventListener("click", createCalculator);
+      .addEventListener("click", function () {
+        const calculator = createCalculator();
+        calculators.add(calculator);
+      });
   });
-
-  //document.getElementById("export").addEventListener("click", function() {
-  //  document.getElementById("emailPopupWrapper").style.display = "flex";
- // });
   
   document.getElementById("submitEmail").addEventListener("click", async function() {
     const email = document.getElementById("userEmail").value;
@@ -490,15 +492,6 @@ function cloneTableColumn(table, index) {
     }
   }
 
-
-
-
-
-
-  
-
-  
-
   function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -543,3 +536,267 @@ function cloneTableColumn(table, index) {
     updateComparisonContainerAndHeaderButtonsPadding();
     window.addEventListener('resize', debouncedUpdatePadding);
   });
+
+
+  function attachEventListeners(calculator) {
+    // Add input listeners to update calculator and URL
+    Object.values(calculator.elements).forEach(element => {
+      if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+        element.addEventListener('input', function () {
+          updateCalculator(calculator);
+        });
+      }
+    });
+  
+    // Delete button listener
+    calculator.elements.deleteButton.addEventListener('click', function () {
+      deleteCalculator(calculator);
+    });
+  }
+  
+  function serializeCalculators(calculators) {
+    const urlParams = new URLSearchParams();
+    const paramKeys = ['n', 'c', 'us', 'pc', 'mm', 'fi', 'cd', 'et', 'dl', 's', 'ih', 'im', 'wm', 'rm'];
+    
+    // Initialize an object to hold arrays for each parameter
+    const paramValues = {};
+    paramKeys.forEach(key => paramValues[key] = []);
+    
+    calculators.forEach(calculator => {
+      const inputs = calculator.inputs;
+      paramValues['n'].push(encodeURIComponent(inputs.name || ''));
+      paramValues['c'].push(encodeURIComponent(inputs.currency || 'USD'));
+      paramValues['us'].push(inputs.unitsPerShipment || '');
+      paramValues['pc'].push(inputs.productionCosts || '');
+      paramValues['mm'].push(inputs.manufacturerMargin || '');
+      paramValues['fi'].push(inputs.freightInsurance || '');
+      paramValues['cd'].push(inputs.customDuties || '');
+      paramValues['et'].push(inputs.exciseTax || '');
+      paramValues['dl'].push(inputs.domesticLogistics || '');
+      paramValues['s'].push(inputs.storage || '');
+      paramValues['ih'].push(inputs.importHandling || '');
+      paramValues['im'].push(inputs.importerMargin || '');
+      paramValues['wm'].push(inputs.wholesalerMargin || '');
+      paramValues['rm'].push(inputs.retailerMargin || '');
+      // Add more parameters here as needed
+    });
+    
+    // Set the URL parameters
+    paramKeys.forEach(key => {
+      const values = paramValues[key];
+      // Only include the parameter if there are non-empty values
+      if (values.some(value => value !== '')) {
+        urlParams.set(key, values.join(','));
+      }
+    });
+    
+    window.history.replaceState(null, '', `${window.location.pathname}?${urlParams.toString()}`);
+  }
+  
+  // Deserialization Functions
+  function deserializeCalculators() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramKeys = ['n', 'c', 'us', 'pc', 'mm', 'fi', 'cd', 'et', 'dl', 's', 'ih', 'im', 'wm', 'rm'];
+    const paramValues = {};
+    
+    // Extract parameter values as arrays
+    paramKeys.forEach(key => {
+      const value = urlParams.get(key);
+      if (value !== null) {
+        paramValues[key] = value.split(',').map(decodeURIComponent);
+      } else {
+        paramValues[key] = [];
+      }
+    });
+    
+    // Determine the number of calculators (length of the longest parameter array)
+    const numCalculators = Math.max(...paramKeys.map(key => paramValues[key].length));
+    
+    // Create an array to hold the inputs for each calculator
+    const calculatorsInputs = [];
+    
+    // Reconstruct input objects
+    for (let i = 0; i < numCalculators; i++) {
+      const inputs = {
+        name: paramValues['n'][i] || '',
+        currency: paramValues['c'][i] || 'USD',
+        unitsPerShipment: parseFloat(paramValues['us'][i]) || 0,
+        productionCosts: parseFloat(paramValues['pc'][i]) || 0,
+        manufacturerMargin: parseFloat(paramValues['mm'][i]) || 0,
+        freightInsurance: parseFloat(paramValues['fi'][i]) || 0,
+        customDuties: parseFloat(paramValues['cd'][i]) || 0,
+        exciseTax: parseFloat(paramValues['et'][i]) || 0,
+        domesticLogistics: parseFloat(paramValues['dl'][i]) || 0,
+        storage: parseFloat(paramValues['s'][i]) || 0,
+        importHandling: parseFloat(paramValues['ih'][i]) || 0,
+        importerMargin: parseFloat(paramValues['im'][i]) || 0,
+        wholesalerMargin: parseFloat(paramValues['wm'][i]) || 0,
+        retailerMargin: parseFloat(paramValues['rm'][i]) || 0,
+        // Add more parameters here as needed
+      };
+      
+      calculatorsInputs.push(inputs);
+    }
+    
+    return calculatorsInputs;
+  }  
+  
+  function createCalculatorWithInputs(inputs) {
+    const index = calculators.size;
+    const column =
+      index === 0
+        ? extractTableColumn(containerTable, index + 1)
+        : cloneTableColumn(containerTable, index);
+  
+    const elements = captureElements(containerTable, index);
+  
+    // Set element values based on inputs
+    Object.keys(inputs).forEach(key => {
+      if (elements[key]) {
+        if (elements[key] instanceof HTMLInputElement || elements[key] instanceof HTMLSelectElement) {
+          elements[key].value = inputs[key];
+        }
+      }
+    });
+  
+    const outputs = calculateOutputs(inputs);
+    const calculator = { column, elements, inputs, outputs };
+    renderCalculator(calculator);
+    attachEventListeners(calculator);
+    return calculator;
+  }  
+
+  function closeSharePopup() {
+    document.querySelector('.share-popup').style.display = 'none';
+  }
+
+  function openSharePopup() {
+    document.querySelector('.share-popup').style.display = 'flex';
+    
+    const currentURL = window.location.href;
+    document.querySelector('.url-text').textContent = currentURL;
+  }
+
+  function handleCopyButtonClick(button) {
+    button.disabled = true; // Disable button to prevent multiple clicks
+  
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      button.textContent = 'Copied';
+  
+      setTimeout(() => {
+        button.textContent = 'Copy';
+        button.disabled = false; // Re-enable button after 2 seconds
+      }, 2000);
+    }).catch(err => {
+      console.error('Copy to clipboard failed:', err);
+      showToast("Failed to copy URL. Please try again.", "#ff6347", "white");
+      button.disabled = false; // Re-enable button even if copy fails
+    });
+  }
+
+  function handleShareClick(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(document.title);
+  
+    let shareURL = '';
+  
+    switch (platform) {
+      case 'x':
+        shareURL = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+        break;
+      case 'facebook':
+        shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'linkedin':
+        shareURL = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+        break;
+      case 'email':
+        const body = encodeURIComponent("Check out this calculator: ") + url;
+        shareURL = `mailto:?subject=${text}&body=${body}`;
+        break;
+      default:
+        showToast("Unsupported sharing platform.", "#ff6347", "white");
+        return;
+    }
+  
+    // Open the share URL in a new window/tab
+    window.open(shareURL, '_blank', 'noopener,noreferrer');
+  }
+  
+  // Function to initialize share buttons
+  function initializeShareButtons() {
+    const shareElements = document.querySelectorAll('[share-link]');
+  
+    shareElements.forEach(element => {
+      const platform = element.getAttribute('share-link');
+  
+      element.addEventListener('click', () => {
+        handleShareClick(platform);
+      });
+    });
+  }
+
+  document.querySelector('.close').addEventListener('click', closeSharePopup);
+  document.querySelector('.share-button').addEventListener('click', openSharePopup);
+  document.querySelector('.copy-button').addEventListener('click', function() {handleCopyButtonClick(this);});
+  document.addEventListener('DOMContentLoaded', () => {initializeShareButtons();});
+
+
+  // Utility functions for handling cookies
+function setCookie(name, value, days) {
+  const expires = days
+    ? `; expires=${new Date(Date.now() + days * 864e5).toUTCString()}`
+    : "";
+  document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/`;
+}
+
+function getCookie(name) {
+  return document.cookie.split("; ").reduce((r, v) => {
+    const parts = v.split("=");
+    return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+  }, "");
+}
+
+// Function to show the How-To-Use popup
+function showHowToUsePopup() {
+  const popup = document.querySelector('.how-to-use-popup');
+  if (popup) {
+    popup.style.display = 'flex';
+  }
+}
+
+// Function to hide the How-To-Use popup and set a cookie
+function hideHowToUsePopup() {
+  const popup = document.querySelector('.how-to-use-popup');
+  if (popup) {
+    popup.style.display = 'none';
+    setCookie('howToUseShown', 'true', 365); // Cookie expires in 1 year
+  }
+}
+
+// Initialize the How-To-Use popup based on the cookie
+function initializeHowToUsePopup() {
+  const howToUseShown = getCookie('howToUseShown');
+
+  if (!howToUseShown) {
+    showHowToUsePopup();
+  }
+
+  // Event listener for closing the popup
+  const closeButton = document.querySelector('.how-to-use-close');
+  if (closeButton) {
+    closeButton.addEventListener('click', hideHowToUsePopup);
+  }
+
+  // Event listener for the "How to use" button to show the popup again
+  const howToUseButton = document.getElementById('how-to-use');
+  if (howToUseButton) {
+    howToUseButton.addEventListener('click', showHowToUsePopup);
+  }
+}
+
+// Initialize all functionalities on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  initializeShareButtons(); // Existing function for share buttons
+  initializeHowToUsePopup(); // Initialize the How-To-Use popup
+});
